@@ -1,4 +1,4 @@
-module ETHelper {
+open module ETHelper {
 	
 	exports com.kyj.fx.b.ETScriptHelper;
 	
@@ -30,7 +30,7 @@ module ETHelper {
 	requires reactfx;
 	requires org.apache.poi.ooxml;
 	
-	
+	/*
 	opens com.kyj.fx.b.ETScriptHelper to javafx.graphics, javafx.fxml;
 	opens com.kyj.fx.b.ETScriptHelper.actions.frame to javafx.fxml;
 	opens com.kyj.fx.b.ETScriptHelper.actions.ec.ec to javafx.fxml;
@@ -39,9 +39,10 @@ module ETHelper {
 	opens com.kyj.fx.b.ETScriptHelper.actions.ec.ec.rule  to javafx.fxml;
 	opens com.kyj.fx.b.ETScriptHelper.actions.ec.ec.group to javafx.fxml;
 	opens com.kyj.fx.b.ETScriptHelper.actions.ec.ec.par to javafx.fxml, javafx.base;
+	*/
 	
-	exports com.kyj.fx.b.ETScriptHelper.actions.ec.ec.par to javafx.fxml;
-	exports com.kyj.fx.b.ETScriptHelper.grid to  spring.beans;
-	exports com.kyj.fx.b.ETScriptHelper.actions.ec.ec to spring.beans;
-	exports com.kyj.fx.b.ETScriptHelper.actions.ec.ec.events to spring.beans;
+	exports com.kyj.fx.b.ETScriptHelper.actions.ec.ec.par;
+	exports com.kyj.fx.b.ETScriptHelper.grid;
+	exports com.kyj.fx.b.ETScriptHelper.actions.ec.ec;
+	exports com.kyj.fx.b.ETScriptHelper.actions.ec.ec.events;
 }
