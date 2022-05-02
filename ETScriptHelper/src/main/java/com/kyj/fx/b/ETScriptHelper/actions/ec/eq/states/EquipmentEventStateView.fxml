@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+
+<fx:root prefHeight="586.0" prefWidth="620.0" type="BorderPane" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+	<center>
+		<TableView fx:id="tvEventStates" BorderPane.alignment="CENTER" />
+	</center>
+</fx:root>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<fx:root prefHeight="714.0" prefWidth="863.0" type="BorderPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+        <items>
+            <SplitPane dividerPositions="0.5" prefHeight="160.0" prefWidth="200.0">
+               <items>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <center>
+                        <TableView fx:id="tvGroup" BorderPane.alignment="CENTER" />
+                     </center>
+                     <top>
+                        <HBox BorderPane.alignment="CENTER">
+                           <children>
+                              <Label text="Groups" />
+                           </children>
+                        </HBox>
+                     </top>
+                  </BorderPane>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <center>
+                        <TableView fx:id="tvRules" BorderPane.alignment="CENTER">
+<!--                           <columns> -->
+<!--                             <TableColumn fx:id="tcRuleName" prefWidth="100.0" text="Name" /> -->
+<!--                             <TableColumn fx:id="tcRuleType" prefWidth="120.0" text="Type" /> -->
+<!--                               <TableColumn fx:id="tcRuleEventWorkflow" prefWidth="156.0" text="Event/Workflow" /> -->
+<!--                           </columns> -->
+                        </TableView>
+                     </center>
+                     <top>
+                        <HBox BorderPane.alignment="CENTER">
+                           <children>
+                              <Label text="Rules" />
+                           </children>
+                        </HBox>
+                     </top>
+                  </BorderPane>
+               </items>
+            </SplitPane>
+            <BorderPane prefHeight="200.0" prefWidth="200.0">
+               <center>
+                  <TableView fx:id="tvDetails" BorderPane.alignment="CENTER">
+<!--                     <columns> -->
+<!--                       <TableColumn fx:id="tcDetailName" prefWidth="100.0" text="Nmae" /> -->
+<!--                       <TableColumn fx:id="tcDetailCondition" prefWidth="150.0" text="Condition" /> -->
+<!--                         <TableColumn fx:id="tcDetailValue" prefWidth="150.0" text="Value" /> -->
+<!--                         <TableColumn fx:id="tcDetailValueIntevalType" prefWidth="200.0" text="Value Inteval Type" /> -->
+<!--                     </columns> -->
+                  </TableView>
+               </center>
+               <top>
+                  <HBox BorderPane.alignment="CENTER">
+                     <children>
+                        <Label text="Details" />
+                     </children>
+                  </HBox>
+               </top>
+            </BorderPane>
+        </items>
+      </SplitPane>
+   </center>
+   <top>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Rule" />
+         </children>
+      </HBox>
+   </top>
+</fx:root>

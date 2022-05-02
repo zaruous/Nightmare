@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<fx:root prefHeight="799.0" prefWidth="981.0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="lblStatus" maxWidth="1.7976931348623157E308" text="..." HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </bottom>
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#miExportEtSccriptsOnAction" text="Export ET Scripts" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <BorderPane>
+         <center>
+            <SplitPane dividerPositions="0.26522187822497423">
+               <items>
+                  <BorderPane>
+                     <center>
+                        <AnchorPane fx:id="apEtTree" prefHeight="200.0" prefWidth="200.0" />
+                     </center>
+                     <top>
+                        <HBox BorderPane.alignment="CENTER">
+                           <children>
+                              <TextField fx:id="txtClassNameFilter" prefHeight="23.0" prefWidth="211.0" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                     </top>
+                  </BorderPane>
+                  <SplitPane>
+                     <items>
+                        <TabPane fx:id="tpEtManagement" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                          <tabs>
+                            <Tab fx:id="tbEtScript" text="ETScript" />
+                          </tabs>
+                        </TabPane>
+                     </items>
+                  </SplitPane>
+               </items>
+            </SplitPane>
+         </center>
+      </BorderPane>
+   </center>
+</fx:root>

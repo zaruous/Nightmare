@@ -1,0 +1,16 @@
+.vbox-item-label {
+	-fx-font-size: 50px;
+}
+
+.vbox-item:hover {
+	-fx-base: #395bae;
+	-fx-background-color: #395bae;
+}
+
+.vbox-item .vbox-item-label :hover {
+	-fx-font-size: 60px;
+}
+
+.vbox-item:pressed {
+	-fx-background-color: red;
+}

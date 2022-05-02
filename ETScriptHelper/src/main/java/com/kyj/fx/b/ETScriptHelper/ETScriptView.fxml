@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root prefHeight="799.0" prefWidth="981.0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <BorderPane>
+         <center>
+            <SplitPane dividerPositions="0.5964912280701754" orientation="VERTICAL">
+               <items>
+                  <SplitPane dividerPositions="0.28391167192429023" orientation="VERTICAL">
+                     <items>
+                        <BorderPane prefHeight="63.0" prefWidth="969.0" SplitPane.resizableWithParent="false">
+                           <center>
+                              <VBox spacing="5.0">
+                                 <children>
+                                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                       <children>
+                                          <Label maxWidth="120.0" prefWidth="120.0" text="Equipment Class" />
+                                          <ComboBox fx:id="cbEquipmentClass" editable="true" onAction="#cbEquipmentClassOnAction" prefWidth="400.0" />
+                                          <Button mnemonicParsing="false" onAction="#btnSearchOnAction" text="Search" />
+                                          <Label fx:id="lblEquipmentClassName" text="Equipment Class Name" HBox.hgrow="ALWAYS" />
+                                       </children>
+                                    </HBox>
+                                    <HBox spacing="5.0">
+                                       <children>
+                                          <Label maxWidth="120.0" prefWidth="120.0" text="Equipment ID" />
+                                          <ComboBox id="s" fx:id="cbEquipmentId" editable="true" prefWidth="400.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox spacing="5.0">
+                                       <children>
+                                          <Label maxWidth="120.0" prefWidth="120.0" text="Event Name" />
+                                          <ComboBox fx:id="cbEventName" onAction="#cbEventNameOnAction" prefWidth="400.0" />
+                                          <Label fx:id="lblEventType" text="Event type" />
+                                       </children>
+                                    </HBox>
+                                    <HBox prefWidth="741.0" spacing="5.0">
+                                       <children>
+                                          <Label maxWidth="120.0" prefWidth="120.0" text="Script Type" />
+                                          <FlowPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <RadioButton id="rCancel" fx:id="rCancel" mnemonicParsing="false" selected="true" text="Event_OnCancel">
+                                                   <toggleGroup>
+                                                      <ToggleGroup fx:id="eventScriptType" />
+                                                   </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton id="rComplete" fx:id="rComplete" mnemonicParsing="false" text="Event_OnComplete" toggleGroup="$eventScriptType" />
+                                                <RadioButton id="rPause" fx:id="rPause" mnemonicParsing="false" text="Event_OnPause" toggleGroup="$eventScriptType" />
+                                                <RadioButton id="rRestart" fx:id="rRestart" mnemonicParsing="false" text="Event_OnRestart" toggleGroup="$eventScriptType" />
+                                                <RadioButton id="rStart" fx:id="rStart" mnemonicParsing="false" text="Event_OnStart" toggleGroup="$eventScriptType" />
+                                                <RadioButton id="rUpdate" fx:id="rUpdate" mnemonicParsing="false" text="Event_OnUpdate" toggleGroup="$eventScriptType" />
+                                             </children>
+                                          </FlowPane>
+                                       </children>
+                                    </HBox>
+                                    <HBox prefWidth="741.0" spacing="5.0">
+                                       <children>
+                                          <Label maxWidth="120.0" prefWidth="120.0" text="Tester" />
+                                          <FlowPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Button mnemonicParsing="false" onAction="#btnEncoderOnAction" text="Encoder" />
+                                                <Button mnemonicParsing="false" onAction="#btnDecoderOnAction" text="Decoder" />
+                                             </children>
+                                          </FlowPane>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                                 <padding>
+                                    <Insets left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </VBox>
+                           </center>
+                           <top>
+                              <HBox BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Label text="1. 필터" />
+                                 </children>
+                              </HBox>
+                           </top>
+                        </BorderPane>
+                        <VBox>
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <Label text="2. 스크립트" />
+                                 </children>
+                              </HBox>
+                              <TextArea fx:id="txtCode" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                     </items>
+                  </SplitPane>
+                  <BorderPane>
+                     <center>
+                        <TableView fx:id="tbCommonScriptPath" prefHeight="200.0" prefWidth="200.0" />
+                     </center>
+                     <top>
+                        <VBox BorderPane.alignment="CENTER">
+                           <children>
+                              <Label text="3. 공통 스크립트" />
+                              <Label text="더블클릭시 스크립트로 복사 이동됨." />
+                              <HBox />
+                           </children>
+                        </VBox>
+                     </top>
+                  </BorderPane>
+               </items>
+            </SplitPane>
+         </center>
+         <bottom>
+            <HBox alignment="CENTER" spacing="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#btnSaveOnAction" prefWidth="120.0" text="Save" />
+                  <Button mnemonicParsing="false" onAction="#btnUploadOnAction" prefWidth="120.0" text="Upload" />
+               </children>
+               <BorderPane.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </BorderPane.margin>
+            </HBox>
+         </bottom>
+      </BorderPane>
+   </center>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</fx:root>

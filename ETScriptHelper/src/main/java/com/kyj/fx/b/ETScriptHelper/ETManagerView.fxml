@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root prefHeight="799.0" prefWidth="981.0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <BorderPane>
+         <center>
+            <SplitPane orientation="VERTICAL">
+               <items>
+                  <SplitPane orientation="VERTICAL">
+                     <items>
+                        <SplitPane dividerPositions="0.43456162642947904" orientation="VERTICAL" SplitPane.resizableWithParent="false">
+                           <items>
+                              <BorderPane prefHeight="63.0" prefWidth="969.0">
+                                 <top>
+                                    <VBox spacing="5.0" BorderPane.alignment="CENTER">
+                                       <children>
+                                          <HBox>
+                                             <children>
+                                                <Label text="1. 필터 및 속성" />
+                                             </children>
+                                          </HBox>
+                                          <HBox spacing="5.0">
+                                             <children>
+                                                <Label maxWidth="120.0" prefWidth="120.0" text="클래스명" />
+                                                <ComboBox fx:id="cbEquipmentClass" editable="true" onAction="#cbEquipmentClassOnAction" prefWidth="400.0" />
+                                                <Button mnemonicParsing="false" onAction="#btnSearchOnAction" prefWidth="80.0" text="조회" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                       <padding>
+                                          <Insets left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </VBox>
+                                 </top>
+                                 <center>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                                       <children>
+                                          <GridPane>
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <CheckBox mnemonicParsing="false" text="클래스 신규 추가 여부" />
+                                                <CheckBox mnemonicParsing="false" text="커스텀 프로퍼티 신규/변경 여부" GridPane.rowIndex="1" />
+                                             </children>
+                                          </GridPane>
+                                       </children>
+                                    </VBox>
+                                 </center>
+                              </BorderPane>
+                              <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                 <center>
+                                    <TabPane BorderPane.alignment="CENTER">
+                                       <tabs>
+                                          <Tab text="커스텀 프로퍼티">
+                                             <content>
+                                                <TableView prefHeight="200.0" prefWidth="200.0">
+                                                  <columns>
+                                                    <TableColumn prefWidth="175.0" text="이름" />
+                                                      <TableColumn prefWidth="125.0" text="데이터 타입" />
+                                                      <TableColumn prefWidth="301.0" text="기본값" />
+                                                      <TableColumn prefWidth="322.0" text="설명" />
+                                                  </columns>
+                                                </TableView>
+                                             </content>
+                                          </Tab>
+                                       </tabs>
+                                    </TabPane>
+                                 </center>
+                                 <top>
+                                    <HBox BorderPane.alignment="CENTER">
+                                       <children>
+                                          <Label text="2. 추가" />
+                                       </children>
+                                    </HBox>
+                                 </top>
+                              </BorderPane>
+                           </items>
+                        </SplitPane>
+                     </items>
+                  </SplitPane>
+               </items>
+            </SplitPane>
+         </center>
+      </BorderPane>
+   </center>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</fx:root>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root prefHeight="507.0" prefWidth="1051.0" type="BorderPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <BorderPane>
+         <center>
+            <SplitPane dividerPositions="0.5678537054860443">
+               <items>
+                  <BorderPane>
+                     <center>
+                        <TableView fx:id="tbCommonScriptPath" prefHeight="200.0" prefWidth="200.0" />
+                     </center>
+                     <top>
+                        <VBox BorderPane.alignment="CENTER">
+                           <children>
+                              <Label text="3. 공통 스크립트" />
+                              <HBox />
+                           </children>
+                        </VBox>
+                     </top>
+                  </BorderPane>
+                  <SplitPane orientation="VERTICAL">
+                     <items>
+                        <VBox>
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <Label text="2. 스크립트" />
+                                 </children>
+                              </HBox>
+                              <TextArea fx:id="txtCode" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                     </items>
+                  </SplitPane>
+               </items>
+            </SplitPane>
+         </center>
+      </BorderPane>
+   </center>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</fx:root>

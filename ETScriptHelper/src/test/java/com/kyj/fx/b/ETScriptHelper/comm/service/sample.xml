@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap:Body>
+		<UpdateEquipmentEvents xmlns="http://dmius.com/DMI.ET/EquipmentTx">
+			<SAToken xmlns="http://dmius.com/DMI.ET/EquipmentTx">47168D2F-CBB3-49C8-8555-92500D09203F</SAToken>
+			<ItemXML xmlns="http://dmius.com/DMI.ET/EquipmentTx">
+				<![CDATA[<ListEquipmentEvents GUID="C1E7E591-7A5D-4760-B546-4CC25BEB4EAB" Name="KYJ-EQ-20201229" StampGUID="361B6026-59C5-4A6A-AE73-43C57077ACF5"><EquipmentEvent GUID="44F6B488-434D-41EF-B3D0-B05D3C2D3533" EventGUID="8EBEB8A9-CF5E-4345-A77B-9259EB7B292B" Name="USE" Description="USE" EventType="1" State="2" ProcessStatus="2" ExecutionState="" TrueStateText="True" FalseStateText="False" DisplayExecution="1" DisplayEventStates="1" RecordItemType="0"/><EquipmentEvent GUID="4BE0B289-0C36-4F6C-8B9F-CD62E6B3F9BF" EventGUID="C736F3BC-A05A-487C-8000-56EFFEE87B16" Name="Clean" Description="Clean" EventType="1" State="1" ProcessStatus="2" ExecutionState="" TrueStateText="True" FalseStateText="False" DisplayExecution="1" DisplayEventStates="1" RecordItemType="0"/></ListEquipmentEvents>]]>
+			</ItemXML>
+		</UpdateEquipmentEvents>
+	</soap:Body>
+</soap:Envelope>

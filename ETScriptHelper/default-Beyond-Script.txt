@@ -1,0 +1,4 @@
+text-report layout:side-by-side &
+options:display-all,line-numbers & 
+title:%2 &
+output-to:%3 output-options:html-color %1 %2
