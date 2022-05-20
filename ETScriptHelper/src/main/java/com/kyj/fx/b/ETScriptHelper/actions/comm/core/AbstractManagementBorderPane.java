@@ -228,9 +228,9 @@ public abstract class AbstractManagementBorderPane<T extends AbstractDVO> extend
 	protected final String createTokenEx(String login, String purePwd, String permission, String domain, String application,
 			String entityType, String entityId, String comment) throws Exception {
 		String rootUrl = ResourceLoader.getInstance().get(ResourceLoader.SYNCADE_ROOT_URL);
-		var esig = new ESig(rootUrl);
+		ESig esig = new ESig(rootUrl);
 		String pwd = ESig.base64Encoder(purePwd);
-		var createToken = esig.createTokenEx(login, pwd, permission, domain, application, entityType, entityId, comment);
+		String createToken = esig.createTokenEx(login, pwd, permission, domain, application, entityType, entityId, comment);
 		String token = ESig.parser().getToken(createToken.toString());
 		return token;
 	}

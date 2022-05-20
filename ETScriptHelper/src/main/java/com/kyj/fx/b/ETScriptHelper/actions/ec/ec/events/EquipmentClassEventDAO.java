@@ -133,12 +133,13 @@ public class EquipmentClassEventDAO extends AbstractDAO {
 		var m = new HashMap<String, Object>();
 		m.put("eventGuid", eventGuid);
 
+		
 		return queryScala(sb.toString(), m, new ResultSetExtractor<EtEventsDVO>() {
 
 			@Override
-			public EtEventsDVO extractData(ResultSet rs) throws SQLException, DataAccessException {
-				if (rs.next())
-					return new BeanPropertyRowMapper<EtEventsDVO>(EtEventsDVO.class).mapRow(rs, rs.getRow());
+			public EtEventsDVO extractData(ResultSet arg0) throws SQLException, DataAccessException {
+				if(arg0.next())
+					return new BeanPropertyRowMapper<EtEventsDVO>(EtEventsDVO.class).mapRow(arg0, 0);
 				return null;
 			}
 		});

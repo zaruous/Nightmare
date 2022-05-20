@@ -192,9 +192,56 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 
 		MenuItem mComopareCommons = new MenuItem("Compare commons scripts");
 		mComopareCommons.setOnAction(this::mComopareCommonsOnAction);
-		this.tvScripts.setContextMenu(new ContextMenu(mCompareWith, mComopareCommons));
+		
+		
+		Menu mSetScript = new Menu("Set commons scripts.");
+		List<MenuItem> collect2 = ETScriptHelperComposite.listCommonsScriptPath().stream().map((CommonsScriptPathDVO d) -> {
+			MenuItem menuItem = new MenuItem(d.getFilePath());
+			menuItem.setUserData(d);
+			menuItem.setOnAction(this::miSetCommonScriptOnAction);
+
+			return menuItem;
+		}).collect(Collectors.toList());
+		mSetScript.getItems().setAll(collect2);
+		
+		
+		this.tvScripts.setContextMenu(new ContextMenu(mSetScript, mCompareWith, mComopareCommons));
 	}
 
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 5. 10. 
+	 * @param actionevent1
+	 */
+	private void miSetCommonScriptOnAction(ActionEvent ae) {
+		var selected = tvScripts.getSelectionModel();
+		if(selected == null)
+		{
+			DialogUtil.showMessageDialog("선택된 데이터가 없음.");
+			return;
+		}
+		
+		if(selected.getSelectedItem() == null) {
+			DialogUtil.showMessageDialog("데이터셋이 존재하지 않음.");
+			return;	
+		}
+		
+		MenuItem mi = (MenuItem)ae.getSource();
+		CommonsScriptPathDVO d = (CommonsScriptPathDVO)mi.getUserData();
+		String fileFullPath = d.getFileFullPath();
+		
+		
+		try {
+			String code = FileUtil.readToString(new File(fileFullPath));
+			selected.getSelectedItem().setCode(code);
+			tvScripts.refresh();
+//			tvScripts.requestLayout();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)
 	 * @작성일 : 2022. 4. 28.

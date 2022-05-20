@@ -72,7 +72,8 @@ public class EquipmentEventStatesDAO extends AbstractDAO {
 		sb.append("#end\n");
 		sb.append("order by event.name\n");
 
-		return query(sb.toString(), param, new BeanPropertyRowMapper<EquipmentEventStateDVO>(EquipmentEventStateDVO.class));
+		return query(sb.toString(), param,
+				new BeanPropertyRowMapper<EquipmentEventStateDVO>(EquipmentEventStateDVO.class));
 
 	}
 
@@ -85,7 +86,8 @@ public class EquipmentEventStatesDAO extends AbstractDAO {
 	 */
 	public String getEquipmentGuid(String equipmentClassName, String equipmentName) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select eq.EquipmentGUID from dmi_et.dbo.ET_Equipment eq inner join dmi_et.dbo.ET_EquipmentClasses ec\n");
+		sb.append(
+				"select eq.EquipmentGUID from dmi_et.dbo.ET_Equipment eq inner join dmi_et.dbo.ET_EquipmentClasses ec\n");
 		sb.append("	on eq.EquipmentClassGUID = ec.EquipmentClassGUID\n");
 		sb.append("where 1=1\n");
 		sb.append("and ec.Name = :equipmentClassName\n");

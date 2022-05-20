@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.kyj.fx.b.ETScriptHelper.comm.AbstractDAO;
 
@@ -39,6 +40,7 @@ public class EquipmentParameterDAO extends AbstractDAO {
 		HashMap<String, Object> p = new HashMap<String, Object>();
 		p.put("name", name);
 		return queryScala(sb.toString(), p, new ResultSetExtractor<String>() {
+
 			@Override
 			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
 				if (rs.next()) {
@@ -67,6 +69,7 @@ public class EquipmentParameterDAO extends AbstractDAO {
 		HashMap<String, Object> p = new HashMap<String, Object>();
 		p.put("equipmentClassGuid", equipmentClassGuid);
 		return queryScala(sb.toString(), p, new ResultSetExtractor<String>() {
+
 			@Override
 			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
 				if (rs.next()) {
@@ -79,7 +82,7 @@ public class EquipmentParameterDAO extends AbstractDAO {
 
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)
-	 * @작성일 : 2021. 12. 27. 
+	 * @작성일 : 2021. 12. 27.
 	 * @param eqName
 	 * @param eventName
 	 * @return
@@ -98,6 +101,7 @@ public class EquipmentParameterDAO extends AbstractDAO {
 		p.put("equipmentClassName", eqName);
 		p.put("eventName", eventName);
 		return queryScala(sb.toString(), p, new ResultSetExtractor<String>() {
+
 			@Override
 			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
 				if (rs.next()) {

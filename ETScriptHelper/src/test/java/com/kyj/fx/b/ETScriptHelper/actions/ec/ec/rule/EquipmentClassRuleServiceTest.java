@@ -7,12 +7,12 @@
 package com.kyj.fx.b.ETScriptHelper.actions.ec.ec.rule;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.tree.DefaultElement;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -62,10 +62,12 @@ class EquipmentClassRuleServiceTest {
 		var doc = XMLUtils.load(strRuleGroup);
 		System.out.println(doc.asXML());
 		
-		List<Element> ruleGroups = (List<Element>) doc.selectNodes("//RuleGroup");
+		List<Node> ruleGroups = (List<Node>) doc.selectNodes("//RuleGroup");
 		assertTrue(ruleGroups.size() > 0 );
 		
-		List<String> sortRuleGroups = ruleGroups.stream().sorted((e1, e2) -> {
+		List<String> sortRuleGroups = ruleGroups.stream()
+				.map(v -> (DefaultElement) v)
+				.sorted((e1, e2) -> {
 			var a1 = e1.attribute("Sequence").getText();
 			var a2 = e2.attribute("Sequence").getText();
 			return Integer.compare(Integer.parseInt(a1, 10), Integer.parseInt(a2, 10));
@@ -83,8 +85,10 @@ class EquipmentClassRuleServiceTest {
 		String ruleGroupGuid = doc.selectSingleNode("//RuleGroup[@Name='CIP_N02']/@GUID").getText();
 		var listRuleByGoups = s.listRuleByGroup(ruleGroupGuid);
 		var docListRuleByGroups = XMLUtils.load(listRuleByGoups.toString());
-		List<Element> listRuleByGroups = docListRuleByGroups.selectNodes("/RuleGroup/Rule");
-		List<String> sortListRuleByGroups = listRuleByGroups.stream().sorted((e1, e2) -> {
+		List<Node> listRuleByGroups = docListRuleByGroups.selectNodes("/RuleGroup/Rule");
+		List<String> sortListRuleByGroups = listRuleByGroups.stream()
+				.map(v -> (DefaultElement) v)
+				.sorted((e1, e2) -> {
 			var a1 = e1.attribute("RuleRank").getText();
 			var a2 = e2.attribute("RuleRank").getText();
 			return Integer.compare(Integer.parseInt(a1, 10), Integer.parseInt(a2, 10));
@@ -94,10 +98,12 @@ class EquipmentClassRuleServiceTest {
 		System.out.println(sortListRuleByGroups);
 
 		String testRuleName = "Set CIP_N02 as True";
-		List<Element> expressions = (List<Element>) docListRuleByGroups
+		List<Node> expressions = (List<Node>) docListRuleByGroups
 				.selectNodes(String.format("//RuleGroup/Rule[@Name='%s']/Expression", testRuleName));
 
-		List<String> sortedExpressions = expressions.stream().sorted((e1, e2) -> {
+		List<String> sortedExpressions = expressions.stream()
+				.map(v -> (DefaultElement) v)
+				.sorted((e1, e2) -> {
 			var a1 = e1.attribute("Sequence").getText();
 			var a2 = e2.attribute("Sequence").getText();
 			return Integer.compare(Integer.parseInt(a1, 10), Integer.parseInt(a2, 10));

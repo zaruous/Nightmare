@@ -11,6 +11,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.tree.DefaultElement;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -53,8 +55,9 @@ class EquipmentClassEventScriptServiceTest {
 		System.err.println(testCode);
 		Document doc = XMLUtils.load(item.toString());
 
-		List<Element> nodes = doc.selectNodes("/Event/ListScripts/Script");
-		for (Element e : nodes) {
+		List<Node> nodes = doc.selectNodes("/Event/ListScripts/Script");
+		for (Node _e : nodes) {
+			DefaultElement e = (DefaultElement) _e;
 			if ("Event_OnComplete".equals(e.attribute("Name").getText())) {
 				e.attribute("Code").setValue(testCode);
 			}

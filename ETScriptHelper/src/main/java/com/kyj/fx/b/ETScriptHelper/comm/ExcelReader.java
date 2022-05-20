@@ -18,6 +18,8 @@ import java.util.Map;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.tree.DefaultElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -179,11 +181,12 @@ public class ExcelReader {
 	 * @throws Exception
 	 */
 	public static <K> List<K> populateList(Document doc, Class<K> toClass, Converter converter) throws Exception {
-		List<Element> selectNodes = doc.selectNodes("//Data/Row");
+		List<Node> selectNodes = doc.selectNodes("//Data/Row");
 
 		var list = new ArrayList<K>();
-		for (Element row : selectNodes) {
+		for (Node _row : selectNodes) {
 			K to = toClass.getConstructor().newInstance();
+			DefaultElement row = (DefaultElement)_row;
 			List<Element> attrs = row.elements();
 			for (Element attr : attrs) {
 				String name = attr.getName();

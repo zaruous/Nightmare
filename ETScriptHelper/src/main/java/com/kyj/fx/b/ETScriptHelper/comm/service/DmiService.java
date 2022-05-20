@@ -8,10 +8,8 @@ package com.kyj.fx.b.ETScriptHelper.comm.service;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.function.Function;
 
@@ -207,9 +205,9 @@ public class DmiService {
 			}
 
 		} else {
-			List<Element> ndPartList = ndMessageIn.selectNodes("wsdl:part");
+			List<Node> ndPartList = ndMessageIn.selectNodes("wsdl:part");
 			for (int i = 0; i < ndPartList.size(); i++) {
-				Element node = ndPartList.get(i);
+				DefaultElement node = (DefaultElement) ndPartList.get(i);
 				// node.accept(ndPortAttr);
 				sXML += "<" + node.attribute("name").getStringValue() + " xmlns=\"\">" + args.get(i) + "</"
 						+ node.attribute("name").getStringValue() + ">";
@@ -332,7 +330,7 @@ public class DmiService {
 						oReturn = m;
 					}
 				} else {
-					List<Element> ndPartOutList = domDocument.selectNodes("//wsdl:types/s:schema/s:element[@name='"
+					List<Node> ndPartOutList = domDocument.selectNodes("//wsdl:types/s:schema/s:element[@name='"
 							+ getBaseName(ndMessageOut.selectSingleNode("wsdl:part/@element").getText())
 							+ "']/s:complexType/s:sequence/s:element");
 					if (ndPartOutList.size() == 1) {
@@ -383,7 +381,7 @@ public class DmiService {
 		return stringValue;
 	}
 
-	private Object extracted(Node ndReturn, List<Element> ndPartOutList) {
+	private Object extracted(Node ndReturn, List<Node> ndPartOutList) {
 		Object oReturn;
 		// String nodeName = ndPartOutList.get(0).attribute("name").getText();
 		// Node ndOut = ndReturn.selectSingleNode("//" + nodeName);
@@ -401,7 +399,7 @@ public class DmiService {
 
 		// Node ndOut = ndReturn.selectSingleNode("tns:" +
 		// ndPartOutList.get(0).attribute("name").getText());
-		oReturn = decodeType(getBaseName(ndPartOutList.get(0).attribute("type").getText()), object);
+		oReturn = decodeType(getBaseName(((DefaultElement)ndPartOutList.get(0)).attribute("type").getText()), object);
 		return oReturn;
 	}
 

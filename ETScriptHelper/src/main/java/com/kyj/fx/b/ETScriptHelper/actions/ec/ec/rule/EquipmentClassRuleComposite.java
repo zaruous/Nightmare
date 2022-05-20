@@ -17,13 +17,14 @@ import java.util.stream.Collectors;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.tree.DefaultElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.AbstractManagementBorderPane;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnExcelTableViewList;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnLoadEquipmentClass;
-import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts.EquipmentScriptDVO;
 import com.kyj.fx.b.ETScriptHelper.comm.DialogUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.FxUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.JsonFormatter;
@@ -156,21 +157,24 @@ public class EquipmentClassRuleComposite extends AbstractManagementBorderPane<Eq
 							return;
 						}
 
-						List<Element> ruleGroups = doc.selectNodes("/ListRules/RuleGroup");
-						ruleGroups = ruleGroups.stream().sorted(ruleGroupComparator).collect(Collectors.toList());
+						List<Node> ruleGroups = doc.selectNodes("/ListRules/RuleGroup");
+						ruleGroups = ruleGroups.stream()
+								.map(v -> (DefaultElement) v)
+								.sorted(ruleGroupComparator).collect(Collectors.toList());
 
 						var array = new ArrayList<GroupRuleDVO>();
-						for (Element ruleGroup : ruleGroups) {
+						for (Node _ruleGroup : ruleGroups) {
+							DefaultElement ruleGroup = (DefaultElement) _ruleGroup;
 							String groupName = ruleGroup.attributeValue("Name");
 							String groupSequence = ruleGroup.attributeValue("Sequence");
 							String groupGuid = ruleGroup.attributeValue("GUID");
 							String groupType = ruleGroup.attributeValue("Type");
 
-							List<Element> rules = ruleGroup.selectNodes("./Rule");
+							List<Node> rules = ruleGroup.selectNodes("./Rule");
 							rules = rules.stream().sorted(ruleComparator).collect(Collectors.toList());
 
-							for (Element rule : rules) {
-
+							for (Node _rule : rules) {
+								DefaultElement rule = (DefaultElement) _rule;
 								/*
 								<Rule GUID="582D4C28-9885-4C97-BC14-384A21D664CE" RuleType="1" Name="Set SIP_TM_TP_Expired as False" 
 								DependentEventGUID="CBD9711C-DD11-4AD9-A447-800CC9C5DE8C" ResultState="2" TimeInterval="1" TimeIntervalType="0" 
@@ -185,10 +189,13 @@ public class EquipmentClassRuleComposite extends AbstractManagementBorderPane<Eq
 								String ruleTimeIntervalType = rule.attributeValue("TimeIntervalType");
 								String ruleRank = rule.attributeValue("RuleRank");
 
-								List<Element> expressions = rule.selectNodes("./Expression");
-								expressions = expressions.stream().sorted(expressionComparator).collect(Collectors.toList());
+								List<Node> expressions = rule.selectNodes("./Expression");
+								expressions = expressions.stream()
+										.map(v -> (DefaultElement)v)
+										.sorted(expressionComparator).collect(Collectors.toList());
 
-								for (Element expression : expressions) {
+								for (Node _expression : expressions) {
+									DefaultElement expression = (DefaultElement) _expression;
 									String expressionName = expression.attributeValue("Name");
 									String expressionSequence = expression.attributeValue("Sequence");
 
@@ -360,11 +367,12 @@ public class EquipmentClassRuleComposite extends AbstractManagementBorderPane<Eq
 		}
 	};
 
-	Comparator<? super Element> ruleComparator = new Comparator<Element>() {
+	Comparator<Node> ruleComparator = new Comparator<Node>() {
 		@Override
-		public int compare(Element o1, Element o2) {
-			var v1 = o1.attributeValue("RuleRank");
-			var v2 = o2.attributeValue("RuleRank");
+		public int compare(Node o1, Node o2) {
+			
+			var v1 = ((DefaultElement)o1).attributeValue("RuleRank");
+			var v2 = ((DefaultElement)o2).attributeValue("RuleRank");
 			return Integer.compare(Integer.parseInt(v1, 10), Integer.parseInt(v2, 10));
 		}
 	};

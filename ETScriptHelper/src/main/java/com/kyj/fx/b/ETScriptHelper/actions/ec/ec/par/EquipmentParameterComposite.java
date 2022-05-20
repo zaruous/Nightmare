@@ -108,8 +108,8 @@ public class EquipmentParameterComposite extends AbstractManagementBorderPane<Ev
 			String eventGuid = new EquipmentParameterDAO().getEventGuid(eqName, eventName);
 			Document doc = s.item(eventGuid);
 			Element selectSingleNode = (Element) doc.selectSingleNode("//ListParameters");
-			List<Element> selectNodes = doc.selectNodes("//ListParameters/Parameter");
-			for (Element e : selectNodes)
+			List<Node> selectNodes = doc.selectNodes("//ListParameters/Parameter");
+			for (Node e : selectNodes)
 				selectSingleNode.remove(e);
 
 			for (EventParameterDVO d : items) {

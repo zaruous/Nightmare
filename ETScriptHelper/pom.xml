@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -20,39 +18,47 @@
 	<properties>
 		<mainclassname>com.kyj.fx.b.ETScriptHelper.MainApp</mainclassname>
 		<logback.version>1.2.0</logback.version>
+		<!-- <slf4j.version>2.0.0-alpha7</slf4j.version> -->
 		<slf4j.version>1.7.20</slf4j.version>
 		<java.version>16</java.version>
+
+		<spring-framework.version>5.3.19</spring-framework.version>
+		<!--
 		<spring-framework.version>4.3.19.RELEASE</spring-framework.version>
+		-->
 		<poi.word.version>5.2.2</poi.word.version>
 		<!-- HTTP -->
 		<apache-http-client.version>4.5.13</apache-http-client.version>
+		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
 	</properties>
 
 	<build>
 
 		<resources>
 			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**/*</include>
-<!-- 					<include>**/*.java</include> -->
-<!-- 					<include>**/*.fxml</include> -->
-<!-- 					<include>**/*.css</include> -->
-<!-- 					<include>**/*.vbs</include> -->
-				</includes>
-			</resource>
-
-			<resource>
 				<directory>src/main/resources</directory>
 				<includes>
-					<include>**/*</include>
+					<include>**</include>
 				</includes>
-			</resource>
 
+			</resource>
 		</resources>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
 
 		<finalName>ETFxHelper</finalName>
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.0.0-M5</version>
+				<configuration>
+					<argLine>--illegal-access=permit</argLine>
+				</configuration>
+			</plugin>
+
 
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -60,9 +66,55 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+					<encoding>UTF-8</encoding>
+					<showWarnings>false</showWarnings>
+					<showDeprecation>false</showDeprecation>
 				</configuration>
 			</plugin>
 
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<excludes>
+									<exclude>org.openjfx:*</exclude>
+								</excludes>
+							</artifactSet>
+							<createDependencyReducedPom>true</createDependencyReducedPom>
+							<outputFile>target/lib/ETHelper-${project.version}-all.jar</outputFile>
+							
+							<!--
+							<filters>
+						        <filter>
+						            <artifact>*:*</artifact>
+						            <excludes>
+						                <exclude>META-INF/*.SF</exclude>
+						                <exclude>META-INF/*.DSA</exclude>
+						                <exclude>META-INF/*.RSA</exclude>
+						            </excludes>
+						        </filter>
+						    </filters>
+						    -->
+						    
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>${mainclassname}</mainClass>
+								</transformer>
+							</transformers>
+							
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
 			<plugin>
 				<groupId>org.openjfx</groupId>
@@ -80,6 +132,7 @@
 				</executions>
 
 				<configuration>
+
 					<stripDebug>true</stripDebug>
 					<compress>2</compress>
 					<noHeaderFiles>true</noHeaderFiles>
@@ -87,41 +140,10 @@
 					<launcher>ETHelper</launcher>
 					<jlinkZipName>ETHelperZIP</jlinkZipName>
 					<mainClass>${mainclassname}</mainClass>
+					<!-- <jlinkExecutable>ETHelper</jlinkExecutable> -->
 				</configuration>
 			</plugin>
 
-			<!-- <plugin> -->
-			<!-- <groupId>org.openjfx</groupId> -->
-			<!-- <artifactId>javafx-maven-plugin</artifactId> -->
-			<!-- <version>0.0.5</version> -->
-			<!-- <configuration> -->
-			<!-- <compress>2</compress> -->
-			<!-- <noHeaderFiles>true</noHeaderFiles> -->
-			<!-- <stripDebug>true</stripDebug> -->
-			<!-- <noManPages>true</noManPages> -->
-			<!-- <launcher>treefx</launcher> -->
-			<!-- <mainClass>treefx/com.acme.treefx.TreeFX</mainClass> -->
-			<!-- <jlinkImageName>treefx</jlinkImageName> -->
-			<!-- <jlinkZipName>treefx</jlinkZipName> -->
-			<!-- </configuration> -->
-			<!-- </plugin> -->
-
-
-			<!-- <plugin> -->
-			<!-- <groupId>org.openjfx</groupId> -->
-			<!-- <artifactId>javafx-maven-plugin</artifactId> -->
-			<!-- <version>0.0.8</version> -->
-
-			<!-- </plugin> -->
-
-			<!-- <plugin> -->
-			<!-- <groupId>org.apache.maven.plugins</groupId> -->
-			<!-- <artifactId>maven-compiler-plugin</artifactId> -->
-			<!-- <version>3.8.0</version> -->
-			<!-- <configuration> -->
-			<!-- <release>16</release> -->
-			<!-- </configuration> -->
-			<!-- </plugin> -->
 
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -131,26 +153,21 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com.kyj.fx.b.ETScriptHelper.MainApp</mainClass>
+							<mainClass>${mainclassname}</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
 			</plugin>
 
 
-
-
-
 		</plugins>
-
-
-
 
 	</build>
 
 
 	<dependencies>
-
+		
+	
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -180,6 +197,12 @@
 			<artifactId>mssql-jdbc</artifactId>
 			<version>7.0.0.jre8</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.microsoft.sqlserver</groupId> -->
+		<!-- <artifactId>mssql-jdbc</artifactId> -->
+		<!-- <version>10.2.0.jre17</version> -->
+		<!-- </dependency> -->
 
 
 		<dependency>
@@ -187,6 +210,32 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring-framework.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
 
 		<!-- no more update -->
 		<!-- <dependency> -->
@@ -201,7 +250,6 @@
 			<artifactId>velocity-engine-core</artifactId>
 			<version>2.3</version>
 		</dependency>
-
 
 
 		<!-- Tomcat -->
@@ -241,16 +289,22 @@
 		</dependency>
 
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.kyj.fx</groupId> -->
-<!-- 			<artifactId>gargoyle-nashorn</artifactId> -->
-<!-- 			<version>0.0.1</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.kyj.fx</groupId> -->
+		<!-- <artifactId>gargoyle-nashorn</artifactId> -->
+		<!-- <version>0.0.1</version> -->
+		<!-- </dependency> -->
 
+		<!-- <dependency> -->
+		<!-- <groupId>org.fxmisc.richtext</groupId> -->
+		<!-- <artifactId>richtextfx</artifactId> -->
+		<!-- <version>0.10.4</version> -->
+		<!-- </dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.fxmisc.richtext/richtextfx -->
 		<dependency>
 			<groupId>org.fxmisc.richtext</groupId>
 			<artifactId>richtextfx</artifactId>
-			<version>0.10.4</version>
+			<version>0.10.9</version>
 		</dependency>
 
 
@@ -292,11 +346,18 @@
 			<version>${apache-http-client.version}</version>
 		</dependency>
 
+		<!-- <dependency> -->
+		<!-- <groupId>dom4j</groupId> -->
+		<!-- <artifactId>dom4j</artifactId> -->
+		<!-- <version>1.6.1</version> -->
+		<!-- </dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.dom4j/dom4j -->
 		<dependency>
-			<groupId>dom4j</groupId>
+			<groupId>org.dom4j</groupId>
 			<artifactId>dom4j</artifactId>
-			<version>1.6.1</version>
+			<version>2.1.3</version>
 		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/xml-apis/xml-apis -->
 		<dependency>
@@ -311,28 +372,29 @@
 			<version>1.1.6</version>
 		</dependency>
 
+<!---->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>17</version>
+			<version>16</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-graphics</artifactId>
-			<version>17</version>
+			<version>16</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-base</artifactId>
-			<version>17</version>
+			<version>16</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
-			<version>17</version>
+			<version>16</version>
 		</dependency>
 
 		<!-- <dependency> -->
@@ -362,11 +424,11 @@
 	</dependencies>
 
 	<repositories>
-		<repository>
-			<id>My-Project</id>
-			<name>My-Project Custom Jars</name>
-			<url>file://${project.basedir}/lib/</url>
-		</repository>
+		<!-- <repository> -->
+		<!-- <id>My-Project</id> -->
+		<!-- <name>My-Project Custom Jars</name> -->
+		<!-- <url>file://${project.basedir}/lib/</url> -->
+		<!-- </repository> -->
 
 
 		<repository>
@@ -374,20 +436,6 @@
 			<name>Maven Central</name>
 			<url>https://repo1.maven.org/maven2/</url>
 		</repository>
-
-		<!-- <repository> -->
-		<!-- <id>Maven Central</id> -->
-		<!-- <name>Maven Central</name> -->
-		<!-- <url>http://repo.maven.apache.org/maven2</url> -->
-		<!-- </repository> -->
-
-		<!-- <repository> -->
-		<!-- <id>Spring Central</id> -->
-		<!-- <name>Spring Central</name> -->
-		<!-- <url>http://repo.spring.io/libs-milestone/</url> -->
-		<!-- </repository> -->
-
-
 	</repositories>
 
 </project>

@@ -55,7 +55,7 @@ public class MiAllEventCancelPerform extends MenuItem implements EventHandler<Ac
 			return v.getEquipmentName() + "┐" + v.getEventName();
 		}));
 
-		var d = new EventPerformDeploy(collect);
+		EventPerformDeploy d = new EventPerformDeploy(collect);
 		d.load();
 		FxUtil.createStageAndShow(d, stage -> {
 			stage.setWidth(600d);

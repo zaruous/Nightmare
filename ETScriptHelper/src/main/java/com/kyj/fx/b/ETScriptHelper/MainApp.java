@@ -93,7 +93,7 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 		// ETFrameComposite etFrameComposite = new ETFrameComposite();
 		// StageStore.setApp(etFrameComposite);
 
-		var form = new MainFormComposite();
+		MainFormComposite form = new MainFormComposite();
 		Scene scene = new Scene(form);
 		scene.getStylesheets().add("/styles/styles.css");
 		scene.getStylesheets().add(MainFormComposite.class.getResource("MainForm.css").toExternalForm());
