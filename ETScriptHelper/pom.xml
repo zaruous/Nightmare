@@ -91,7 +91,7 @@
 							</artifactSet>
 							<createDependencyReducedPom>true</createDependencyReducedPom>
 							<outputFile>target/lib/ETHelper-${project.version}-all.jar</outputFile>
-							
+
 							<!--
 							<filters>
 						        <filter>
@@ -104,13 +104,13 @@
 						        </filter>
 						    </filters>
 						    -->
-						    
+
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>${mainclassname}</mainClass>
 								</transformer>
 							</transformers>
-							
+
 						</configuration>
 					</execution>
 				</executions>
@@ -166,8 +166,8 @@
 
 
 	<dependencies>
-		
-	
+
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -372,7 +372,7 @@
 			<version>1.1.6</version>
 		</dependency>
 
-<!---->
+		<!---->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -420,6 +420,19 @@
 		<!-- </dependency> -->
 		<!-- </dependencies> -->
 
+
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>2.3.3</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.3.3</version>
+			<scope>runtime</scope>
+		</dependency>
 
 	</dependencies>
 

@@ -33,6 +33,7 @@ import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.group.EquipmentClassGroupTab;
 import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.par.EquipmentParameterTab;
 import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.rule.EquipmentClassRuleTab;
 import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts.EquipmentClassEventScriptTab;
+import com.kyj.fx.b.ETScriptHelper.actions.ec.eq.cp.EquipmentCpTab;
 import com.kyj.fx.b.ETScriptHelper.actions.ec.eq.states.EquipmentEventStateTab;
 import com.kyj.fx.b.ETScriptHelper.actions.support.ETScriptHelperComposite;
 import com.kyj.fx.b.ETScriptHelper.comm.DialogUtil;
@@ -91,6 +92,7 @@ public class ETFrameComposite extends BorderPane {
 	EquipmentClassRuleTab tabEquipmentClassRuleTab;
 	EquipmentClassGroupTab tabEquipmentClassGroupTab;
 	EquipmentParameterTab tabEquipmentParameterTab;
+	EquipmentCpTab tabEquipmentCpTab;
 	// EquipmentClassTab _tabGeneral;
 	// EquipmentClassEventStateTab _tabEquipmentEventStates;
 
@@ -122,6 +124,8 @@ public class ETFrameComposite extends BorderPane {
 
 	private EtConfigurationTreeView tvEtConfigurationTree;
 
+	
+
 	@FXML
 	public void initialize() {
 		this.tabGeneral = new EquipmentClassTab();
@@ -131,8 +135,9 @@ public class ETFrameComposite extends BorderPane {
 		this.tabEquipmentClassRuleTab = new EquipmentClassRuleTab();
 		this.tabEquipmentClassGroupTab = new EquipmentClassGroupTab();
 		this.tabEquipmentParameterTab = new EquipmentParameterTab();
+		tabEquipmentCpTab = new EquipmentCpTab();
 
-		tpEtManagement.getTabs().addAll(this.tabGeneral, this.tabEquipmentEventStates, this.tabEquipmentClassEventTab,
+		tpEtManagement.getTabs().addAll(this.tabGeneral, tabEquipmentCpTab, this.tabEquipmentEventStates, this.tabEquipmentClassEventTab,
 				this.tabEquipmentClassEventScriptTab, tabEquipmentClassRuleTab, this.tabEquipmentClassGroupTab , tabEquipmentParameterTab);
 
 		String externalForm = ETFrameComposite.class.getResource("/images/excel16.png").toExternalForm();
@@ -441,21 +446,33 @@ public class ETFrameComposite extends BorderPane {
 					listEquipments = listChildEquipments(equipmentGuid);
 				}
 
+				tabGeneral.setDisable(false);
+				tabEquipmentCpTab.setDisable(false);
+				tabEquipmentEventStates.setDisable(false);
+				
 				// listEquipments.add(new )
 				selectedItem.getChildren().setAll(listEquipments);
 				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
-				tabGeneral.setDisable(false);
+				
 				tpEtManagement.getSelectionModel().select(tabGeneral);
 				break;
 			case EC_EQ_ITEM:
-				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
+				
+				
+				
 				tabGeneral.setDisable(false);
+				tabEquipmentCpTab.setDisable(false);
+				tabEquipmentEventStates.setDisable(false);
+				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
+				tabEquipmentCpTab.onLoadEquipment(equipmentGuid);
+				
 				break;
 			case EC_EQ_EVENT_STATES:
 
-				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
+//				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
 				tabGeneral.setDisable(false);
-
+				tabEquipmentCpTab.setDisable(false);
+				
 				tabEquipmentEventStates.onLoadEquipment(equipmentGuid);
 				tabEquipmentEventStates.setDisable(false);
 				tpEtManagement.getSelectionModel().select(tabEquipmentEventStates);
@@ -464,6 +481,15 @@ public class ETFrameComposite extends BorderPane {
 			case EC_EQ_EVENTS:
 				List<EtConfigurationTreeItem> listEquipmentEvents = listEquipmentEvents(equipmentGuid);
 				selectedItem.getChildren().setAll(listEquipmentEvents);
+				break;
+			case EQ_CUSTOM_PROP:
+				
+				tabGeneral.setDisable(false);
+				tabEquipmentCpTab.setDisable(false);
+				tabEquipmentEventStates.setDisable(false);
+				
+				tabEquipmentCpTab.onLoadEquipment(equipmentGuid);
+				tpEtManagement.getSelectionModel().select(tabEquipmentCpTab);
 				break;
 			}
 		}
@@ -572,6 +598,9 @@ public class ETFrameComposite extends BorderPane {
 				URL urlComponent = ETFrameCompositeInitializer.class.getResource("/images/component.gif");
 				Image imgComponent = new Image(urlComponent.toExternalForm(), 15, 15, false, false);
 
+				URL urlCp = ETFrameCompositeInitializer.class.getResource("/images/component.gif");
+				Image imgCpComponent = new Image(urlCp.toExternalForm(), 15, 15, false, false);
+				
 				@Override
 				public EtConfigurationTreeItem mapRow(ResultSet rs, int rowNum) throws SQLException {
 
@@ -592,6 +621,9 @@ public class ETFrameComposite extends BorderPane {
 					etConfigurationTreeItem.getChildren()
 							.add(new EtConfigurationTreeItem(new ImageView(img2), "1-9", "States", Action.EC_EQ_EVENT_STATES));
 
+					etConfigurationTreeItem.getChildren()
+						.add(new EtConfigurationTreeItem(new ImageView(imgCpComponent), "1-9", "Custom Properties", Action.EQ_CUSTOM_PROP));
+					
 					return etConfigurationTreeItem;
 				}
 			});

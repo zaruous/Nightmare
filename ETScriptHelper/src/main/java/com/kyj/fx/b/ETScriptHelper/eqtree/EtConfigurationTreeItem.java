@@ -32,7 +32,8 @@ public class EtConfigurationTreeItem extends TreeItem<EtConfigurationTreeDVO> {
 		EC_EQ_EVENTS, 
 		ROOT, 
 		EC_EVENTS_ITEM, 
-		EC_EQ_EVENT_STATES, EC_EQ_EVENT_ITEMS
+		EC_EQ_EVENT_STATES, EC_EQ_EVENT_ITEMS,
+		EQ_CUSTOM_PROP,
 	}
 
 	/**

@@ -40,6 +40,7 @@ open module ETHelper {
 	requires org.apache.poi.ooxml;
 	// requires com.microsoft.sqlserver.jdbc;
 	requires java.management;
+	requires java.xml.bind;
 
 	exports com.kyj.fx.b.ETScriptHelper;
 	exports com.kyj.fx.b.ETScriptHelper.actions.comm.core;

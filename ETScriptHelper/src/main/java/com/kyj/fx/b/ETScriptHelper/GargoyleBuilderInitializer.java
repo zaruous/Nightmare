@@ -32,6 +32,7 @@ public class GargoyleBuilderInitializer implements BuilderFactory {
 		@Override
 		public TableView<?> build() {
 			FxUtil.installClipboardKeyEvent(this);
+			getSelectionModel().setCellSelectionEnabled(true);
 			return this;
 		}
 

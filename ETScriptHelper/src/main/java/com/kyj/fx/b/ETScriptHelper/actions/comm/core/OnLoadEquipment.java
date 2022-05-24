@@ -18,5 +18,5 @@ public interface OnLoadEquipment {
 	 * @작성자 : KYJ (callakrsos@naver.com)
 	 * @작성일 : 2021. 11. 24.
 	 */
-	public void onLoadEquipment(String eventGuid);
+	public void onLoadEquipment(String equipmentGuid);
 }
