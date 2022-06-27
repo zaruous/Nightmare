@@ -14,13 +14,17 @@ import com.kyj.fx.b.ETScriptHelper.eqtree.EtConfigurationTreeDVO;
 import com.kyj.fx.b.ETScriptHelper.eqtree.EtConfigurationTreeItem;
 import com.kyj.fx.b.ETScriptHelper.eqtree.EtConfigurationTreeItem.Action;
 import com.kyj.fx.b.ETScriptHelper.eqtree.EtConfigurationTreeView;
+import com.kyj.fx.b.ETScriptHelper.eqtree.MenuItemEventHistoryPerform;
 import com.kyj.fx.b.ETScriptHelper.eqtree.MenuItemEventPerform;
+import com.kyj.fx.b.ETScriptHelper.eqtree.MenuItemExportEtScript;
+import com.kyj.fx.b.ETScriptHelper.eqtree.MenuItemImportEtScript;
 import com.kyj.fx.b.ETScriptHelper.eqtree.MenuItemInfo;
 import com.kyj.fx.b.ETScriptHelper.eqtree.MiAllEventCancelPerform;
 import com.kyj.fx.b.ETScriptHelper.grid.CodeDVO;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -103,6 +107,23 @@ public class ETFrameCompositeInitializer {
 				contextMenu.getItems().add(new MenuItemInfo(tv, "Info"));
 
 				switch (ti.getAction()) {
+				case EC:
+					
+					
+					Menu mExport = new Menu("Export");
+					MenuItemExportEtScript miExportETScript = new MenuItemExportEtScript(tv, "ET Script");
+					mExport.getItems().add(miExportETScript);
+					
+					
+					Menu miImport = new Menu("Import");
+					MenuItemImportEtScript miImportETScript = new MenuItemImportEtScript(tv, "ET Script");
+					miImport.getItems().add(miImportETScript);
+					
+					
+					contextMenu.getItems().addAll(mExport, miImport);
+					
+					
+					break;
 				case EC_EQ:
 					MiAllEventCancelPerform mAllEventCalcen = new MiAllEventCancelPerform(tv,"All Event Cancel Perform");
 					contextMenu.getItems().add(mAllEventCalcen);
@@ -110,8 +131,12 @@ public class ETFrameCompositeInitializer {
 				case EC_EQ_EVENT_ITEMS:
 					MenuItemEventPerform mEventPerform = new MenuItemEventPerform(tv,"Event Cancel Perform");
 					contextMenu.getItems().add(mEventPerform);
-					
+					MenuItemEventHistoryPerform miEventHistory = new MenuItemEventHistoryPerform(tv, "Event history");
+					contextMenu.getItems().add(miEventHistory);
 					break;
+				case EC_EVENTS_ITEM:
+					break;
+					
 				default:
 					break;
 				}

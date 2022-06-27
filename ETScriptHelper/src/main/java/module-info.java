@@ -7,8 +7,11 @@ open module ETHelper {
 
 	requires javafx.controls;
 	requires javafx.base;
-	requires javafx.fxml;
-	requires javafx.graphics;
+	//The type FXMLLoader from module javafx.fxml may not be accessible to clients due to missing 'requires transitive'
+	
+	requires transitive javafx.fxml;
+	//The type Stage from module javafx.graphics may not be accessible to clients due to missing 'requires transitive'
+	requires transitive javafx.graphics;
 	requires org.apache.commons.io;
 	requires java.sql;
 

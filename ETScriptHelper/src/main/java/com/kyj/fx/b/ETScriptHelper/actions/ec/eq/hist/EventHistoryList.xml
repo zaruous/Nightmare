@@ -1,0 +1,149 @@
+<!--업로드 내용 작성하는 방법 ver 1.0 -->
+<!--파일명은 반드시 서비스명과 동일하게 작성한다. -->
+<Template serviceId="2" action='doAction'
+	name="Event history 조회">
+	<Url>
+		<Pattern>/Service</Pattern>
+		<!-- URL Parameter로 SQL 파라미터로 매핑된다. -->
+		<Params>
+		
+			<Param name='equipmentGuid' dataType='java.lang.String'
+				defaultValue='' />
+				
+			<Param name='equipmentName' dataType='java.lang.String'
+				defaultValue='KYJ-CELLBACK-FROM' />
+			
+			<Param name='eventName' dataType='java.lang.String'
+				defaultValue='Manual' />
+			
+			<Param name='eventParameterName' dataType='java.lang.String'
+				defaultValue='' />
+			
+			<Param name='eventParameterValue' dataType='java.lang.String'
+				defaultValue='' />
+
+			<Param name='startDate' dataType='java.lang.String'
+				defaultValue='{$NOW}' />
+			<Param name='completeDate' dataType='java.lang.String'
+				defaultValue='' />
+
+			<Param name='eventHistoryGuid' dataType='java.lang.String'
+				defaultValue='' />
+			<Param name='serverName' dataType='java.lang.String'
+				defaultValue='p3mesdev' />
+
+		</Params>
+	</Url>
+	<Description>
+		<![CDATA[Workflow Event History조회]]>
+	</Description>
+	<Version>1.0.0</Version>
+
+	<DataSource>
+		<!-- Gargoyle Database에 등록된 Alias Name이다. -->
+		<DataSourceAlias>p3-dev</DataSourceAlias>
+	</DataSource>
+
+	<!-- 처리할 SQL을 작성한다. -->
+	<Sql>
+			<![CDATA[
+			
+SELECT  TOP 2000  ET_Equipment.EquipmentGUID
+	         , ET_Equipment.Name AS EquipmentName
+	         , ET_Equipment.Description
+	         , ET_Events.Name AS EventName
+	         , ET_Events.Description AS EventDescription
+	         , ET_EventHistory.StartUserID StartUserID
+	         , ET_EventHistory.CompleteUserID CompleteUserID
+	         , (SELECT USERS.USERNAME+' ('+USERS.LOGIN+')' FROM [DMI_SA].[dbo].[USERS] USERS WITH (NOLOCK) 
+	             WHERE USERS.LOGIN = ET_EventHistory.StartUserID) StartUser
+	         , (SELECT USERS.USERNAME+' ('+USERS.LOGIN+')' FROM [DMI_SA].[dbo].[USERS] USERS WITH (NOLOCK) 
+	             WHERE USERS.LOGIN = ET_EventHistory.CompleteUserID) CompleteUser
+	         , (SELECT USERS.USERNAME+' ('+USERS.LOGIN+')' FROM [DMI_SA].[dbo].[USERS] USERS WITH (NOLOCK) 
+	             WHERE USERS.LOGIN = ET_ParameterHistory_Comments.Value and ET_ParameterHistory_Comments.Name = 'Started By') StartedBy
+	         , (SELECT USERS.USERNAME+' ('+USERS.LOGIN+')' FROM [DMI_SA].[dbo].[USERS] USERS WITH (NOLOCK) 
+	             WHERE USERS.LOGIN = ET_ParameterHistory_Comments.Value AND ET_ParameterHistory_Comments.Name = 'Performed By') PerformedBy
+	         , ET_EventHistory.StartedDate
+	         , ET_EventHistory.CompletedDate
+	         , ET_EventHistory.Comments
+	         , ISNULL(CASE WHEN ET_EventHistory.CurrentOrderNumber = '' THEN NULL ELSE ET_EventHistory.CurrentOrderNumber END,'NA') AS EventWorkFlowIdName
+	         , ISNULL(ET_ParameterHistory_Comments.Name, 'COMMENTS_ENTERED') as EventCommentName
+	         , ISNULL(CASE WHEN RTRIM(ET_ParameterHistory_Comments.Value) = '' THEN NULL ELSE ET_ParameterHistory_Comments.Name+' : ' END ,'') AS EventCommentDescription
+	         , ISNULL(CASE WHEN RTRIM(ET_ParameterHistory_Comments.Value) = '' THEN NULL ELSE ET_ParameterHistory_Comments.Value END ,'') AS EventCommentValue
+	         , ET_EquipmentClasses.Name AS EquipmentClassName
+	         , ISNULL(ET_ParameterHistory_Comments.Sequence, 0) Sequence
+	         , (CASE WHEN ET_ParameterHistory_Comments.Name = 'Workflow ID' THEN ET_ParameterHistory_Comments.Value ELSE NULL END) WorkflowID
+			 , ET_EventHistory.EventHistoryGUID
+          FROM [DMI_ET].dbo.ET_EquipmentClasses WITH (NOLOCK)
+	     RIGHT JOIN [DMI_ET].dbo.ET_Equipment ET_Equipment WITH (NOLOCK) ON ET_EquipmentClasses.[EquipmentClassGUID] = ET_Equipment.[EquipmentClassGUID]
+	     INNER JOIN [DMI_ET].dbo.ET_EquipmentEvents ETEVNT WITH (NOLOCK) ON ET_Equipment.EquipmentGUID = ETEVNT.EquipmentGUID
+	     INNER JOIN [DMI_ET].dbo.ET_Events ET_Events WITH (NOLOCK) ON ET_Events.EventGUID = ETEVNT.EventGUID
+	     INNER JOIN [DMI_ET].dbo.ET_EventHistory ET_EventHistory WITH (NOLOCK) ON ETEVNT.EquipmentEventGUID = ET_EventHistory.EquipmentEventGUID
+	      LEFT OUTER JOIN [DMI_ET].dbo.ET_ParameterHistory ET_ParameterHistory_Comments WITH (NOLOCK) ON  ET_ParameterHistory_Comments.EventHistoryGUID = ET_EventHistory.EventHistoryGUID
+         WHERE 1=1
+         
+         #if($equipmentGuid and $equipmentGuid.length() >0)
+         and ET_Equipment.EquipmentGUID = :equipmentGuid
+         #end
+         
+         #if($equipmentName and $equipmentName.length() >0)
+         and ET_Equipment.Code = :equipmentName
+         #end
+         
+		#if($eventName and $eventName.length() >0)
+			and ET_Events.Name = :eventName
+		#end
+		#if($startDate and $startDate.length() >0)
+			AND ET_EventHistory.StartedDate >= :startDate
+		#end
+		#if($completeDate and $completeDate.length() > 10)
+			AND ET_EventHistory.CompletedDate <= ( :completeDate)
+		#elseif($completeDate and $completeDate.length() == 10)
+			AND ET_EventHistory.CompletedDate <= ( :completeDate + ' 23:59:59')
+		#end
+		#if($eventParameterName and $eventParameterName.length() >0)
+			AND ET_ParameterHistory_Comments.Name = :eventParameterName
+		#end
+		
+
+		
+		#if($eventHistoryGuid and $eventHistoryGuid.length() >0)
+			AND ET_EventHistory.EventHistoryGUID in  (:eventHistoryGuid )
+		#end
+		
+		#if($eventParameterValue and $eventParameterValue.length() >0)
+			AND ET_ParameterHistory_Comments.Value = :eventParameterValue
+		#end
+		
+		
+		
+ORDER BY ET_EventHistory.CompletedDate, SEQUENCE
+		]]>
+	</Sql>
+
+	<!--Sql Result Handle. -->
+	<!-- 파라미터로 SQL 처리결과로 resultMap이 제공됨. -->
+	<Code language='groovy' action="doAction"
+		fxRootCompositeName="parent">
+		<![CDATA[ 
+			import com.kyj.fx.commons.utils.FxUtil;
+			import java.awt.Desktop;
+			import java.net.URI;
+			import java.util.List;
+			import java.util.Map;
+			import javafx.scene.control.ContextMenu;
+			import javafx.scene.control.MenuItem;
+			import javafx.scene.control.TableView;
+			import org.controlsfx.control.table.TableFilter;
+			import com.kyj.fx.rax.tree.*;
+			
+			def tb = FxUtil.createTableViewByMap(result);
+
+		
+			FxUtil.installFindKeyEvent(tb);
+			FxUtil.installTableFilter(tb);
+			
+			parent.setCenter(tb);
+		]]>
+	</Code>
+</Template>

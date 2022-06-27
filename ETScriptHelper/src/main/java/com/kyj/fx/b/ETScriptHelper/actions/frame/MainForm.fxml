@@ -11,7 +11,9 @@
 <?import javafx.scene.text.Font?>
 
 
-<fx:root prefHeight="504.0" prefWidth="957.0" stylesheets="@MainForm.css" type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17">
+<fx:root id="root" prefHeight="504.0" 
+	prefWidth="957.0" stylesheets="@MainForm.css" type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" 
+	xmlns="http://javafx.com/javafx/17">
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>

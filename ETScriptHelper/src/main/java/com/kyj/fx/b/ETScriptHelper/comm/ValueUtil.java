@@ -450,6 +450,42 @@ public class ValueUtil {
 	 */
 	public static boolean equals(String s1, String s2) {
 		return StringUtils.equals(s1, s2);
+	}
+
+	/**
+	 * @작성자 : KYJ
+	 * @작성일 : 2016. 10. 4.
+	 * @param value
+	 */
+	public static boolean isNumber(String value) {
+		int length = value.length();
+		for (int i = 0; i < length; i++)
+			if (!Character.isDigit(value.charAt(i)))
+				return false;
+		return length == 0 ? false : true;
+
+	}
+	
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 6. 27. 
+	 * @param text
+	 * @param text2
+	 * @return
+	 */
+	public static int compare(String text, String text2) {
+
+		if(isNumber(text) && isNumber(text2))
+			return Double.compare(Double.parseDouble(text.toString()), Double.parseDouble(text2.toString()));
+
+		if (text == null && text2 == null)
+			return 0;
+		else if (text == null)
+			return 1;
+		else if (text2 == null)
+			return -1;
+		return text.compareTo(text2);
+		
 	}		
 
 }

@@ -10,6 +10,14 @@ package com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts;
  * @author KYJ (callakrsos@naver.com)
  *
  */
-record Event(String equipmentClassGuid, String eventGuid) {
+public record Event(String equipmentClassGuid, String eventGuid) {
 
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 6. 24.
+	 * @return
+	 */
+	public static Event AllEvent(String equipmentClassGuid) {
+		return new Event(equipmentClassGuid, "ALL");
+	}
 };

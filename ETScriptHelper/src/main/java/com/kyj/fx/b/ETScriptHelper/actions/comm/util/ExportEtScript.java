@@ -4,7 +4,7 @@
  *	작성일   : 2021. 7. 22.
  *	작성자   : KYJ (callakrsos@naver.com)
  *******************************/
-package com.kyj.fx.b.ETScriptHelper.actions.frame;
+package com.kyj.fx.b.ETScriptHelper.actions.comm.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;

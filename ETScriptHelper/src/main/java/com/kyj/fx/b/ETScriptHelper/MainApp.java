@@ -16,6 +16,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class MainApp extends Application implements UncaughtExceptionHandler {
@@ -46,6 +47,7 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 
 	public void start(Stage stage) throws Exception {
 
+		
 		StageStore.setPrimaryStage(stage);
 
 		stage.addEventFilter(KeyEvent.KEY_RELEASED, ev -> {

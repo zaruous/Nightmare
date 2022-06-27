@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,36 +140,50 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 		ChangeListener<Event> changeListener = (oba, o, n) -> {
 			if (eventInfo.get() == null) {
 				tvScripts.getItems().clear();
+				txtScript.setText("");
 				return;
 			}
 
 			EquipmentClassEventScriptDAO dao = new EquipmentClassEventScriptDAO();
 			Event event = eventInfo.get();
+			
+//			String equipmentClassGuid = event.equipmentClassGuid();
+//			String eventGuid = event.eventGuid();
 
-			EtEventsDVO eventInfo = dao.getEventInfo(event.eventGuid());
-			Number eventType = eventInfo.getEventType();
-			var param = new HashMap<String, Object>();
+			List<String> eventGuidArr = Collections.emptyList();
+			if ("ALL".equals( event.eventGuid())) {
+				eventGuidArr = dao.getAllEventGuids(event.equipmentClassGuid());
+			} else {
+				eventGuidArr = Arrays.asList( event.eventGuid());
+			}
+			tvScripts.getItems().clear();
+			for (String eventGuid : eventGuidArr) {
+				EtEventsDVO eventInfo = dao.getEventInfo(eventGuid);
+				Number eventType = eventInfo.getEventType();
+				var param = new HashMap<String, Object>();
 
-			switch (eventType.intValue()) {
-			/* transient */
-			case 0:
-				param.put("eventTypeNames", Arrays.asList("Event_OnComplete"));
-				break;
-			/* start-stop */
-			case 1:
-				param.put("eventTypeNames", Arrays.asList("Event_OnCancel", "Event_OnComplete", "Event_OnPause", "Event_OnRestart",
-						"Event_OnStart", "Event_OnUpdate"));
-				break;
-			/* system */
-			case 2:
-				param.put("eventTypeNames", Arrays.asList("Event_OnComplete"));
-				break;
+				switch (eventType.intValue()) {
+				/* transient */
+				case 0:
+					param.put("eventTypeNames", Arrays.asList("Event_OnComplete"));
+					break;
+				/* start-stop */
+				case 1:
+					param.put("eventTypeNames", Arrays.asList("Event_OnCancel", "Event_OnComplete", "Event_OnPause", "Event_OnRestart",
+							"Event_OnStart", "Event_OnUpdate"));
+					break;
+				/* system */
+				case 2:
+					param.put("eventTypeNames", Arrays.asList("Event_OnComplete"));
+					break;
+				}
+
+				param.put("equipmentClassGuid", event.equipmentClassGuid());
+				param.put("eventGuid", eventGuid);
+				List<EquipmentScriptDVO> scripts = dao.getEquipmentScript(param);
+				tvScripts.getItems().addAll(scripts);
 			}
 
-			param.put("equipmentClassGuid", event.equipmentClassGuid());
-			param.put("eventGuid", event.eventGuid());
-			List<EquipmentScriptDVO> scripts = dao.getEquipmentScript(param);
-			tvScripts.getItems().setAll(scripts);
 		};
 
 		tvScripts.getColumns().add(numberColumn);
@@ -192,8 +207,7 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 
 		MenuItem mComopareCommons = new MenuItem("Compare commons scripts");
 		mComopareCommons.setOnAction(this::mComopareCommonsOnAction);
-		
-		
+
 		Menu mSetScript = new Menu("Set commons scripts.");
 		List<MenuItem> collect2 = ETScriptHelperComposite.listCommonsScriptPath().stream().map((CommonsScriptPathDVO d) -> {
 			MenuItem menuItem = new MenuItem(d.getFilePath());
@@ -203,45 +217,43 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 			return menuItem;
 		}).collect(Collectors.toList());
 		mSetScript.getItems().setAll(collect2);
-		
-		
+
 		this.tvScripts.setContextMenu(new ContextMenu(mSetScript, mCompareWith, mComopareCommons));
 	}
 
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)
-	 * @작성일 : 2022. 5. 10. 
+	 * @작성일 : 2022. 5. 10.
 	 * @param actionevent1
 	 */
 	private void miSetCommonScriptOnAction(ActionEvent ae) {
 		var selected = tvScripts.getSelectionModel();
-		if(selected == null)
-		{
+		if (selected == null) {
 			DialogUtil.showMessageDialog("선택된 데이터가 없음.");
 			return;
 		}
-		
-		if(selected.getSelectedItem() == null) {
+
+		if (selected.getSelectedItem() == null) {
 			DialogUtil.showMessageDialog("데이터셋이 존재하지 않음.");
-			return;	
+			return;
 		}
-		
-		MenuItem mi = (MenuItem)ae.getSource();
-		CommonsScriptPathDVO d = (CommonsScriptPathDVO)mi.getUserData();
+
+		MenuItem mi = (MenuItem) ae.getSource();
+		CommonsScriptPathDVO d = (CommonsScriptPathDVO) mi.getUserData();
 		String fileFullPath = d.getFileFullPath();
-		
-		
+
 		try {
 			String code = FileUtil.readToString(new File(fileFullPath));
 			selected.getSelectedItem().setCode(code);
 			tvScripts.refresh();
-//			tvScripts.requestLayout();
+			txtScript.setText(code);
+			// tvScripts.requestLayout();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)
 	 * @작성일 : 2022. 4. 28.
@@ -257,7 +269,8 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 		String scriptRight = selectedItem.getCode() == null ? "" : selectedItem.getCode();
 
 		try {
-			// var leftFile = new File(FileUtil.getTempGagoyle(), IdGenUtil.generate());
+			// var leftFile = new File(FileUtil.getTempGagoyle(),
+			// IdGenUtil.generate());
 			// FileUtil.writeFile(leftFile, scriptLeft);
 
 			var rightFile = new File(FileUtil.getTempGagoyle(), IdGenUtil.generate());
@@ -265,7 +278,8 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 
 			BeyoundCompareToolHelper helper = new BeyoundCompareToolHelper();
 			// helper.setScriptFile(BeyoundCompareToolHelper.SCRIPT_FOLDER_COMPARE_FILE_NAME);
-			// BeyoundCompareToolHelper helper = BeyoundCompareToolHelper.newFolderCompare();
+			// BeyoundCompareToolHelper helper =
+			// BeyoundCompareToolHelper.newFolderCompare();
 			helper.setLeftFile(new File(dvo.getFileFullPath()));
 			helper.setRightFile(rightFile);
 			helper.compare();
@@ -275,27 +289,24 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 		}
 	}
 
-	
-	
 	String replaceComments(String str) {
 		StringBuilder sb = new StringBuilder(str.length());
 		try (BufferedReader br = new BufferedReader(new StringReader(str))) {
-			
-			
-//			String readLine = br.readLine();
+
+			// String readLine = br.readLine();
 			String temp = null;
-			while( (temp = br.readLine())!=null)
-			{
+			while ((temp = br.readLine()) != null) {
 				if (!temp.trim().startsWith("'")) {
 					sb.append(temp);
-				}	
+				}
 			}
-			
+
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 		return sb.toString();
 	}
+
 	/**
 	 * mComopareCommonsOnAction * @작성자 : KYJ (callakrsos@naver.com)
 	 * 
@@ -304,14 +315,14 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 	 */
 	public void mComopareCommonsOnAction(ActionEvent e) {
 
-//		File dir = new File(FileUtil.getTempGagoyle(), IdGenUtil.generate());
-//		dir.mkdirs();
+		// File dir = new File(FileUtil.getTempGagoyle(), IdGenUtil.generate());
+		// dir.mkdirs();
 
 		ObservableList<EquipmentScriptDVO> items = this.tvScripts.getItems();
-		
+
 		List<CommonsScriptPathDVO> listCommonsScriptPath = ETScriptHelperComposite.listCommonsScriptPath();
 		List<File> commonsScripts = listCommonsScriptPath.stream().map(d -> new File(d.getFileFullPath())).collect(Collectors.toList());
-		
+
 		StringBuilder ret = new StringBuilder();
 		StringBuilder detail = new StringBuilder();
 		for (EquipmentScriptDVO d : items) {
@@ -320,26 +331,24 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 
 			if (!actionName.isEmpty()) {
 
-				
 				String code1 = replaceComments(code);
 
 				List<File> collect = commonsScripts.stream()
-				.filter(v -> ValueUtil.equals(v.getName().replace(".vbs", "").toUpperCase(), actionName.toUpperCase()))
-				.filter(f ->{
-					String str;
-					try {
-						str = FileUtil.readToString(f);
-						String converted = replaceComments(str);
-						return ValueUtil.equals(code1, converted);
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-					return false;
-				}).collect(Collectors.toList());
-				
+						.filter(v -> ValueUtil.equals(v.getName().replace(".vbs", "").toUpperCase(), actionName.toUpperCase()))
+						.filter(f -> {
+							String str;
+							try {
+								str = FileUtil.readToString(f);
+								String converted = replaceComments(str);
+								return ValueUtil.equals(code1, converted);
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+							return false;
+						}).collect(Collectors.toList());
+
 				ret.append(actionName).append("\t:\t").append(collect.size()).append("\n");
-				
-				
+
 				detail.append(actionName).append("\tmatched:\t").append(collect.size()).append("\n");
 				detail.append("matched files :\t").append(collect.toString()).append("\n");
 				detail.append("#####################\n");
@@ -347,23 +356,25 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 
 		}
 		ret.append("\n").append(detail);
-		
-		FxUtil.createStageAndShow(new TextArea(ret.toString()), stage->{
+
+		FxUtil.createStageAndShow(new TextArea(ret.toString()), stage -> {
 			stage.setHeight(600d);
 		});
 
-//		try {
-//			BeyoundCompareToolHelper helper = BeyoundCompareToolHelper.newFolderCompare();
-//			helper.setLeftFile(new File(ETScriptHelperComposite.getEtScriptBasePath()));
-//			helper.setRightFile(dir);
-//			helper.closeScript(true);
-//			helper.compare();
-//			File outFile = helper.getOutFile();
-//			if (outFile != null && outFile.exists())
-//				Desktop.getDesktop().open(outFile);
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//		}
+		// try {
+		// BeyoundCompareToolHelper helper =
+		// BeyoundCompareToolHelper.newFolderCompare();
+		// helper.setLeftFile(new
+		// File(ETScriptHelperComposite.getEtScriptBasePath()));
+		// helper.setRightFile(dir);
+		// helper.closeScript(true);
+		// helper.compare();
+		// File outFile = helper.getOutFile();
+		// if (outFile != null && outFile.exists())
+		// Desktop.getDesktop().open(outFile);
+		// } catch (Exception e1) {
+		// e1.printStackTrace();
+		// }
 
 	}
 
@@ -439,6 +450,15 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 	@Override
 	public void onLoadEquipmentClassEvent(String equipmentClassGuid, String eventGuid) {
 		Event value = new Event(equipmentClassGuid, eventGuid);
+		setEvent(value);
+	}
+	
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 6. 24. 
+	 * @param value
+	 */
+	protected void setEvent(Event value) {
 		eventInfo.set(null);
 		eventInfo.set(value);
 	}
@@ -482,10 +502,13 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 					if (column == tcCode) {
 						String id = IdGenUtil.generate();
 
-						// EquipmentScriptDVO equipmentScriptDVO = table.getItems().get(rowIndex);
-						// String equipmentClassName = equipmentScriptDVO.getEquipmentClassName();
+						// EquipmentScriptDVO equipmentScriptDVO =
+						// table.getItems().get(rowIndex);
+						// String equipmentClassName =
+						// equipmentScriptDVO.getEquipmentClassName();
 						// String eventName = equipmentScriptDVO.getEventName();
-						// String actionName = equipmentScriptDVO.getActionName();
+						// String actionName =
+						// equipmentScriptDVO.getActionName();
 						// String.format("%s%s%s");
 
 						File scriptFile = new File(outDir, id);
@@ -503,7 +526,9 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 				/*
 				 * (non-Javadoc)
 				 * 
-				 * @see com.kyj.fx.commons.excel.IExcelScreenHandler#toSheetName( javafx.scene.control.TableView)
+				 * @see
+				 * com.kyj.fx.commons.excel.IExcelScreenHandler#toSheetName(
+				 * javafx.scene.control.TableView)
 				 */
 				@Override
 				public String toSheetName(TableView<EquipmentScriptDVO> table) {
@@ -529,7 +554,8 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 
 							var f = new File(fromFile.getParentFile(), v);
 							if (!f.exists()) {
-								// %EquipmentClassEventScriptComposite_000002=경로에 파일이 존재하지 않습니다.
+								// %EquipmentClassEventScriptComposite_000002=경로에
+								// 파일이 존재하지 않습니다.
 								throw new RuntimeException(Message.getInstance().getMessage("%EquipmentClassEventScriptComposite_0000023",
 										f.getAbsolutePath()));
 							}
@@ -576,13 +602,18 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 		// }
 
 		String permission = "5", domain = "Syncade", application = "DMI ET", entityType = "Events", entityId = "0";
-		// DialogUtil.showESigDialog(permission, domain, application, entityType, entityId, new Callback<Map<String, String>, Void>() {
+		// DialogUtil.showESigDialog(permission, domain, application,
+		// entityType, entityId, new Callback<Map<String, String>, Void>() {
 		// @Override
 		// public Void call(Map<String, String> param) {
 		//
 		// ObservableList<EquipmentScriptDVO> items = tvScripts.getItems();
-		// Map<String, List<EquipmentScriptDVO>> collect = items.stream().filter(v -> ValueUtil.isNotEmpty(v.getEquipmentClassName()))
-		// .filter(v -> ValueUtil.isNotEmpty(v.getEventName())).collect(Collectors.groupingBy((EquipmentScriptDVO v) -> {
+		// Map<String, List<EquipmentScriptDVO>> collect =
+		// items.stream().filter(v ->
+		// ValueUtil.isNotEmpty(v.getEquipmentClassName()))
+		// .filter(v ->
+		// ValueUtil.isNotEmpty(v.getEventName())).collect(Collectors.groupingBy((EquipmentScriptDVO
+		// v) -> {
 		// String eqName = v.getEquipmentClassName();
 		// String eventName = v.getEventName();
 		// // 그룹키 생성.
@@ -638,7 +669,8 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 
 		if (ValueUtil.isEmpty(eventGuid)) {
 			setDeployItemFail();
-			// EquipmentClassEventScriptComposite_000004=EvenGuid가 존재하지 않습니다 [{0}], [{1}]
+			// EquipmentClassEventScriptComposite_000004=EvenGuid가 존재하지 않습니다
+			// [{0}], [{1}]
 			String message = Message.getInstance().getMessage("EquipmentClassEventScriptComposite_000004", className, eventName);
 			return message;
 		}
@@ -650,7 +682,9 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 			for (EquipmentScriptDVO ec : items) {
 				String actionName = ec.getActionName();
 				String scriptGuid = ec.getScriptGuid();
-				// Node node = doc.selectSingleNode(String.format("/Event/ListScripts/Script[@Name='{0}']", actionName));
+				// Node node =
+				// doc.selectSingleNode(String.format("/Event/ListScripts/Script[@Name='{0}']",
+				// actionName));
 				Element parentNode = (Element) doc.selectSingleNode("/Event/ListScripts");
 				Element scriptNode = (Element) parentNode.selectSingleNode(String.format("Script[@Name='%s']", actionName));
 
@@ -663,7 +697,8 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 					addElement.addAttribute("Code", ec.getCode());
 					addElement.addAttribute("ScriptGUID", scriptGuid);
 					addElement.addAttribute("GUID", IdGenUtil.randomGuid().toUpperCase());
-					// Element parent = (Element) doc.selectSingleNode("/Event/ListScripts");
+					// Element parent = (Element)
+					// doc.selectSingleNode("/Event/ListScripts");
 					// parentNode.add(addElement);
 				} else {
 					scriptNode.attribute("Code").setValue(ec.getCode());
@@ -698,4 +733,9 @@ public class EquipmentClassEventScriptComposite extends AbstractManagementBorder
 		eventInfo.set(null);
 		eventInfo.set(event);
 	}
+	
+	public TableView<EquipmentScriptDVO> getScriptTable() {
+		return this.tvScripts;
+	}
+	
 }

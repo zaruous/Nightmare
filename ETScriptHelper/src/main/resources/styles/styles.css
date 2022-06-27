@@ -1,4 +1,13 @@
 /* Application wide styles */
+
+.root{
+	-fx-font-family : "Verdana";	
+}
+
+Text, TextArea, Label{
+	-fx-font-family : "Verdana";
+}
+
 .text{
 	-fx-font-family : "Verdana";	
 }

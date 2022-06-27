@@ -7,7 +7,6 @@
 package com.kyj.fx.b.ETScriptHelper.comm;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.ResourceBundle;

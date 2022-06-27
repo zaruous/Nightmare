@@ -6,25 +6,27 @@
  *******************************/
 package com.kyj.fx.b.ETScriptHelper.eqtree;
 
-import org.dom4j.Document;
-import org.dom4j.Node;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.kyj.fx.b.ETScriptHelper.actions.ec.eq.eventform.CancelEventPerformService;
+import com.kyj.fx.b.ETScriptHelper.actions.ec.eq.hist.EventHsitroyDAO;
 import com.kyj.fx.b.ETScriptHelper.comm.DialogUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.FxUtil;
-import com.kyj.fx.b.ETScriptHelper.comm.ValueUtil;
-import com.kyj.fx.b.ETScriptHelper.comm.service.XMLUtils;
+import com.kyj.fx.b.ETScriptHelper.comm.MapToTableViewGenerator;
+import com.kyj.fx.b.ETScriptHelper.comm.StageStore;
 import com.kyj.fx.b.ETScriptHelper.eqtree.EtConfigurationTreeItem.Action;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 
 /**
  * @author KYJ (callakrsos@naver.com)
  *
  */
-public class MenuItemEventPerform extends MenuItem {
+public class MenuItemEventHistoryPerform extends MenuItem {
 
 	private EtConfigurationTreeView tvEtConfigurationTree;
 	private EventType eventType;
@@ -33,14 +35,14 @@ public class MenuItemEventPerform extends MenuItem {
 		Start, Update, Complete, Cancel;
 	}
 
-	public MenuItemEventPerform(EtConfigurationTreeView tvEtConfigurationTree, EventType type) {
+	public MenuItemEventHistoryPerform(EtConfigurationTreeView tvEtConfigurationTree, EventType type) {
 		super(type.name());
 		this.eventType = type;
 		this.tvEtConfigurationTree = tvEtConfigurationTree;
 		this.setOnAction(this::onAction);
 	}
 
-	public MenuItemEventPerform(EtConfigurationTreeView tv, String text) {
+	public MenuItemEventHistoryPerform(EtConfigurationTreeView tv, String text) {
 		super(text);
 		this.tvEtConfigurationTree = tv;
 		this.setOnAction(this::onAction);
@@ -55,27 +57,28 @@ public class MenuItemEventPerform extends MenuItem {
 
 		TreeItem<EtConfigurationTreeDVO> tv = tvEtConfigurationTree.getSelectionModel().getSelectedItem();
 		EtConfigurationTreeItem findEquipment = (EtConfigurationTreeItem) findEquipment(tv);
-		String equipemtnName = findEquipment.getValue().getDisplayText();
-//		String equipmentGuid = findEquipment.getValue().getId();
+		String equipmentName = findEquipment.getValue().getDisplayText();
+		String equipmentGuid = findEquipment.getValue().getId();
 		String eventName = tv.getValue().getDisplayText();
 //		System.out.println(equipemtnName);
 //		System.out.println(equipmentGuid);
 
-		// DialogUtil.showMessageDialog(String.format("EquipmentGuid : %s, Equipment Name : %s", equipmentGuid, equipemtnName));
-
-		CancelEventPerformService cancelEventPerformService = new CancelEventPerformService();
 		try {
-			Object cancel = cancelEventPerformService.cancel(equipemtnName, eventName);
-//			System.out.println(cancel);
+			EventHsitroyDAO d = new EventHsitroyDAO();
 
-			Document load = XMLUtils.load(cancel.toString());
-			Node n = load.selectSingleNode("//CS_MSG");
-			if (n != null) {
-				DialogUtil.showMessageDialog(n.getText());
-			}
-		} catch (Exception e) {
-			FxUtil.showStatusMessage(ValueUtil.toString(e));
-			DialogUtil.showExceptionDailog(e);
+			HashMap<String, Object> hashMap = new HashMap<String, Object>();
+			hashMap.put("equipmentGuid", equipmentGuid);
+			hashMap.put("eventName", eventName);
+			hashMap.put("equipmentName", equipmentName);
+			List<Map<String, Object>> listEventHistory = d.listEventHistory(hashMap);
+			
+			TableView<Map<String, Object>> load = new MapToTableViewGenerator(listEventHistory).load();
+			FxUtil.createStageAndShow(load, s->{
+				s.initOwner(StageStore.getPrimaryStage());
+			});
+
+		} catch (Exception e1) {
+			DialogUtil.showExceptionDailog(e1);
 		}
 	}
 
@@ -101,4 +104,5 @@ public class MenuItemEventPerform extends MenuItem {
 
 		return _selectedItem;
 	}
+
 }

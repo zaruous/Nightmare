@@ -165,4 +165,31 @@ public class EquipmentClassEventScriptDAO extends AbstractDAO {
 		var dao = new EquipmentClassEventDAO();
 		return dao.getEvent(eventGuid);
 	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 6. 24.
+	 * @param equipmentClassGuid
+	 * @return
+	 */
+	public List<String> getAllEventGuids(String equipmentClassGuid) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("\n");
+		sb.append("select e.eventGuid from DMI_ET.dbo.ET_Events e with (nolock)\n");
+		sb.append("	inner join DMI_ET.dbo.ET_EquipmentClasses c with (nolock)\n");
+		sb.append("	on e.equipmentClassGuid = c.equipmentClassGuid\n");
+		sb.append("where 1=1\n");
+		sb.append("and c.EquipmentClassGUID = :equipmentClassGuid\n");
+
+		var p = new HashMap<String, Object>();
+		p.put("equipmentClassGuid", equipmentClassGuid);
+		return query(sb.toString(), p, new RowMapper<String>() {
+
+			@Override
+			public String mapRow(ResultSet rs, int arg1) throws SQLException {
+				return rs.getString(1);
+			}
+		});
+//		return queryForList(sb.toString(), p, String.class);
+	}
 }

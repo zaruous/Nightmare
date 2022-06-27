@@ -18,9 +18,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
@@ -237,7 +242,7 @@ public class FileUtil {
 
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)
-	 * @작성일 : 2021. 11. 30. 
+	 * @작성일 : 2021. 11. 30.
 	 * @param f
 	 */
 	public static void windowOpen(File f) {
@@ -319,7 +324,7 @@ public class FileUtil {
 
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)
-	 * @작성일 : 2022. 4. 28. 
+	 * @작성일 : 2022. 4. 28.
 	 * @param file
 	 * @param is
 	 * @param charset
@@ -339,7 +344,7 @@ public class FileUtil {
 
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)
-	 * @작성일 : 2022. 4. 28. 
+	 * @작성일 : 2022. 4. 28.
 	 * @return
 	 */
 	public static File getTempGagoyle() {
@@ -348,7 +353,7 @@ public class FileUtil {
 			file.mkdirs();
 		return file;
 	}
-	
+
 	/**
 	 * 시스템 Temp 파일 위치 리턴.
 	 *
@@ -358,5 +363,17 @@ public class FileUtil {
 	 */
 	public static File getTempFileSystem() {
 		return new File(System.getProperty("java.io.tmpdir"));
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 6. 24.
+	 * @param file
+	 * @throws IOException
+	 */
+	public static List<Path> recursive(File file) throws IOException {
+		try (Stream<Path> walk = Files.walk(file.toPath(), 10)) {
+			return walk.collect(Collectors.toList());
+		}
 	}
 }
