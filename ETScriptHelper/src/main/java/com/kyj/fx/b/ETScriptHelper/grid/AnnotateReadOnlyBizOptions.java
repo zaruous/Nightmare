@@ -1,6 +1,6 @@
 /********************************
  *	프로젝트 : VisualFxVoEditor
- *	패키지   : com.kyj.fx.voeditor.visual.component.grid
+ *	패키지   : com.kyj.fx.b.ETScriptHelper.grid
  *	작성일   : 2015. 10. 9.
  *	작성자   : KYJ
  *******************************/
@@ -27,46 +27,25 @@ public class AnnotateReadOnlyBizOptions<T> extends AnnotationOptions<T> {
 		super(clazz);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.samsung.sds.sos.client.component.grid.AnnotationOptions#editable(
-	 * java.lang.String)
-	 */
+
 	@Override
 	public boolean editable(String columnName) {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.samsung.sds.sos.client.component.grid.AnnotationOptions#
-	 * useCommonCheckBox ()
-	 */
+
 	@Override
 	public boolean useCommonCheckBox() {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.samsung.sds.sos.client.component.grid.IOptions#useButtons()
-	 */
+
 	@Override
 	public int useButtons() {
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.samsung.sds.sos.client.component.grid.AnnotationOptions#columnSize
-	 * (java.lang.String)
-	 */
+
 	@Override
 	public int columnSize(String columnName) {
 		if ("fstRegDt".equals(columnName) || "fnlUpdDt".equals(columnName)) {
@@ -80,13 +59,7 @@ public class AnnotateReadOnlyBizOptions<T> extends AnnotationOptions<T> {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.samsung.sds.sos.client.component.grid.IOptions#stringConverter(java
-	 * .lang.String)
-	 */
+
 	@Override
 	public StringConverter<Object> stringConverter(String columnName) {
 

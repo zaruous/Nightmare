@@ -1,6 +1,6 @@
 /********************************
  *	프로젝트 : sos-client
- *	패키지   : com.samsung.sds.sos.client.util
+ *	패키지   : com.kyj.fx.b.ETScriptHelper.comm
  *	작성일   : 2016. 9. 6.
  *	프로젝트 : OPERA 
  *	작성자   : KYJ
@@ -25,9 +25,7 @@ public class DefautExcelDataSetHandler implements IExcelDataSetHandler<Sheet, Li
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefautExcelDataSetHandler.class);
 
-	/* (non-Javadoc)
-	 * @see com.samsung.sds.sos.client.util.ExcelDataSetConverter#accept(org.apache.poi.ss.usermodel.Sheet, java.util.List)
-	 */
+
 	@Override
 	public void accept(final int startRow, Sheet sheet, LinkedHashMap<ExcelColumnExpression, List<Object>> map) {
 		Iterator<ExcelColumnExpression> iterator = map.keySet().iterator();

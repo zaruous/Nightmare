@@ -1,6 +1,6 @@
 /********************************
  *	프로젝트 : sos-client
- *	패키지   : com.samsung.sds.sos.client.core.screen.utiles
+ *	패키지   : com.kyj.fx.b.ETScriptHelper.comm
  *	작성일   : 2016. 9. 6.
  *	프로젝트 : OPERA 
  *	작성자   : KYJ

@@ -6,19 +6,20 @@
  *******************************/
 package com.kyj.fx.b.ETScriptHelper.actions.ec.ec.group;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.util.List;
 
 import org.dom4j.Element;
-import org.dom4j.Node;
-import org.junit.Assert;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.b.ETScriptHelper.comm.ExcelReader;
-import com.kyj.fx.b.ETScriptHelper.comm.FxExcelUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.IdGenUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.service.ESig;
 import com.kyj.fx.b.ETScriptHelper.comm.service.XMLUtils;
@@ -42,7 +43,8 @@ class EquipmentClassGroupServiceTest {
 		var s = new EquipmentClassGroupService();
 		var f = new File(EquipmentClassGroupServiceTest.class.getResource("20210205095242.xlsx").toURI());
 		// Assert.assert(f.exists());
-		Assert.assertTrue(f.exists());
+//		Assert.assertTrue(f.exists());
+		assertTrue(f.exists());
 
 		// String readExcelToXml = FxExcelUtil.readExcelToXml(f);
 		Object readExcelToXml = s.listRuleGroup(equipmentClassGuid);
@@ -111,14 +113,14 @@ class EquipmentClassGroupServiceTest {
 		var s = new EquipmentClassGroupService();
 		Object ret = s.listRuleGroup(equipmentClassGuid);
 		LOGGER.debug("{}", ret);
-		Assert.assertNotEquals("", ret);
-
+		assertNotEquals("", ret);
+		
 		// 존재하지않은 Equipment class를 호출할떄
 		ret = s.listRuleGroup("12312312");
 		LOGGER.debug("{}", ret);
-		Assert.assertNotEquals("", ret);
+		assertNotEquals("", ret);
 		var doc = XMLUtils.load(ret.toString());
-		Assert.assertTrue((doc.selectSingleNode("//faultstring") != null));
+		assertTrue((doc.selectSingleNode("//faultstring") != null));
 	}
 
 }

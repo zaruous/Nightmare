@@ -26,7 +26,9 @@ open module ETHelper {
 	requires dom4j;
 	requires org.apache.commons.codec;
 	requires velocity.engine.core;
-	requires transitive tomcat.jdbc;
+	requires  transitive tomcat.jdbc;
+	
+	
 	requires com.google.gson;
 	requires org.apache.commons.lang3;
 
@@ -45,6 +47,9 @@ open module ETHelper {
 	requires java.management;
 	requires java.xml.bind;
 
+	
+	
+	
 	exports com.kyj.fx.b.ETScriptHelper;
 	exports com.kyj.fx.b.ETScriptHelper.actions.comm.core;
 	exports com.kyj.fx.b.ETScriptHelper.actions.deploy;
@@ -64,5 +69,7 @@ open module ETHelper {
 	exports com.kyj.fx.b.ETScriptHelper.eqtree;
 	exports com.kyj.fx.b.ETScriptHelper.grid;
 	exports com.kyj.fx.fxloader;
+	
+	
 
 }

@@ -1,6 +1,6 @@
 /********************************
  *	프로젝트 : sos-client
- *	패키지   : com.samsung.sds.sos.client.core.screen.utiles
+ *	패키지   : com.kyj.fx.b.ETScriptHelper.comm
  *	작성일   : 2016. 9. 9.
  *	프로젝트 : OPERA 
  *	작성자   : KYJ
@@ -29,8 +29,7 @@ public class DefaultTableColumnForExcelImpl implements ITableColumnForExcel {
 	 *  2. PropertyValueFactory 클래스를 사용하여 콜백을 구현한경우 excel처리 안함   ->  일반적인 UI에서 사용됨.
 	 * 
 	 *  
-	 * (non-Javadoc)
-	 * @see com.samsung.sds.sos.client.core.screen.utiles.ITableColumnForExcel#test(javafx.scene.control.TableView, javafx.scene.control.TableColumn)
+
 	 */
 	@Override
 	public boolean test(TableView<?> t, TableColumn<?, ?> c) {
