@@ -7,28 +7,26 @@ open module ETHelper {
 
 	requires javafx.controls;
 	requires javafx.base;
-	//The type FXMLLoader from module javafx.fxml may not be accessible to clients due to missing 'requires transitive'
-	
+	// The type FXMLLoader from module javafx.fxml may not be accessible to
+	// clients due to missing 'requires transitive'
+
 	requires transitive javafx.fxml;
-	//The type Stage from module javafx.graphics may not be accessible to clients due to missing 'requires transitive'
+	// The type Stage from module javafx.graphics may not be accessible to
+	// clients due to missing 'requires transitive'
 	requires transitive javafx.graphics;
 	requires org.apache.commons.io;
 	requires java.sql;
 
-	requires slf4j.api;
-//	requires slf4j.api;
+	//requires slf4j.api;
+	requires org.slf4j;
 	
-	// requires ch.qos.logback.core;
-//	requires logback.core;
 	requires logback.classic;
 
 	requires org.controlsfx.controls;
 	requires dom4j;
 	requires org.apache.commons.codec;
 	requires velocity.engine.core;
-	requires  transitive tomcat.jdbc;
-	
-	
+
 	requires com.google.gson;
 	requires org.apache.commons.lang3;
 
@@ -46,14 +44,13 @@ open module ETHelper {
 	// requires com.microsoft.sqlserver.jdbc;
 	requires java.management;
 	requires java.xml.bind;
-
-	
+	requires java.xml;
+	requires com.zaxxer.hikari;
 	
 	
 	exports com.kyj.fx.b.ETScriptHelper;
 	exports com.kyj.fx.b.ETScriptHelper.actions.comm.core;
 	exports com.kyj.fx.b.ETScriptHelper.actions.deploy;
-//	exports com.kyj.fx.b.ETScriptHelper.actions.ec;
 	exports com.kyj.fx.b.ETScriptHelper.actions.ec.ec;
 	exports com.kyj.fx.b.ETScriptHelper.actions.ec.ec.events;
 	exports com.kyj.fx.b.ETScriptHelper.actions.ec.ec.group;
@@ -69,7 +66,5 @@ open module ETHelper {
 	exports com.kyj.fx.b.ETScriptHelper.eqtree;
 	exports com.kyj.fx.b.ETScriptHelper.grid;
 	exports com.kyj.fx.fxloader;
-	
-	
 
 }

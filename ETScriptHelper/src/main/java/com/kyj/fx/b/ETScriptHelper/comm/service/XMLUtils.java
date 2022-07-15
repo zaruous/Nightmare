@@ -14,19 +14,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
+
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.dom4j.Attribute;
 
-//import javax.xml.parsers.ParserConfigurationException;
+
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.dom4j.tree.DefaultElement;
-import org.xml.sax.SAXException;
+
+
 //import org.xml.sax.SAXException;
 
 /**
@@ -102,7 +103,7 @@ public class XMLUtils {
 		for (Node e : elements) {
 			Constructor<T> constructor = instanceClass.getDeclaredConstructor();
 			T instance = constructor.newInstance();
-			Iterator<Attribute> it = ((DefaultElement)e).attributeIterator();
+			Iterator<Attribute> it = ((DefaultElement) e).attributeIterator();
 			while (it.hasNext()) {
 				Attribute next = it.next();
 				String name = next.getName();

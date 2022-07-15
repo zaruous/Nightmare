@@ -18,8 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-import org.apache.tomcat.jdbc.pool.DataSource;
+import javax.sql.DataSource;
+
 import org.slf4j.LoggerFactory;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 /**
  * @author KYJ (callakrsos@naver.com)
@@ -94,7 +98,7 @@ public class DbUtil {
 		synchronized (dataSourceCache) {
 			if (dataSourceCache.containsKey(key)) {
 				dataSource = dataSourceCache.get(key);
-				dataSource.checkAbandoned();
+//				dataSource.checkAbandoned();
 			}
 
 			if (dataSource == null) {
@@ -106,17 +110,31 @@ public class DbUtil {
 					throw new Exception("Driver or url is empty.");
 				}
 
-				dataSource = new DataSource();
-				dataSource.setDriverClassName(driver);
-				dataSource.setUrl(url);
-				dataSource.setUsername(id);
-				dataSource.setPassword(pass);
-				dataSource.setDefaultAutoCommit(false);
-				dataSource.setInitialSize(2);
-				dataSource.setLoginTimeout(3);
-				dataSource.setTestOnConnect(true);
-				dataSource.setTestOnBorrow(true);
-				dataSource.setValidationQuery("select 1");
+				HikariConfig configuration = new HikariConfig();
+				configuration.setDriverClassName(driver);
+				configuration.setJdbcUrl(url);
+				configuration.setUsername(id);
+				configuration.setPassword(pass);
+				configuration.setAutoCommit(false);
+				configuration.setMaximumPoolSize(2);
+				configuration.setConnectionTimeout(3000);
+				configuration.setValidationTimeout(3000);
+				configuration.setConnectionInitSql("select 1 ");
+				configuration.setConnectionTestQuery("select 1");
+				
+				
+				
+				dataSource = new HikariDataSource(configuration);
+//				dataSource.setDriverClassName(driver);
+//				dataSource.setUrl(url);
+//				dataSource.setUsername(id);
+//				dataSource.setPassword(pass);
+//				dataSource.setDefaultAutoCommit(false);
+//				dataSource.setInitialSize(2);
+//				dataSource.setLoginTimeout(3);
+//				dataSource.setTestOnConnect(true);
+//				dataSource.setTestOnBorrow(true);
+//				dataSource.setValidationQuery("select 1");
 				
 				if (handler != null)
 					handler.accept(dataSource);
@@ -145,17 +163,31 @@ public class DbUtil {
 
 		if (dataSourceCache.containsKey(key)) {
 			DataSource dataSource = dataSourceCache.get(key);
-			dataSource.checkAbandoned();
+//			dataSource.checkAbandoned();
 			return dataSource.getConnection();
 		} else {
-			DataSource dataSource = new DataSource();
-			dataSource.setDriverClassName(driver);
-			dataSource.setUrl(url);
-			dataSource.setUsername(id);
-			dataSource.setPassword(pass);
-			dataSource.setDefaultAutoCommit(false);
-			dataSource.setInitialSize(1);
-			dataSource.setLoginTimeout(3);
+//			DataSource dataSource = new DataSource();
+//			dataSource.setDriverClassName(driver);
+//			dataSource.setUrl(url);
+//			dataSource.setUsername(id);
+//			dataSource.setPassword(pass);
+//			dataSource.setDefaultAutoCommit(false);
+//			dataSource.setInitialSize(1);
+//			dataSource.setLoginTimeout(3);
+			
+			HikariConfig configuration = new HikariConfig();
+			configuration.setDriverClassName(driver);
+			configuration.setJdbcUrl(url);
+			configuration.setUsername(id);
+			configuration.setPassword(pass);
+			configuration.setAutoCommit(false);
+			configuration.setMaximumPoolSize(2);
+			configuration.setConnectionTimeout(3000);
+			configuration.setValidationTimeout(3000);
+			configuration.setConnectionInitSql("select 1 ");
+			configuration.setConnectionTestQuery("select 1");
+			DataSource dataSource = new HikariDataSource(configuration);
+			
 			dataSourceCache.put(key, dataSource);
 			return dataSource.getConnection();
 		}
