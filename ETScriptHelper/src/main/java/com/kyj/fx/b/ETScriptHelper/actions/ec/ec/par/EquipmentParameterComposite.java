@@ -10,9 +10,10 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
@@ -22,12 +23,14 @@ import org.slf4j.LoggerFactory;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.AbstractManagementBorderPane;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnExcelTableViewList;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnLoadEquipmentClassEvent;
+import com.kyj.fx.b.ETScriptHelper.comm.DialogUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.ExcelReader;
 import com.kyj.fx.b.ETScriptHelper.comm.FxUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.IdGenUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.ValueUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.service.XMLUtils;
 import com.kyj.fx.b.ETScriptHelper.grid.AnnotationOptions;
+import com.kyj.fx.b.ETScriptHelper.grid.CodeDVO;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -36,8 +39,16 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.util.Pair;
 
 /**
  * @author KYJ (callakrsos@naver.com)
@@ -52,13 +63,90 @@ public class EquipmentParameterComposite extends AbstractManagementBorderPane<Ev
 	private StringProperty equipmentClassGuid = new SimpleStringProperty();
 	private StringProperty equipmentEventGuid = new SimpleStringProperty();
 
+	private StringProperty equipmentClassName = new SimpleStringProperty();
+	private StringProperty equipmentEventName = new SimpleStringProperty();
+
+	@FXML
+	private TextField txtParameterName, txtDefaultValue, txtSequence;
+
+	@FXML
+	private ComboBox<CodeDVO> cbDataType, cbType;
+
+	@FXML
+	private CheckBox cbRequired, cbRepectable;
+
+	@FXML
+	private TextArea txtDescription;
+
 	public EquipmentParameterComposite() {
 		super(EquipmentParameterComposite.class.getResource("EquipmentParameterView.fxml"));
 	}
 
 	@FXML
+	public void btnNewParamterOnAction() {
+
+		String parameterName = txtParameterName.getText();
+		if (ValueUtil.isEmpty(parameterName)) {
+			DialogUtil.showMessageDialog("parameter name is empty.");
+			return;
+		}
+
+		try {
+			Integer.parseInt(txtSequence.getText(), 10);
+		} catch (NumberFormatException e) {
+			DialogUtil.showMessageDialog("sequence is not int.");
+			return;
+		}
+
+		EventParameterDVO e = new EventParameterDVO();
+		e.setName(parameterName);
+		e.setDescription(txtDescription.getText());
+		e.setDataType(cbDataType.getSelectionModel().getSelectedItem().getCode());
+		e.setRecordType(cbType.getSelectionModel().getSelectedItem().getCode());
+		e.setRequired(cbRequired.isSelected() ? "1" : "0");
+		e.setIsRepeatable(cbRepectable.isSelected() ? "1" : "0");
+		e.setSequence(txtSequence.getText());
+		e.setDefaultValue(txtDefaultValue.getText());
+
+		e.setEquipmentClassName(equipmentClassName.get());
+		e.setEquipmentEventName(equipmentEventName.get());
+
+		this.tvParameter.getItems().add(e);
+
+	}
+
+	@FXML
 	public void initialize() {
-		FxUtil.installCommonsTableView(EventParameterDVO.class, tvParameter, new AnnotationOptions<EventParameterDVO>(EventParameterDVO.class));
+		CodeDVO[] dataTypes = new CodeDVO[] { new CodeDVO("3", "String") };
+		cbDataType.getItems().addAll(dataTypes);
+		CodeDVO[] eventTypes = new CodeDVO[] { new CodeDVO("0", "On Start"), new CodeDVO("1", "On Update"),
+				new CodeDVO("2", "On Complete") };
+		cbType.getItems().addAll(eventTypes);
+
+		cbDataType.getSelectionModel().selectFirst();
+		cbType.getSelectionModel().selectFirst();
+		AnnotationOptions<EventParameterDVO> option = new AnnotationOptions<EventParameterDVO>(EventParameterDVO.class) {
+
+			@Override
+			public boolean editable(String columnName) {
+				if ("name".equals(columnName) || 
+						"sequence".equals(columnName)||
+						"description".equals(columnName)||
+						"dataType".equals(columnName)||
+						"recordType".equals(columnName)||
+						"required".equals(columnName)||
+						"isRepeatable".equals(columnName)||
+						"defaultValue".equals(columnName)
+						)
+					return true;
+
+				return false;
+			}
+
+		};
+		// tvParameter.setEditable(true);
+
+		FxUtil.installCommonsTableView(EventParameterDVO.class, tvParameter, option);
 		this.equipmentEventGuid.addListener(new ChangeListener<String>() {
 
 			@Override
@@ -80,14 +168,43 @@ public class EquipmentParameterComposite extends AbstractManagementBorderPane<Ev
 					List<EventParameterDVO> populateXmlElement = XMLUtils.populateXmlElement(doc, "//Event/ListParameters/Parameter",
 							EventParameterDVO.class, new CamelCaseDataHandler(eqname, eventName));
 
+					equipmentClassName.set(eqname);
+					equipmentEventName.set(eventName);
+
 					tvParameter.getItems().setAll(populateXmlElement);
-					tvParameter.getItems().sort((a,b)->{
-						return Integer.compare(a.getSequence(), b.getSequence());
+					tvParameter.getItems().sort((a, b) -> {
+						return Integer.compare(Integer.parseInt(a.getSequence(), 10), Integer.parseInt(b.getSequence(), 10));
 					});
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
+		});
+
+		MenuItem miTbParameterDelete = new MenuItem("Delete");
+		miTbParameterDelete.setOnAction(this::miTbParameterDeleteOnAction);
+
+		
+		tvParameter.setContextMenu(new ContextMenu(miTbParameterDelete));
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 19.
+	 * @param ae
+	 */
+	public void miTbParameterDeleteOnAction(ActionEvent ae) {
+		EventParameterDVO selectedItem = this.tvParameter.getSelectionModel().getSelectedItem();
+		if (selectedItem == null)
+			return;
+		String name = selectedItem.getName();
+		Optional<Pair<String, String>> showYesOrNoDialog = DialogUtil.showYesOrNoDialog("Delete", "선택하신 " + name + " 을 삭제하시겠습니까?");
+		showYesOrNoDialog.ifPresent(p -> {
+
+			if ("Y".equals(p.getValue())) {
+				this.tvParameter.getItems().remove(selectedItem);
+			}
+
 		});
 	}
 
@@ -122,11 +239,12 @@ public class EquipmentParameterComposite extends AbstractManagementBorderPane<Ev
 				addElement.addAttribute("Required", d.getRequired());
 				addElement.addAttribute("IsRepeatable", d.getIsRepeatable());
 				addElement.addAttribute("DefaultValue", d.getDefaultValue());
-				addElement.addAttribute("Sequence", d.getSequence()+"");
+				addElement.addAttribute("Sequence", d.getSequence() + "");
 			}
 
 			String token = createTokenEx(this.esigInfo.get());
-			String req = StringEscapeUtils.escapeXml(doc.getRootElement().asXML());
+
+			String req = StringEscapeUtils.escapeXml10(doc.getRootElement().asXML());
 			LOGGER.debug(req);
 			// StringEscapeUtils.escapeXml(reqXml)
 			Document update = s.update(token, req);

@@ -66,7 +66,7 @@ public class BaseColumnMapper<T> implements IColumnMapper<T> {
 		// 컬럼의 속성을 정의
 		setColumnProperty(tableColumn, columnName, options);
 		tableColumn.setResizable(true);
-		tableColumn.setEditable(false);
+		tableColumn.setEditable(options.editable(columnName));
 
 		
 		

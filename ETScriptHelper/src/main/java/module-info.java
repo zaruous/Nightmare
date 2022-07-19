@@ -46,6 +46,7 @@ open module ETHelper {
 	requires java.xml.bind;
 	requires java.xml;
 	requires com.zaxxer.hikari;
+	requires org.apache.commons.text;
 	
 	
 	exports com.kyj.fx.b.ETScriptHelper;

@@ -27,5 +27,7 @@ class XMLUtilsTest2 {
 		rootElement.remove(rootElement.getNamespace());
 		System.out.println(rootElement.asXML());
 	}
-
+	
+	
+	
 }

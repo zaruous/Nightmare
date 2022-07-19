@@ -47,7 +47,7 @@ public class CamelCaseDataHandler implements XMLUtils.XmlDataHander<EventParamet
 			instance.setDefaultValue(nodeValue);
 			break;
 		case "Sequence":
-			instance.setSequence(Integer.parseInt(nodeValue, 10));
+			instance.setSequence(/*Integer.parseInt(nodeValue, 10)*/ nodeValue);
 			break;
 		case "Description":
 			instance.setDescription(nodeValue);

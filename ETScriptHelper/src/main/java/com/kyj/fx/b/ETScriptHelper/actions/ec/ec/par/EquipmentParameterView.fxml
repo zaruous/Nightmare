@@ -1,11 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
-
-<fx:root prefHeight="651.0" prefWidth="887.0" type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17">
+<fx:root prefHeight="651.0" prefWidth="887.0" type="BorderPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <TableView fx:id="tvParameter" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <SplitPane dividerPositions="0.6718027734976888" orientation="VERTICAL" BorderPane.alignment="CENTER">
+         <items>
+            <TableView fx:id="tvParameter" editable="true" prefHeight="200.0" prefWidth="200.0" />
+            <BorderPane prefHeight="262.0" prefWidth="885.0" SplitPane.resizableWithParent="false">
+               <center>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="436.0" minWidth="10.0" percentWidth="25.0" prefWidth="159.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="436.0" minWidth="10.0" percentWidth="3.0" prefWidth="159.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="755.0" minWidth="10.0" percentWidth="25.0" prefWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="755.0" minWidth="10.0" percentWidth="3.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="755.0" minWidth="10.0" percentWidth="25.0" prefWidth="284.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="755.0" minWidth="10.0" percentWidth="3.0" prefWidth="284.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="755.0" minWidth="10.0" percentWidth="25.0" prefWidth="499.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints fillHeight="false" maxHeight="96.0" minHeight="10.0" percentHeight="20.0" prefHeight="43.0" vgrow="SOMETIMES" />
+                      <RowConstraints fillHeight="false" maxHeight="184.0" minHeight="10.0" percentHeight="20.0" prefHeight="64.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="239.0" minHeight="10.0" percentHeight="20.0" prefHeight="198.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="239.0" minHeight="10.0" percentHeight="40.0" prefHeight="198.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Name" />
+                        <TextField fx:id="txtParameterName" GridPane.rowIndex="1" />
+                        <Label text="Data Type" GridPane.columnIndex="2" />
+                        <Label text="Default Value" GridPane.columnIndex="4" />
+                        <Label text="Type" GridPane.columnIndex="6" />
+                        <ComboBox fx:id="cbDataType" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cbType" prefWidth="150.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtDefaultValue" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <TextArea fx:id="txtDescription" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="7" GridPane.rowIndex="3" />
+                        <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnSpan="7" GridPane.rowIndex="2">
+                           <children>
+                              <CheckBox fx:id="cbRequired" mnemonicParsing="false" text="Required" />
+                              <CheckBox fx:id="cbRepectable" mnemonicParsing="false" text="Repeatable" />
+                              <Label text="Sequence" />
+                              <TextField fx:id="txtSequence" prefHeight="22.0" prefWidth="110.0" text="0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </GridPane>
+               </center>
+               <top>
+                  <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button fx:id="btnNewParamter" mnemonicParsing="false" onAction="#btnNewParamterOnAction" text="New Parameter" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+               </top>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </BorderPane>
+         </items>
+      </SplitPane>
    </center>
 </fx:root>

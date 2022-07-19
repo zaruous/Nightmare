@@ -6,7 +6,9 @@
  *******************************/
 package com.kyj.fx.b.ETScriptHelper.actions.ec.ec.rule;
 
-import static org.junit.Assert.assertTrue;
+
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -9,8 +9,6 @@ package com.kyj.fx.b.ETScriptHelper.actions.ec.ec.par;
 import com.kyj.fx.b.ETScriptHelper.comm.AbstractDVO;
 import com.kyj.fx.b.ETScriptHelper.grid.ImportantColumn;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -26,6 +24,7 @@ public class EventParameterDVO extends AbstractDVO {
 	private StringProperty equipmentEventName = new SimpleStringProperty();
 	@ImportantColumn
 	private StringProperty guid = new SimpleStringProperty();
+	
 	@ImportantColumn
 	private StringProperty name = new SimpleStringProperty();
 	private StringProperty description = new SimpleStringProperty();
@@ -34,7 +33,7 @@ public class EventParameterDVO extends AbstractDVO {
 	private StringProperty required = new SimpleStringProperty();
 	private StringProperty isRepeatable = new SimpleStringProperty();
 	private StringProperty defaultValue = new SimpleStringProperty();
-	private IntegerProperty sequence = new SimpleIntegerProperty();
+	private StringProperty sequence = new SimpleStringProperty();
 
 	public final StringProperty guidProperty() {
 		return this.guid;
@@ -156,15 +155,15 @@ public class EventParameterDVO extends AbstractDVO {
 		this.equipmentEventNameProperty().set(equipmentEventName);
 	}
 
-	public final IntegerProperty sequenceProperty() {
+	public final StringProperty sequenceProperty() {
 		return this.sequence;
 	}
 
-	public final int getSequence() {
+	public final String getSequence() {
 		return this.sequenceProperty().get();
 	}
 
-	public final void setSequence(final int sequence) {
+	public final void setSequence(final String sequence) {
 		this.sequenceProperty().set(sequence);
 	}
 
