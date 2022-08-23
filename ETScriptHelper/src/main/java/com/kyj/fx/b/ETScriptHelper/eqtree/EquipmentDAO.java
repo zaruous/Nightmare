@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.kyj.fx.b.ETScriptHelper.EquipmentDVO;
@@ -32,6 +33,47 @@ public class EquipmentDAO {
 
 	public EquipmentDAO() throws Exception {
 		super();
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 22. 
+	 * @param hashMap
+	 * @param rowMapper
+	 * @return
+	 * @throws Exception
+	 */
+	public List<EtConfigurationTreeItem> listWorkflowInstance(Map<String, Object> hashMap,
+			RowMapper<EtConfigurationTreeItem> rowMapper) throws Exception {
+		EquipmentDQM d = new EquipmentDQM();
+		d.setDataSource(getDataSource());
+		return d.listWorkflowInstance(hashMap, rowMapper);
+	}
+	
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 21.
+	 * @param hashMap
+	 * @return
+	 * @throws Exception
+	 */
+	public List<WorkflowDVO> listWorkflow(Map<String, Object> hashMap) throws Exception {
+		EquipmentDQM d = new EquipmentDQM();
+		d.setDataSource(getDataSource());
+		return d.listWorkflow(hashMap);
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 21.
+	 * @param hashMap
+	 * @return
+	 * @throws Exception
+	 */
+	public <T> List<T> listWorkflow(Map<String, Object> hashMap, RowMapper<T> mapper) throws Exception {
+		EquipmentDQM d = new EquipmentDQM();
+		d.setDataSource(getDataSource());
+		return d.listWorkflow(hashMap, mapper);
 	}
 
 	/**
@@ -191,6 +233,52 @@ public class EquipmentDAO {
 					return d;
 				}
 			});
+		}
+
+		/**
+		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성일 : 2022. 7. 21.
+		 * @param hashMap
+		 * @return
+		 */
+		
+
+		public List<WorkflowDVO> listWorkflow(Map<String, Object> hashMap) {
+			StringBuffer sb = new StringBuffer();
+			sb.append("\n");
+			sb.append("\n");
+			sb.append("select \n");
+			sb.append("a. WorkflowGuid\n");
+			sb.append(", a.name\n");
+			sb.append(", a.description\n");
+			sb.append(", a.documentName\n");
+			sb.append("from DMI_ET.dbo.ET_WorkFlows(nolock) a\n");
+			sb.append("where 1=1 \n");
+			sb.append("and EquipmentClassGuid = :equipmentClassGuid\n");
+			sb.toString();
+
+			return query(sb.toString(), hashMap, new BeanPropertyRowMapper<>(WorkflowDVO.class));
+		}
+		
+		/**
+		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성일 : 2022. 7. 21. 
+		 * @param <T>
+		 * @param hashMap
+		 * @param mapper
+		 * @return
+		 */
+		public <T> List<T>   listWorkflow(Map<String, Object> hashMap, RowMapper<T> mapper) {
+			StringBuffer sb  = new StringBuffer();
+			sb.append("select \n");
+			sb.append("a. WorkflowGuid\n");
+			sb.append(", a.name\n");
+			sb.append(", a.description\n");
+			sb.append(", a.documentName\n");
+			sb.append("from DMI_ET.dbo.ET_WorkFlows(nolock) a\n");
+			sb.append("where 1=1 \n");
+			sb.append("and EquipmentClassGuid = :equipmentClassGuid\n");
+			return query(sb.toString(), hashMap, mapper);
 		}
 
 		/**
@@ -473,7 +561,48 @@ public class EquipmentDAO {
 				}
 			});
 		}
-
+		
+		/**
+		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성일 : 2022. 7. 22. 
+		 * @param <T>
+		 * @param hashMap
+		 * @param rowMapper
+		 * @return
+		 */
+		public <T> List<T>  listWorkflowInstance(Map<String, Object> hashMap, RowMapper<T> rowMapper) {
+			StringBuffer sb = new StringBuffer();
+			sb.append("select top 300 * from dmi_et.dbo.ET_WorkFlowInstance a (nolock)\n");
+			sb.append("where 1=1\n");
+			sb.append("and a.EquipmentGUID = :equipmentGuid\n");
+			sb.append("and a.WorkFlowGUID = :workflowId\n");
+			sb.append("order by a.StartDate desc \n");
+			
+			return query(sb.toString(), hashMap, rowMapper );
+		}
+		
+		/**
+		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성일 : 2022. 7. 22. 
+		 * @param hashMap
+		 * @return
+		 */
+		public List<WorkflowInstanceDVO>  listWorkflowInstance(Map<String, Object> hashMap) {
+			StringBuffer sb = new StringBuffer();
+			sb.append("\n");
+			sb.append("\n");
+			sb.append("\n");
+			sb.append("select * from dmi_et.dbo.ET_WorkFlowInstance a (nolock)\n");
+			sb.append("where 1=1\n");
+			sb.append("and a.EquipmentClassGUID = :equipmentGuid\n");
+			sb.append("and a.WorkFlowGUID = :workflowId\n");
+			
+			return query(sb.toString(), hashMap, new BeanPropertyRowMapper<WorkflowInstanceDVO>(WorkflowInstanceDVO.class) );
+		}
 	}
+
+
+
+	
 
 }

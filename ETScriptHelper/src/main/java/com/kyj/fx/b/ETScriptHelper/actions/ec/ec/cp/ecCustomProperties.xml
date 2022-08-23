@@ -1,0 +1,43 @@
+<Template serviceId="EtCustomProperties" action="EtCustomProperties">
+	<Url>
+		<Pattern>/Service</Pattern>
+		<Params>
+			<Param name="equipmentClassGuid" dataType="java.lang.String" defaultValue=""/>
+		</Params>
+	</Url>
+	
+	<Sql>
+		<![CDATA[
+			SELECT
+		   cp.CustomPropertyGUID as customPropertyGUID
+		   ,cp.Name  as name
+		   ,cp.DataType as dataType
+		   ,cp.DefaultValue as defaultValue
+		   ,cp.Description   as description
+		FROM
+		    DMI_ET.dbo.ET_EquipmentClasses ec (nolock) 
+		INNER JOIN
+		    DMI_ET.dbo.ET_CustomProperties cp (nolock) 
+		        ON ec.EquipmentClassGuid = cp.EquipmentClassGuid
+		WHERE
+		    1=1 
+		and cp.equipmentClassGuid = :equipmentClassGuid
+		order by cp.Name;
+		]]>
+	</Sql>
+	
+	<!--Sql Result Handle. -->
+	<!-- 파라미터로 SQL 처리결과로 resultMap이 제공됨. -->
+	<Code language="groovy">
+		<![CDATA[
+			return resultMap;
+		]]>
+	</Code>
+	<Description>
+		<![CDATA[
+			ET 커스텀 프로퍼티 조히
+		]]>
+	</Description>
+	
+	<Version>1.0.0</Version>
+</Template>

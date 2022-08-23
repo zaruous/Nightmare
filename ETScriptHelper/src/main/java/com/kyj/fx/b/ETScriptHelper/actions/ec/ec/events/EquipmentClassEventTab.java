@@ -8,6 +8,7 @@ package com.kyj.fx.b.ETScriptHelper.actions.ec.ec.events;
 
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.AbstractEtTab;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnEquipmentClassEventScript;
+import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnLoadEquipment;
 
 /**
  * @author KYJ (callakrsos@naver.com)
@@ -44,4 +45,5 @@ public class EquipmentClassEventTab extends AbstractEtTab implements OnEquipment
 		equipmentClassEventComposite.reload();
 	}
 
+	
 }

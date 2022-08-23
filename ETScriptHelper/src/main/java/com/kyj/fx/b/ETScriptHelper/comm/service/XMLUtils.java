@@ -14,18 +14,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
 
-
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.dom4j.Attribute;
-
-
-
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.dom4j.tree.DefaultElement;
+import org.xml.sax.SAXException;
 
 
 //import org.xml.sax.SAXException;
@@ -94,7 +92,6 @@ public class XMLUtils {
 	 * @throws SecurityException
 	 * @throws NoSuchMethodException
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> List<T> populateXmlElement(Document doc, String xpath, Class<T> instanceClass, XmlDataHander<T> handler)
 			throws Exception {
 		List<Node> elements = doc.selectNodes(xpath);
@@ -146,6 +143,7 @@ public class XMLUtils {
 	 * @return
 	 */
 	public static String escape(String str) {
-		return StringEscapeUtils.escapeXml(str);
+//		StringEscapeUtils.escapeXml11(str)
+		return StringEscapeUtils.escapeXml11(str);
 	}
 }

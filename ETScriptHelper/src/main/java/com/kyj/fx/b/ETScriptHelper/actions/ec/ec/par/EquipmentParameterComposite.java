@@ -117,7 +117,7 @@ public class EquipmentParameterComposite extends AbstractManagementBorderPane<Ev
 
 	@FXML
 	public void initialize() {
-		CodeDVO[] dataTypes = new CodeDVO[] { new CodeDVO("3", "String") };
+		CodeDVO[] dataTypes = new CodeDVO[] {new CodeDVO("0", "Boolean") ,  new CodeDVO("1", "Date/Time"),   new CodeDVO("2", "Number"),  new CodeDVO("3", "String") };
 		cbDataType.getItems().addAll(dataTypes);
 		CodeDVO[] eventTypes = new CodeDVO[] { new CodeDVO("0", "On Start"), new CodeDVO("1", "On Update"),
 				new CodeDVO("2", "On Complete") };
@@ -231,7 +231,8 @@ public class EquipmentParameterComposite extends AbstractManagementBorderPane<Ev
 
 			for (EventParameterDVO d : items) {
 				Element addElement = selectSingleNode.addElement("Parameter");
-				addElement.addAttribute("GUID", IdGenUtil.randomGuid().toUpperCase());
+				
+				addElement.addAttribute("GUID",    ValueUtil.isEmpty(d.getGuid()) ? IdGenUtil.randomGuid().toUpperCase() : d.getGuid() );
 				addElement.addAttribute("Name", d.getName());
 				addElement.addAttribute("Description", d.getDescription());
 				addElement.addAttribute("DataType", d.getDataType());
@@ -309,6 +310,16 @@ public class EquipmentParameterComposite extends AbstractManagementBorderPane<Ev
 	public void onLoadEquipmentClassEvent(String equipmentClassGuid, String eventGuid) {
 		this.equipmentClassGuid.set(equipmentClassGuid);
 		this.equipmentEventGuid.set(eventGuid);
+		
+		
+		txtParameterName.setText("");
+		txtDefaultValue.setText("");
+		txtSequence.setText("0");
+		
+		cbRequired.setSelected(false);
+		cbRepectable.setSelected(false);
+		
+		txtDescription.setText("");		
 	}
 
 }

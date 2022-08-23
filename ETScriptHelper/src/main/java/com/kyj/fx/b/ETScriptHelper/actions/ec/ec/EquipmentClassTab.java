@@ -85,4 +85,9 @@ public class EquipmentClassTab extends AbstractEtTab implements OnLoadEquipmentC
 		equipmentClassComposite.reload();
 	}
 
+	@Override
+	public boolean enableReloadButton() {
+		return true;
+	}
+
 }

@@ -21,6 +21,7 @@ import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnExcelTableViewList;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnCommitService;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnLoadEquipment;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnLoadEquipmentClass;
+import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnReload;
 import com.kyj.fx.b.ETScriptHelper.comm.DialogUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.ExcelReader;
 import com.kyj.fx.b.ETScriptHelper.comm.FxUtil;
@@ -47,7 +48,7 @@ import javafx.util.Callback;
  *
  */
 public class EquipmentEventStateComposite extends BorderPane
-		implements OnLoadEquipmentClass, OnLoadEquipment, OnExcelTableViewList, OnCommitService  {
+		implements OnLoadEquipmentClass, OnLoadEquipment, OnExcelTableViewList, OnCommitService , OnReload {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(EquipmentEventStateComposite.class);
 
@@ -226,6 +227,15 @@ public class EquipmentEventStateComposite extends BorderPane
 	@Override
 	public boolean exportExcel(File out) {
 		return OnExcelTableViewList.super.exportExcel(out);
+	}
+
+	@Override
+	public void reload() {
+		
+		String string = equipmentClassGuid.get();
+		String string2 = equipmentGuid.get();
+		equipmentClassGuid.set(null);equipmentGuid.set(null);
+		equipmentClassGuid.set(string);equipmentGuid.set(string2);
 	}
 
 }

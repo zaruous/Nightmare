@@ -6,6 +6,9 @@
  *******************************/
 package com.kyj.fx.b.ETScriptHelper.eqtree;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -19,6 +22,36 @@ public class EtConfigurationTreeDVO {
 
 	private StringProperty id = new SimpleStringProperty();
 	private StringProperty displayText = new SimpleStringProperty();
+	private Map<String, Object> properties = new HashMap<>();
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 22.
+	 * @param key
+	 * @param value
+	 */
+	public void addProperty(String key, Object value) {
+		this.properties.put(key, value);
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 22.
+	 * @return
+	 */
+	public Map<String, Object> getProperties() {
+		return properties;
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 22.
+	 * @param properties
+	 */
+	public void setProperties(Map<String, Object> properties) {
+		this.properties = properties;
+	}
+
 	/**
 	 * @param id
 	 * @param displayText

@@ -7,6 +7,8 @@
 package com.kyj.fx.b.ETScriptHelper.comm;
 
 import java.io.StringWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,7 @@ import javax.sql.DataSource;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -66,6 +69,26 @@ public class AbstractDAO {
 
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 28. 
+	 * @param query
+	 * @param paramMap
+	 * @return
+	 */
+	public String queryScala(String query, Map<String, Object> paramMap) {
+		return queryScala(query, paramMap, new ResultSetExtractor<String>() {
+
+			@Override
+			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
+				if (rs.next()) {
+					return rs.getString(1);
+				}
+				return null;
+			}
+		});
+	}
+	
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
 	 * @작성일 : 2019. 2. 14.
 	 * @param query
 	 * @param paramMap
@@ -85,6 +108,9 @@ public class AbstractDAO {
 		return getNamedJdbcTemplate().query(_query, paramMap, mapper);
 	}
 
+
+	
+	
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)
 	 * @작성일 : 2020. 12. 16.

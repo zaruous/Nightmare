@@ -25,7 +25,6 @@ public class EventParameterDVO extends AbstractDVO {
 	@ImportantColumn
 	private StringProperty guid = new SimpleStringProperty();
 	
-	@ImportantColumn
 	private StringProperty name = new SimpleStringProperty();
 	private StringProperty description = new SimpleStringProperty();
 	private StringProperty dataType = new SimpleStringProperty();

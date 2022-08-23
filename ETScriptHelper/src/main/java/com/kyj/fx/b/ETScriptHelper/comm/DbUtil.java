@@ -117,8 +117,8 @@ public class DbUtil {
 				configuration.setPassword(pass);
 				configuration.setAutoCommit(false);
 				configuration.setMaximumPoolSize(2);
-				configuration.setConnectionTimeout(3000);
-				configuration.setValidationTimeout(3000);
+				configuration.setConnectionTimeout(30000);
+				configuration.setValidationTimeout(30000);
 				configuration.setConnectionInitSql("select 1 ");
 				configuration.setConnectionTestQuery("select 1");
 				

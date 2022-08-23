@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts.EquipmentClassEventScri
 import com.kyj.fx.b.ETScriptHelper.actions.ec.eq.cp.EquipmentCpTab;
 import com.kyj.fx.b.ETScriptHelper.actions.ec.eq.states.EquipmentEventStateTab;
 import com.kyj.fx.b.ETScriptHelper.actions.support.ETScriptHelperComposite;
+import com.kyj.fx.b.ETScriptHelper.actions.wf.ETWorkflowState;
 import com.kyj.fx.b.ETScriptHelper.comm.DialogUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.ExcelFileChooserHandler;
 import com.kyj.fx.b.ETScriptHelper.comm.FileUtil;
@@ -94,6 +96,7 @@ public class ETFrameComposite extends BorderPane {
 	EquipmentClassGroupTab tabEquipmentClassGroupTab;
 	EquipmentParameterTab tabEquipmentParameterTab;
 	EquipmentCpTab tabEquipmentCpTab;
+
 	// EquipmentClassTab _tabGeneral;
 	// EquipmentClassEventStateTab _tabEquipmentEventStates;
 
@@ -125,21 +128,28 @@ public class ETFrameComposite extends BorderPane {
 
 	private EtConfigurationTreeView tvEtConfigurationTree;
 
-	
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 22.
+	 * @return
+	 */
+	public EtConfigurationTreeView getTvEtConfigurationTree() {
+		return tvEtConfigurationTree;
+	}
 
 	@FXML
 	public void initialize() {
 		this.tabGeneral = new EquipmentClassTab();
+		this.tabEquipmentCpTab = new EquipmentCpTab();
 		this.tabEquipmentEventStates = new EquipmentEventStateTab();
 		this.tabEquipmentClassEventTab = new EquipmentClassEventTab();
 		this.tabEquipmentClassEventScriptTab = new EquipmentClassEventScriptTab();
 		this.tabEquipmentClassRuleTab = new EquipmentClassRuleTab();
 		this.tabEquipmentClassGroupTab = new EquipmentClassGroupTab();
 		this.tabEquipmentParameterTab = new EquipmentParameterTab();
-		tabEquipmentCpTab = new EquipmentCpTab();
 
 		tpEtManagement.getTabs().addAll(this.tabGeneral, tabEquipmentCpTab, this.tabEquipmentEventStates, this.tabEquipmentClassEventTab,
-				this.tabEquipmentClassEventScriptTab, tabEquipmentClassRuleTab, this.tabEquipmentClassGroupTab , tabEquipmentParameterTab);
+				this.tabEquipmentClassEventScriptTab, tabEquipmentClassRuleTab, this.tabEquipmentClassGroupTab, tabEquipmentParameterTab);
 
 		String externalForm = ETFrameComposite.class.getResource("/images/excel16.png").toExternalForm();
 		btnExportExcel.setGraphic(new ImageView(new Image(externalForm, 15.0, 15.0, false, false)));
@@ -150,12 +160,6 @@ public class ETFrameComposite extends BorderPane {
 		this.tvEtConfigurationTree = new EtConfigurationTreeView();
 		tvEtConfigurationTree.addEventHandler(MouseEvent.MOUSE_CLICKED, this::tvEtConfigurationTreeOnClick);
 
-		// tvEtConfigurationTree.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-		// @Override
-		// public void handle(ContextMenuEvent ev) {
-		//
-		// }
-		// });
 		apEtTree.getChildren().add(tvEtConfigurationTree);
 		AnchorPane.setLeftAnchor(tvEtConfigurationTree, 5.0);
 		AnchorPane.setTopAnchor(tvEtConfigurationTree, 5.0);
@@ -269,7 +273,7 @@ public class ETFrameComposite extends BorderPane {
 	 * @param selectedItem
 	 * @return
 	 */
-	private TreeItem<EtConfigurationTreeDVO> findEquipmentClass(TreeItem<EtConfigurationTreeDVO> selectedItem) {
+	public TreeItem<EtConfigurationTreeDVO> findEquipmentClass(TreeItem<EtConfigurationTreeDVO> selectedItem) {
 
 		EtConfigurationTreeItem _selectedItem = (EtConfigurationTreeItem) selectedItem;
 		if (_selectedItem.getAction() == Action.EC)
@@ -288,7 +292,7 @@ public class ETFrameComposite extends BorderPane {
 	 * @param selectedItem
 	 * @return
 	 */
-	private TreeItem<EtConfigurationTreeDVO> findEquipment(TreeItem<EtConfigurationTreeDVO> selectedItem) {
+	public TreeItem<EtConfigurationTreeDVO> findEquipment(TreeItem<EtConfigurationTreeDVO> selectedItem) {
 
 		EtConfigurationTreeItem _selectedItem = (EtConfigurationTreeItem) selectedItem;
 		if (_selectedItem.getAction() == Action.EC_EQ_ITEM)
@@ -343,8 +347,8 @@ public class ETFrameComposite extends BorderPane {
 				eventGuid = source.getValue().getId();
 			}
 
-			LOGGER.debug("\nequipmentClassGuid : {}\nequipmentGuid : {}\nequipmentName : {} ", equipmentClassGuid, equipmentGuid,
-					equipmentName);
+			LOGGER.debug("\nequipmentClassGuid : {}\nequipmentGuid : {}\nequipmentName : {}\nAction: {}", equipmentClassGuid, equipmentGuid,
+					equipmentName, source.getAction());
 
 			// tabGeneral.onLoadEquipmentClass("");
 			// tabEquipmentEventStates.onLoadEquipment("");
@@ -357,7 +361,8 @@ public class ETFrameComposite extends BorderPane {
 				List<EtConfigurationTreeItem> collect = selectedItem.getChildren().stream()
 						.filter(chi -> chi instanceof EtConfigurationTreeItem).map(chi -> ((EtConfigurationTreeItem) chi)).filter(chi -> {
 							if (chi instanceof EtConfigurationTreeItem) {
-								if (Action.EC_EQ == chi.getAction() || Action.EC_EVENTS == chi.getAction()) {
+								if (Action.EC_EQ == chi.getAction() || Action.EC_EVENTS == chi.getAction()
+										|| Action.EC_WORKFLOW == chi.getAction()) {
 									return true;
 								}
 							}
@@ -368,7 +373,6 @@ public class ETFrameComposite extends BorderPane {
 					@Override
 					public void accept(EtConfigurationTreeItem chi) {
 						String id = source.getValue().getId();
-						// Platform.runLater(() -> {});
 
 						if (Action.EC_EQ == chi.getAction()) {
 							List<EtConfigurationTreeItem> listEquipments = listEquipments(id);
@@ -377,10 +381,13 @@ public class ETFrameComposite extends BorderPane {
 						} else if (Action.EC_EVENTS == chi.getAction()) {
 							List<EtConfigurationTreeItem> listEvents = listEvents(id);
 							chi.getChildren().setAll(listEvents);
-							// chi.setExpanded(true);
+						} else if (Action.EC_WORKFLOW == chi.getAction()) {
+							List<EtConfigurationTreeItem> listWorkflows = listWorkflows(id);
+							chi.getChildren().setAll(listWorkflows);
 						}
 
 					}
+
 				});
 				tpEtManagement.getSelectionModel().select(tabGeneral);
 				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
@@ -404,27 +411,43 @@ public class ETFrameComposite extends BorderPane {
 				selectedItem.getChildren().setAll(listEvents);
 				this.tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
 				tabGeneral.setDisable(false);
-				
-			
-				
+
 				break;
 			case EC_EVENTS_ITEM:
-				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
-				tabGeneral.setDisable(false);
-
-		
+				this.tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
+				this.tabGeneral.setDisable(false);
 
 				this.tabEquipmentClassEventScriptTab.onLoadEquipmentClassEvent(equipmentClassGuid, eventGuid);
 				this.tabEquipmentClassEventScriptTab.setDisable(false);
+
+				this.tabEquipmentClassEventTab.onEquipmenbtClassEventScript(equipmentClassGuid, eventGuid);
 				this.tabEquipmentClassEventTab.setDisable(false);
-				
+
 				this.tabEquipmentParameterTab.onLoadEquipmentClassEvent(equipmentClassGuid, eventGuid);
-				tabEquipmentParameterTab.setDisable(false);
-				
+				this.tabEquipmentParameterTab.setDisable(false);
+
+				// tpEtManagement.getSelectionModel().select(tabEquipmentClassEventTab);
+
 				break;
 			case EC_WORKFLOW:
 				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
 				tabGeneral.setDisable(false);
+				break;
+			case EC_WORKFLOW_CLASS:
+
+				break;
+			case EQ_WORKFLOW:
+
+				// if(selectedItem.getChildren().isEmpty())
+				selectedItem.getChildren().setAll(listEqWorkflows(equipmentClassGuid));
+
+				break;
+			case EQ_WORKFLOW_CLASS:
+				List<EtConfigurationTreeItem> listWorkflowInstance = listWorkflowInstance(equipmentGuid, selectedItem.getValue().getId());
+				selectedItem.getChildren().setAll(listWorkflowInstance);
+				return;
+			case EQ_WORKFLOW_INSTANCE:
+
 				break;
 			case EC_RULE:
 				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
@@ -450,30 +473,28 @@ public class ETFrameComposite extends BorderPane {
 				tabGeneral.setDisable(false);
 				tabEquipmentCpTab.setDisable(false);
 				tabEquipmentEventStates.setDisable(false);
-				
+
 				// listEquipments.add(new )
 				selectedItem.getChildren().setAll(listEquipments);
 				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
-				
+
 				tpEtManagement.getSelectionModel().select(tabGeneral);
 				break;
 			case EC_EQ_ITEM:
-				
-				
-				
+
 				tabGeneral.setDisable(false);
 				tabEquipmentCpTab.setDisable(false);
 				tabEquipmentEventStates.setDisable(false);
 				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
 				tabEquipmentCpTab.onLoadEquipment(equipmentGuid);
-				
+
 				break;
 			case EC_EQ_EVENT_STATES:
 
-//				tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
+				// tabGeneral.onLoadEquipmentClass(equipmentClassGuid);
 				tabGeneral.setDisable(false);
 				tabEquipmentCpTab.setDisable(false);
-				
+
 				tabEquipmentEventStates.onLoadEquipment(equipmentGuid);
 				tabEquipmentEventStates.setDisable(false);
 				tpEtManagement.getSelectionModel().select(tabEquipmentEventStates);
@@ -484,17 +505,125 @@ public class ETFrameComposite extends BorderPane {
 				selectedItem.getChildren().setAll(listEquipmentEvents);
 				break;
 			case EQ_CUSTOM_PROP:
-				
+
 				tabGeneral.setDisable(false);
 				tabEquipmentCpTab.setDisable(false);
 				tabEquipmentEventStates.setDisable(false);
-				
+
 				tabEquipmentCpTab.onLoadEquipment(equipmentGuid);
 				tpEtManagement.getSelectionModel().select(tabEquipmentCpTab);
 				break;
 			}
 		}
 
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 22.
+	 * @param equipmentClassGuid
+	 * @return
+	 */
+	private List<EtConfigurationTreeItem> listEqWorkflows(String equipmentClassGuid) {
+		return listWorkflows(equipmentClassGuid, v -> {
+			v.setAction(Action.EQ_WORKFLOW_CLASS);
+			return v;
+		});
+	}
+
+	private List<EtConfigurationTreeItem> listWorkflowInstance(String equipmentGuid, String workflowId) {
+
+		if (ValueUtil.isEmpty(equipmentGuid))
+			return Collections.emptyList();
+
+		try {
+			EquipmentDAO dao = new EquipmentDAO();
+			HashMap<String, Object> hashMap = new HashMap<>();
+			hashMap.put("equipmentGuid", equipmentGuid);
+			hashMap.put("workflowId", workflowId);
+			return dao.listWorkflowInstance(hashMap, new RowMapper<EtConfigurationTreeItem>() {
+
+				URL url = ETFrameCompositeInitializer.class.getResource("/images/WorkflowInstance.png");
+				Image img = new Image(url.toExternalForm(), 15, 15, false, false);
+
+				@Override
+				public EtConfigurationTreeItem mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+					String orderNumber = rs.getString("OrderNumber");
+					EtConfigurationTreeItem etConfigurationTreeItem = new EtConfigurationTreeItem(new ImageView(img),
+							rs.getString("WorkflowGuid"), orderNumber, Action.EQ_WORKFLOW_INSTANCE);
+
+					EtConfigurationTreeDVO value = etConfigurationTreeItem.getValue();
+
+					String stateNm = "";
+					int columnCount = rs.getMetaData().getColumnCount();
+					for (int i = 1; i < columnCount; i++) {
+						var colname = rs.getMetaData().getColumnName(i);
+						var v = rs.getObject(colname);
+						value.addProperty(colname, v);
+
+						if ("Status".equals(colname)) {
+							value.addProperty("StatusNm", stateNm = ETWorkflowState.getText(Integer.parseInt(v.toString(), 10)));
+						}
+					}
+					
+					
+					value.setDisplayText(String.format("%s(%s)", orderNumber, stateNm));
+					
+
+					// value.setProperties(hashMap);
+
+					return etConfigurationTreeItem;
+				}
+			});
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 22.
+	 * @param equipmentClassGuid
+	 * @return
+	 */
+	private List<EtConfigurationTreeItem> listWorkflows(String equipmentClassGuid) {
+		return listWorkflows(equipmentClassGuid, v -> v);
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2022. 7. 21.
+	 * @param equipmentClassGuid
+	 * @return
+	 */
+	private List<EtConfigurationTreeItem> listWorkflows(String equipmentClassGuid,
+			Function<EtConfigurationTreeItem, EtConfigurationTreeItem> dataHandler) {
+
+		if (ValueUtil.isEmpty(equipmentClassGuid))
+			return Collections.emptyList();
+
+		try {
+			EquipmentDAO dao = new EquipmentDAO();
+			HashMap<String, Object> hashMap = new HashMap<>();
+			hashMap.put("equipmentClassGuid", equipmentClassGuid);
+			return dao.listWorkflow(hashMap, new RowMapper<EtConfigurationTreeItem>() {
+
+				URL url = ETFrameCompositeInitializer.class.getResource("/images/Workflow.png");
+				Image img = new Image(url.toExternalForm(), 15, 15, false, false);
+
+				@Override
+				public EtConfigurationTreeItem mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+					EtConfigurationTreeItem etConfigurationTreeItem = new EtConfigurationTreeItem(new ImageView(img),
+							rs.getString("WorkflowGuid"), rs.getString("name"), Action.EC_WORKFLOW_CLASS);
+					return dataHandler.apply(etConfigurationTreeItem);
+				}
+			});
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private List<EtConfigurationTreeItem> listEvents(String equipmentClassGuid) {
@@ -601,7 +730,12 @@ public class ETFrameComposite extends BorderPane {
 
 				URL urlCp = ETFrameCompositeInitializer.class.getResource("/images/component.gif");
 				Image imgCpComponent = new Image(urlCp.toExternalForm(), 15, 15, false, false);
-				
+
+				// URL urlWorkflow =
+				// ETFrameCompositeInitializer.class.getResource("/images/Workflow.png");
+				// Image imgWorkflowCpComponent = new
+				// Image(urlWorkflow.toExternalForm(), 15, 15, false, false);
+
 				@Override
 				public EtConfigurationTreeItem mapRow(ResultSet rs, int rowNum) throws SQLException {
 
@@ -611,6 +745,9 @@ public class ETFrameComposite extends BorderPane {
 					EtConfigurationTreeItem trEquipments = new EtConfigurationTreeItem(new ImageView(imgComponent), "2-8", "Equipments",
 							Action.EC_EQ);
 
+					EtConfigurationTreeItem trWorkflow = new EtConfigurationTreeItem(new ImageView(imgComponent), "2-9", "Workflows",
+							Action.EQ_WORKFLOW);
+
 					URL urlComponent = ETFrameCompositeInitializer.class.getResource("/images/component.gif");
 					Image imgComponent = new Image(urlComponent.toExternalForm(), 15, 15, false, false);
 					EtConfigurationTreeItem trEvents = new EtConfigurationTreeItem(new ImageView(imgComponent), "1-8-1", "Events",
@@ -618,13 +755,14 @@ public class ETFrameComposite extends BorderPane {
 
 					etConfigurationTreeItem.getChildren().add(trEquipments);
 					etConfigurationTreeItem.getChildren().add(trEvents);
+					etConfigurationTreeItem.getChildren().add(trWorkflow);
 
 					etConfigurationTreeItem.getChildren()
 							.add(new EtConfigurationTreeItem(new ImageView(img2), "1-9", "States", Action.EC_EQ_EVENT_STATES));
 
-					etConfigurationTreeItem.getChildren()
-						.add(new EtConfigurationTreeItem(new ImageView(imgCpComponent), "1-9", "Custom Properties", Action.EQ_CUSTOM_PROP));
-					
+					etConfigurationTreeItem.getChildren().add(
+							new EtConfigurationTreeItem(new ImageView(imgCpComponent), "1-9", "Custom Properties", Action.EQ_CUSTOM_PROP));
+
 					return etConfigurationTreeItem;
 				}
 			});

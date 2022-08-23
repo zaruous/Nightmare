@@ -42,6 +42,8 @@ public class ResourceLoader {
 
 	public static final String SYNCADE_ROOT_URL = "syncade.root.url";
 	
+	public static final String SYNCADE_RA_ROOT_URL = "syncade.ra.root.url";
+	
 	private static ResourceLoader loader;
 
 	private final String FILE_NAME = "UserConf.properties";

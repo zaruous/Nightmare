@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnExcelTableViewList;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnLoadEquipmentClass;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnReload;
+import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.cp.EquipmentClassCpComposite;
 import com.kyj.fx.b.ETScriptHelper.comm.AbstractDVO;
 import com.kyj.fx.b.ETScriptHelper.comm.DialogUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.ExcelColumnExpression;
@@ -53,6 +54,7 @@ public class EquipmentClassComposite extends BorderPane implements OnLoadEquipme
 	@FXML
 	private TextArea txtEquipmentClassDesc;
 
+	private EquipmentClassCpComposite ecCpComposite;
 	public EquipmentClassComposite() {
 		var loader = FxUtil.newLaoder();
 		loader.setLocation(EquipmentClassComposite.class.getResource("EquipmentClassView.fxml"));
@@ -60,6 +62,13 @@ public class EquipmentClassComposite extends BorderPane implements OnLoadEquipme
 		loader.setController(this);
 		try {
 			loader.load();
+			
+			
+			BorderPane bp = loader.getRoot();
+			ecCpComposite = new EquipmentClassCpComposite();
+			bp.setBottom(ecCpComposite);
+//			ecCpComposite.setPrefHeight(Double.MAX_VALUE);
+			ecCpComposite.setMaxHeight(Double.MAX_VALUE);
 		} catch (IOException e) {
 			LOGGER.error(ValueUtil.toString(e));
 		}
@@ -126,8 +135,10 @@ public class EquipmentClassComposite extends BorderPane implements OnLoadEquipme
 	 */
 	@Override
 	public void onLoadEquipmentClass(String equipmentClassGuid) {
-		this.equipmentClassGuid.set("");
+//		this.equipmentClassGuid.set("");
 		this.equipmentClassGuid.set(equipmentClassGuid);
+		
+		this.ecCpComposite.onLoadEquipmentClass(equipmentClassGuid);
 	}
 
 	/*
@@ -215,6 +226,8 @@ public class EquipmentClassComposite extends BorderPane implements OnLoadEquipme
 		String temp = this.equipmentClassGuid.get();		
 		this.equipmentClassGuid.set(null);
 		this.equipmentClassGuid.set(temp);
+		
+		this.ecCpComposite.reload();
 	}
 
 }

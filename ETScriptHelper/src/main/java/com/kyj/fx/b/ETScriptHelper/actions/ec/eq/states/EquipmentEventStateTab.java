@@ -16,6 +16,7 @@ import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnExcelTableViewList;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnCommitService;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnLoadEquipment;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnLoadEquipmentClass;
+import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnReload;
 
 import javafx.scene.control.TableView;
 
@@ -24,7 +25,7 @@ import javafx.scene.control.TableView;
  *
  */
 public class EquipmentEventStateTab extends AbstractEtTab
-		implements OnLoadEquipmentClass, OnLoadEquipment, OnExcelTableViewList, OnCommitService {
+		implements OnLoadEquipmentClass, OnLoadEquipment, OnExcelTableViewList, OnCommitService, OnReload {
 
 	private EquipmentEventStateComposite c = new EquipmentEventStateComposite();
 
@@ -69,7 +70,27 @@ public class EquipmentEventStateTab extends AbstractEtTab
 
 	@Override
 	public void reload() {
-		
+		c.reload();
+	}
+
+	@Override
+	public boolean enableExcelExportButton() {
+		return true;
+	}
+
+	@Override
+	public boolean enableExcelImportButton() {
+		return true;
+	}
+
+	@Override
+	public boolean enableReloadButton() {
+		return true;
+	}
+
+	@Override
+	public boolean enableCommitButton() {
+		return true;
 	}
 
 }

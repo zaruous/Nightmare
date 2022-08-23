@@ -516,8 +516,12 @@ public class DialogUtil {
 	 */
 	public static Optional<Map<String, String>> showVerifierESigDialog(String permission, String domain, String application,
 			String entityType, String entityId, Callback<Map<String, String>, Void> callback) {
+		String userName = PreferencesUtil.getDefault().get("gargoyle.rax.simulate.username", "");
+		String userPwd = PreferencesUtil.getDefault().get("gargoyle.rax.simulate.userpwd", "");
+		Pair<String, String> idPass = new Pair<String, String>(userName, userPwd);
+		
 		Pair<String, String> verifier = new Pair<String, String>("", "");
-		SaLoginDialog loginDialog = new SaLoginDialog(permission, domain, application, entityType, entityId, verifier, callback);
+		SaLoginDialog loginDialog = new SaLoginDialog(permission, domain, application, entityType, entityId, idPass, verifier, callback);
 		return loginDialog.showAndWait();
 	}
 
@@ -684,15 +688,22 @@ public class DialogUtil {
 			content.getChildren().add(h5);
 
 			content.getChildren().add(lbMessage);
-			content.getChildren().add(txUserName);
-			content.getChildren().add(txPassword);
+			Label lblUser = new Label("User"); lblUser.prefWidth(120d);
+			Label lblUsePwd = new Label("User Pwd");lblUsePwd.prefWidth(120d);
+			
+			content.getChildren().add(new HBox(lblUser, txUserName));
+			content.getChildren().add(new HBox(lblUsePwd,txPassword));
 
 			// Label label = new Label("Verifier Id:");
 			// Label label2 = new Label("Verifier Pwd:");
 			// label.setPrefWidth(120d);
 			// label2.setPrefWidth(120d);
-			HBox v1 = new HBox(txVerifierUserName);
-			HBox v2 = new HBox(txVerifierPassword);
+			Label lblVerifer = new Label("Verifier");lblVerifer.prefWidth(120d);
+			Label lblVerifierPwd = new Label("Verifier Pwd");lblVerifierPwd.prefWidth(120d);
+			
+			HBox v1 = new HBox(lblVerifer, txVerifierUserName);
+			
+			HBox v2 = new HBox(lblVerifierPwd, txVerifierPassword);
 
 			if (verifierUserInfo == null) {
 				v1.setVisible(false);

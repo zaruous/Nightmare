@@ -23,7 +23,8 @@ open module ETHelper {
 	requires logback.classic;
 
 	requires org.controlsfx.controls;
-	requires dom4j;
+	requires transitive dom4j;
+//	requires jaxen;
 	requires org.apache.commons.codec;
 	requires velocity.engine.core;
 
