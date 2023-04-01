@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<fx:root prefHeight="799.0" prefWidth="981.0" stylesheets="@ETFrameView.css" type="BorderPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+	<padding>
+		<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+	</padding>
+	<bottom>
+		<HBox maxHeight="-Infinity" BorderPane.alignment="CENTER">
+			<children>
+				<Label fx:id="lblStatus" maxWidth="1.7976931348623157E308" text="Status" HBox.hgrow="ALWAYS" />
+			</children>
+		</HBox>
+	</bottom>
+	<top>
+		<MenuBar BorderPane.alignment="CENTER">
+			<menus>
+				<Menu mnemonicParsing="false" text="File">
+					
+					<items>
+						<Menu mnemonicParsing="false" text="Import/Export">
+							<items>
+								<MenuItem mnemonicParsing="false" text="Import Scripts" />		
+								<MenuItem mnemonicParsing="false" text="Export Scripts" />
+							</items>
+						</Menu>
+					</items>
+					
+					
+				</Menu>
+            <Menu mnemonicParsing="false" text="Window">
+              <items>
+						<MenuItem mnemonicParsing="false" onAction="#miHomeOnAction" text="Home">
+<!-- 							<accelerator> -->
+<!-- 						       <KeyCodeCombination alt="DOWN" code="HOME" control="UP" meta="DOWN" shift="DOWN" shortcut="UP"/> -->
+<!-- 						    </accelerator> -->
+						</MenuItem>
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                <MenuItem fx:id="miVersion" mnemonicParsing="false" onAction="#miVersionOnAction" text="Version" />
+              </items>
+            </Menu>
+			</menus>
+		</MenuBar>
+	</top>
+	<center>
+		<BorderPane>
+			<center>
+				<SplitPane orientation="VERTICAL">
+					<items>
+						<SplitPane dividerPositions="0.26522187822497423">
+							<items>
+								<BorderPane fx:id="borLeft">
+									<center>
+										<AnchorPane fx:id="apTree" />
+									</center>
+									<top>
+										<HBox BorderPane.alignment="CENTER">
+											<children>
+												<TextField fx:id="txtClassNameFilter" onKeyPressed="#txtClassNameFilterOnKeyPressed" promptText="Class Name" HBox.hgrow="ALWAYS" />
+											</children>
+										</HBox>
+									</top>
+								</BorderPane>
+								<BorderPane>
+									<center>
+										<TabPane fx:id="tpScriptManagement" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
+									</center>
+									<bottom>
+										<HBox alignment="CENTER_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
+											<children>
+                                    		<Button id="btn-export" fx:id="btnImportExcel" disable="true" mnemonicParsing="false" onAction="#btnImportExcel" prefWidth="40.0">
+                                    			<tooltip><Tooltip text="Import Excel" /></tooltip>
+                                    		</Button>
+												<Button id="btn-export" fx:id="btnExportExcel" disable="true" mnemonicParsing="false" onAction="#btnExportExcel" prefWidth="40.0">
+												<tooltip><Tooltip text="Export Excel" /></tooltip>
+												</Button>
+												<Button fx:id="btnCommit" disable="true" mnemonicParsing="false" onAction="#btnCommitOnAction" text="Commit" />
+												<Button fx:id="btnReload" disable="true" mnemonicParsing="false" onAction="#btnReloadOnAction" text="Reload" />
+											</children>
+											<padding>
+												<Insets bottom="5.0" right="5.0" top="5.0" />
+											</padding>
+										</HBox>
+									</bottom>
+								</BorderPane>
+							</items>
+						</SplitPane>
+					</items>
+				</SplitPane>
+			</center>
+		</BorderPane>
+	</center>
+</fx:root>

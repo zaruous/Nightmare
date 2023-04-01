@@ -7,6 +7,7 @@ open module ETHelper {
 
 	requires javafx.controls;
 	requires javafx.base;
+	requires javafx.swing;
 	// The type FXMLLoader from module javafx.fxml may not be accessible to
 	// clients due to missing 'requires transitive'
 
@@ -48,6 +49,7 @@ open module ETHelper {
 	requires java.xml;
 	requires com.zaxxer.hikari;
 	requires org.apache.commons.text;
+	
 	
 	
 	exports com.kyj.fx.b.ETScriptHelper;

@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.kyj.fx.b.ETScriptHelper.ETScriptComposite;
-import com.kyj.fx.b.ETScriptHelper.MainApp;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnCommitService;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnExcelTableViewList;
 import com.kyj.fx.b.ETScriptHelper.actions.comm.core.OnReload;
@@ -44,7 +43,6 @@ import com.kyj.fx.b.ETScriptHelper.comm.ExcelFileChooserHandler;
 import com.kyj.fx.b.ETScriptHelper.comm.FileUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.FxUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.Message;
-import com.kyj.fx.b.ETScriptHelper.comm.ResourceLoader;
 import com.kyj.fx.b.ETScriptHelper.comm.StageStore;
 import com.kyj.fx.b.ETScriptHelper.comm.ValueUtil;
 import com.kyj.fx.b.ETScriptHelper.eqtree.EquipmentClassDVO;
@@ -71,8 +69,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 import javafx.util.Pair;
 
 /**
@@ -81,7 +77,7 @@ import javafx.util.Pair;
  * @author KYJ (callakrsos@naver.com)
  *
  */
-public class ETFrameComposite extends BorderPane {
+public class ETFrameComposite extends AbstractCommonsApp {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ETFrameComposite.class);
 
@@ -869,12 +865,6 @@ public class ETFrameComposite extends BorderPane {
 	}
 
 	@FXML
-	public void miHomeOnAction() {
-		Stage stage = StageStore.getPrimaryStage();
-		MainApp.updateComponent(stage);
-	}
-
-	@FXML
 	public void btnReloadOnAction() {
 		Tab selectedItem = this.tpEtManagement.getSelectionModel().getSelectedItem();
 
@@ -891,12 +881,7 @@ public class ETFrameComposite extends BorderPane {
 		dataFrom.reload();
 	}
 
-	@FXML
-	public void miVersionOnAction() {
-		String appVersion = ResourceLoader.getInstance().get(ResourceLoader.APP_VERSION);
-		String msg = "app version " + appVersion;
-		DialogUtil.showMessageDialog(msg);
-	}
+
 
 	@FXML
 	public void miEtCommScriptOnAction() {

@@ -51,32 +51,10 @@
 	</appender>
 
 	<!-- 이 아래에 있는 애들 다 log로 찍겠다. -->
-<!-- 	<logger name="com.kyj.fx.voeditor" level="DEBUG"> -->
-<!-- 		<appender-ref ref="console" /> -->
-<!-- 	</logger> -->
-<!-- 	<logger name="com.kyj.fx.voeditor" level="ERROR"> -->
-<!-- 		<appender-ref ref="console" /> -->
-<!-- 	</logger> -->
+	<logger name="com.kyj.fx" level="DEBUG">
+		<appender-ref ref="console" />
+	</logger>
 
-<!-- 	<logger name="DB - LOGGER" level="DEBUG"> -->
-<!-- 		<appender-ref ref="dbutil-fileForLoginInterceptor" /> -->
-<!-- 	</logger> -->
-
-<!-- 	<logger name="com.kyj" level="DEBUG"> -->
-<!-- 		<appender-ref ref="console" /> -->
-<!-- 	</logger> -->
-
-<!-- 	<logger name="com.kyj.fx.behavior" level="DEBUG"> -->
-<!-- 		<appender-ref ref="console" /> -->
-<!-- 	</logger> -->
-
-<!-- 	<logger name="com.kyj.fx.rax" level="DEBUG"> -->
-<!-- 		<appender-ref ref="console" /> -->
-<!-- 	</logger> -->
-
-<!-- 	<logger name="com.kyj.fx.nashorn" level="DEBUG"> -->
-<!-- 		<appender-ref ref="console" /> -->
-<!-- 	</logger> -->
 
 	<!-- 이 아래에 있는 애들 다 log로 찍겠다. -->
 	<logger name="org.apache.pdfbox" level="DEBUG">

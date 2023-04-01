@@ -18,12 +18,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -375,5 +380,64 @@ public class FileUtil {
 		try (Stream<Path> walk = Files.walk(file.toPath(), 10)) {
 			return walk.collect(Collectors.toList());
 		}
+	}
+	
+	
+	/**
+	 * @작성자 : (zaruous@naver.com)
+	 * @작성일 : 2023. 4. 1. 
+	 * @param file
+	 * @param skipDirFilter
+	 * @return
+	 * @throws IOException
+	 */
+	public static List<File> recursive(File file, Predicate<Path> skipDirFilter) throws IOException {
+		return recursive(file, skipDirFilter, f -> true);
+	}
+
+	/**
+	 * @작성자 : (zaruous@naver.com)
+	 * @작성일 : 2023. 4. 1.
+	 * @param file
+	 * @param skipDirFilter
+	 * @return
+	 * @throws IOException
+	 */
+	public static List<File> recursive(File file, Predicate<Path> skipDirFilter, Predicate<Path> isAppend) throws IOException {
+
+		List<File> arrayList = new ArrayList<File>();
+		SimpleFileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
+
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				if (skipDirFilter.test(dir)) {
+					return FileVisitResult.SKIP_SUBTREE;
+				} else {
+					return FileVisitResult.CONTINUE;
+				}
+			}
+
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+//				System.out.println("File name: " + file.toAbsolutePath());
+				if(isAppend.test(file))
+					arrayList.add(file.toFile());
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+				// System.out.println("Failed to access file: " + file);
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+				// System.out.println("Directory name: " + dir.getFileName());
+				return FileVisitResult.CONTINUE;
+			}
+		};
+		Files.walkFileTree(file.toPath(), visitor);
+		return arrayList;
 	}
 }

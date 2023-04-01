@@ -7,6 +7,7 @@
 package com.kyj.fx.b.ETScriptHelper.comm;
 
 import com.kyj.fx.b.ETScriptHelper.actions.frame.ETFrameComposite;
+import com.kyj.fx.b.ETScriptHelper.actions.frame.AbstractCommonsApp;
 
 import javafx.stage.Stage;
 
@@ -16,7 +17,7 @@ import javafx.stage.Stage;
  */
 public class StageStore {
 
-	private static ETFrameComposite app;
+	private static AbstractCommonsApp app;
 	private StageStore() {
 
 	}
@@ -26,7 +27,7 @@ public class StageStore {
 	 * @작성일 : 2021. 11. 23. 
 	 * @param composite
 	 */
-	public static void setApp(ETFrameComposite composite) {
+	public static void setApp(AbstractCommonsApp composite) {
 		app = composite;
 	}
 	/**
@@ -34,7 +35,7 @@ public class StageStore {
 	 * @작성일 : 2021. 11. 23. 
 	 * @return
 	 */
-	public static ETFrameComposite getApp() {
+	public static AbstractCommonsApp getApp() {
 		return app;
 	}
 	/**

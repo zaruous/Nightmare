@@ -45,14 +45,6 @@ import com.kyj.fx.b.ETScriptHelper.comm.ValueUtil;
 public class ExcelUploadTest {
 
 	@Disabled
-	@Test
-	public void devUploadTest() throws FileNotFoundException, IOException {
-
-		var fromFile = new File("C:\\Users\\KYJ\\20211206174131.xlsx");
-		File file = new File("\\\\20.10.20.64\\c$\\Users\\p3Syncade\\Documents\\test\\paste.xlsx");
-		Files.copy(fromFile.toPath(), new FileOutputStream(file));
-
-	}
 
 	@Test
 	public void test() throws UnsupportedEncodingException, GeneralSecurityException {

@@ -35,10 +35,27 @@ public class MainFormComposite extends BorderPane {
 		}
 	}
 
+	/**
+	 * @작성자 : (zaruous@naver.com)
+	 * @작성일 : 2023. 4. 1.
+	 */
 	@FXML
 	public void vbEquipmentOnClick() {
 		Stage stage = StageStore.getPrimaryStage();
 		ETFrameComposite compisite = new ETFrameComposite();
+		StageStore.setApp(compisite);
+		Scene scene = stage.getScene();
+		scene.setRoot(compisite);
+	}
+
+	/**
+	 * @작성자 : (zaruous@naver.com)
+	 * @작성일 : 2023. 4. 1.
+	 */
+	@FXML
+	public void utilsOnClick() {
+		Stage stage = StageStore.getPrimaryStage();
+		var compisite = new UtilFrameComposite();
 		StageStore.setApp(compisite);
 		Scene scene = stage.getScene();
 		scene.setRoot(compisite);

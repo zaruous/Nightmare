@@ -10,10 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<fx:root id="root" prefHeight="504.0" 
-	prefWidth="957.0" stylesheets="@MainForm.css" type="BorderPane" xmlns:fx="http://javafx.com/fxml/1" 
-	xmlns="http://javafx.com/javafx/17">
+<fx:root id="root" prefHeight="504.0" prefWidth="957.0" stylesheets="@MainForm.css" type="BorderPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -41,7 +38,7 @@
                <children>
                   <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label styleClass="vbox-item-label" text="Inventory">
+                        <Label onMouseClicked="#utilsOnClick" styleClass="vbox-item-label" text="Utils">
                            <font>
                               <Font size="11.0" />
                            </font>

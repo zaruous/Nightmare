@@ -10,7 +10,10 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,4 +72,32 @@ public class Utils {
 
 		return hashMap;
 	}
+	
+	
+	
+	/**
+	 * @최초생성일 2023. 4. 1.
+	 */
+	public static final Comparator<Path> PATH_NAME_COMPARE = new Comparator<Path>() {
+
+		@Override
+		public int compare(Path o1, Path o2) {
+
+			String fname1 = o1.getFileName().toString();
+			String fname2 = o2.getFileName().toString();
+			if (Files.isDirectory(o1) == Files.isDirectory(o2)) {
+				return fname1.compareTo(fname2);
+			}
+
+			if (Files.isDirectory(o1)) {
+				return -1;
+			}
+			if (Files.isDirectory(o2)) {
+				return 1;
+			}
+			
+			return fname1.compareTo(fname2);
+		}
+	};
+	
 }
