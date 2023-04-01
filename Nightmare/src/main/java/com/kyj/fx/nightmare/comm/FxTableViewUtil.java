@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.comm
  *	작성일   : 2021. 11. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
@@ -46,7 +46,7 @@ import javafx.util.Pair;
 import javafx.util.StringConverter;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class FxTableViewUtil {
@@ -481,7 +481,7 @@ public class FxTableViewUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30. 
 	 * @param <T>
 	 * @param baseModel
@@ -563,7 +563,7 @@ public class FxTableViewUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2018. 10. 22.
 	 * @param tb
 	 * @param namedColumn

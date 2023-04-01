@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper
  *	작성일   : 2021. 7. 9.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.b.ETScriptHelper;
 
@@ -21,7 +21,7 @@ import com.kyj.fx.nightmare.comm.Hex;
 import com.kyj.fx.nightmare.eqtree.EquipmentDAO;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 class DbUpdateTest {

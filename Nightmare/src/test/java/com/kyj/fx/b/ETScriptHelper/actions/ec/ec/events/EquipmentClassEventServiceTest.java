@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.actions.ec.ec.events
  *	작성일   : 2022. 7. 20.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.b.ETScriptHelper.actions.ec.ec.events;
 
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.kyj.fx.nightmare.actions.ec.ec.events.EquipmentClassEventService;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 class EquipmentClassEventServiceTest {

@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.actions.ec.ec.group
  *	작성일   : 2021. 12. 17.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.ec.ec.group;
 
@@ -14,13 +14,13 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import com.kyj.fx.nightmare.comm.AbstractDAO;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class EquipmentClassGroupDAO extends AbstractDAO {
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 17.
 	 * @param equipmentClassGuid
 	 * @return

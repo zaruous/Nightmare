@@ -194,7 +194,7 @@ public class IdGenUtil {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 8. 
 	 * @return
 	 */

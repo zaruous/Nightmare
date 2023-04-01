@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper
  *	작성일   : 2021. 11. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare;
 
@@ -17,7 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class ETManagerComposite extends BorderPane {

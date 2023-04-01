@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.comm
  *	작성일   : 2021. 11. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
@@ -30,11 +30,11 @@ import org.apache.velocity.context.Context;
 import com.google.gson.Gson;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class ValueUtil {
@@ -63,7 +63,7 @@ public class ValueUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 22. 
 	 * @param obj
 	 * @return
@@ -73,7 +73,7 @@ public class ValueUtil {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 22. 
 	 * @param e
 	 * @return
@@ -310,7 +310,7 @@ public class ValueUtil {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23. 
 	 * @param inputStream
 	 * @return
@@ -352,7 +352,7 @@ public class ValueUtil {
 	}	
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30. 
 	 * @param text
 	 * @return
@@ -362,7 +362,7 @@ public class ValueUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30. 
 	 * @param text
 	 * @param replaceText
@@ -373,7 +373,7 @@ public class ValueUtil {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30. 
 	 * @param text
 	 * @return
@@ -442,7 +442,7 @@ public class ValueUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 9. 
 	 * @param s1
 	 * @param s2
@@ -467,7 +467,7 @@ public class ValueUtil {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 6. 27. 
 	 * @param text
 	 * @param text2

@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.frame
  *	작성일   : 2021. 11. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
@@ -12,7 +12,7 @@ import com.kyj.fx.nightmare.actions.frame.ETFrameComposite;
 import javafx.stage.Stage;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class StageStore {
@@ -23,7 +23,7 @@ public class StageStore {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23. 
 	 * @param composite
 	 */
@@ -31,7 +31,7 @@ public class StageStore {
 		app = composite;
 	}
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23. 
 	 * @return
 	 */

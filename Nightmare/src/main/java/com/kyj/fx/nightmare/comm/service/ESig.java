@@ -2,7 +2,7 @@
  *	프로젝트 : gargoyle-commons
  *	패키지   : com.kyj.fx.commons.fx.controls.nashorn
  *	작성일   : 2020. 11. 18.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm.service;
 
@@ -17,7 +17,7 @@ import com.kyj.fx.nightmare.comm.Message;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class ESig {
@@ -47,7 +47,7 @@ public class ESig {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 14.
 	 * @param domain
 	 * @param application
@@ -66,7 +66,7 @@ public class ESig {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 14.
 	 * @param login
 	 * @param password
@@ -85,7 +85,7 @@ public class ESig {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 14.
 	 * @param login
 	 * @param password
@@ -103,7 +103,7 @@ public class ESig {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23.
 	 * @param login
 	 * @param password
@@ -128,7 +128,7 @@ public class ESig {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 14.
 	 * @param login
 	 * @param password
@@ -155,7 +155,7 @@ public class ESig {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2020. 9. 2.
 	 * @param login
 	 * @param encrypedPwd
@@ -187,7 +187,7 @@ public class ESig {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2020. 9. 2.
 	 * @param login
 	 * @param password
@@ -213,7 +213,7 @@ public class ESig {
 	// }
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30.
 	 * @param pwd
 	 * @return
@@ -225,7 +225,7 @@ public class ESig {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30.
 	 * @param pwd
 	 * @return
@@ -240,13 +240,13 @@ public class ESig {
 	}
 
 	/**
-	 * @author KYJ (callakrsos@naver.com)
+	 * @author KYJ (zaruous@naver.com)
 	 *
 	 */
 	public static class ESigParser {
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2021. 12. 6. 
 		 * @param tokenXml
 		 * @return

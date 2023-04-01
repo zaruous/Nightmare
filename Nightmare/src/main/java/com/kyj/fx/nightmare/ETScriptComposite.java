@@ -54,7 +54,7 @@ import javafx.util.Pair;
 import javafx.util.StringConverter;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class ETScriptComposite extends BorderPane {
@@ -303,7 +303,7 @@ public class ETScriptComposite extends BorderPane {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 11.
 	 * @param newValue
 	 */
@@ -455,7 +455,7 @@ public class ETScriptComposite extends BorderPane {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 7. 5.
 	 */
 	@FXML
@@ -470,7 +470,7 @@ public class ETScriptComposite extends BorderPane {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 7. 6.
 	 */
 	@FXML
@@ -564,7 +564,7 @@ public class ETScriptComposite extends BorderPane {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 19.
 	 */
 	private void repaintEventScripts() {
@@ -572,7 +572,7 @@ public class ETScriptComposite extends BorderPane {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 19.
 	 * @param highlightColor
 	 */
@@ -624,7 +624,7 @@ public class ETScriptComposite extends BorderPane {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 19.
 	 */
 	@FXML
@@ -648,7 +648,7 @@ public class ETScriptComposite extends BorderPane {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 19.
 	 */
 	@FXML
@@ -662,7 +662,7 @@ public class ETScriptComposite extends BorderPane {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 19.
 	 * @param message
 	 */

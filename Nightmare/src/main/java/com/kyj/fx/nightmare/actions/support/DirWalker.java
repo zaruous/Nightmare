@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper
  *	작성일   : 2021. 7. 6.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.support;
 
@@ -16,7 +16,7 @@ import org.apache.commons.io.DirectoryWalker;
 
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class DirWalker extends DirectoryWalker<CommonsScriptPathDVO> {

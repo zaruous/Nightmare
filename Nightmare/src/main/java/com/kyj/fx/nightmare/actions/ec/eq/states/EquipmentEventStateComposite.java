@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.actions.ec
  *	작성일   : 2021. 11. 23.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.ec.eq.states;
 
@@ -44,7 +44,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class EquipmentEventStateComposite extends BorderPane
@@ -121,7 +121,7 @@ public class EquipmentEventStateComposite extends BorderPane
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23.
 	 * @return
 	 */
@@ -130,7 +130,7 @@ public class EquipmentEventStateComposite extends BorderPane
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23.
 	 * @return
 	 */
@@ -139,7 +139,7 @@ public class EquipmentEventStateComposite extends BorderPane
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23.
 	 * @param equipmentClassGuid
 	 */

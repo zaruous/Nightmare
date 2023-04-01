@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.frame
  *	작성일   : 2021. 11. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class FileUtil {
@@ -72,7 +72,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 10. 11.
 	 * @param file
 	 * @param str
@@ -114,7 +114,7 @@ public class FileUtil {
 	/**
 	 * READ TO String
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 1. 11.
 	 * @param f
 	 * @param charset
@@ -127,7 +127,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 12. 9.
 	 * @param f
 	 * @return
@@ -139,7 +139,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 12. 9.
 	 * @param f
 	 *            reading target.
@@ -160,7 +160,7 @@ public class FileUtil {
 	/**
 	 * READ TO String
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 1. 11.
 	 * @param f
 	 * @param encoding
@@ -223,7 +223,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 24.
 	 * @param path
 	 * @param readStream
@@ -246,7 +246,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30.
 	 * @param f
 	 */
@@ -328,7 +328,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 4. 28.
 	 * @param file
 	 * @param is
@@ -348,7 +348,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 4. 28.
 	 * @return
 	 */
@@ -371,7 +371,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 6. 24.
 	 * @param file
 	 * @throws IOException

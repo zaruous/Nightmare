@@ -89,7 +89,7 @@ public class TemplateUtil {
 		}
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2019. 11. 6.
 		 * @param <T>
 		 * @param out

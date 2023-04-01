@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.comm
  *	작성일   : 2021. 12. 8.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.b.ETScriptHelper.comm;
 
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.kyj.fx.nightmare.comm.IdGenUtil;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 class IdGenUtilTest {

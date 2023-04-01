@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.comm.service
  *	작성일   : 2021. 11. 23.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm.service;
 
@@ -29,13 +29,13 @@ import org.xml.sax.SAXException;
 //import org.xml.sax.SAXException;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class XMLUtils {
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23.
 	 * @param str
 	 * @return
@@ -48,7 +48,7 @@ public class XMLUtils {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 3. 2.
 	 * @param data
 	 * @param encoding
@@ -64,7 +64,7 @@ public class XMLUtils {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30.
 	 * @param file
 	 * @return
@@ -81,7 +81,7 @@ public class XMLUtils {
 	 * Xpath를 활용해 XML 문서의 Element를 탐색한 후 할당된 어트리뷰트의 이름값을 <br/>
 	 * 자바 빈에 할당하기 위한 목적 <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 9.
 	 * @param <T>
 	 * @param doc
@@ -116,7 +116,7 @@ public class XMLUtils {
 	/**
 	 * XML에 속한 데이터를 자바 빈으로 할당하기 위한 객체.
 	 * 
-	 * @author KYJ (callakrsos@naver.com)
+	 * @author KYJ (zaruous@naver.com)
 	 *
 	 * @param <T>
 	 */
@@ -124,7 +124,7 @@ public class XMLUtils {
 	public interface XmlDataHander<T> {
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2021. 12. 9.
 		 * @param instance
 		 * @param nodeName
@@ -137,7 +137,7 @@ public class XMLUtils {
 	/**
 	 * escape <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 10.
 	 * @param str
 	 * @return

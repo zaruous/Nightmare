@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.frame
  *	작성일   : 2021. 11. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
@@ -31,7 +31,7 @@ import javafx.stage.Window;
 import javafx.util.StringConverter;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class FxUtil {
@@ -63,7 +63,7 @@ public class FxUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 22.
 	 * @param <T>
 	 * @param baseModel
@@ -87,7 +87,7 @@ public class FxUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 22.
 	 * @param <T>
 	 * @param baseModel
@@ -99,7 +99,7 @@ public class FxUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30.
 	 * @param <T>
 	 * @param baseModel
@@ -122,7 +122,7 @@ public class FxUtil {
 
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 8. 
 	 * @param scene
 	 * @param option
@@ -135,7 +135,7 @@ public class FxUtil {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 8. 
 	 * @param parent
 	 * @param option
@@ -275,7 +275,7 @@ public class FxUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 25.
 	 * @param tv
 	 */
@@ -287,7 +287,7 @@ public class FxUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 25.
 	 * @param tb
 	 */
@@ -299,7 +299,7 @@ public class FxUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 25.
 	 * @param saveFile
 	 * @param sheetName
@@ -328,7 +328,7 @@ public class FxUtil {
 
 	/**
 	 * @return
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 25.
 	 */
 	public static FXMLLoader newLaoder() {
@@ -342,7 +342,7 @@ public class FxUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 3.
 	 * @param message
 	 */
@@ -351,7 +351,7 @@ public class FxUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 7.
 	 * @param <T>
 	 * @param tv
@@ -362,7 +362,7 @@ public class FxUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 7.
 	 * @param <T>
 	 * @param tv

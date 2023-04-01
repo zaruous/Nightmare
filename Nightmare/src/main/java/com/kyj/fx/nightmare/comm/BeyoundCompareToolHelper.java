@@ -2,7 +2,7 @@
  *	프로젝트 : VisualFxVoEditor
  *	패키지   : com.kyj.fx.voeditor.visual.diff
  *	작성일   : 2019. 2. 28.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * 
  * The purpose of this program is to compare text files and obtain a report. <br/>
  * 
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class BeyoundCompareToolHelper {
@@ -96,7 +96,7 @@ public class BeyoundCompareToolHelper {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 4. 28.
 	 * @return
 	 */
@@ -107,7 +107,7 @@ public class BeyoundCompareToolHelper {
 	/**
 	 * Beyound Compare를 사용할 수 있는 환경인지 체크 <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 3. 1.
 	 * @return
 	 */
@@ -188,7 +188,7 @@ public class BeyoundCompareToolHelper {
 	 * 
 	 * 별도의 스크립트를 수행하고자한다면 프로그램 설치 디렉토리에 'default-Beyond-Script.txt' 이 파일을 수정하면된다 . <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 27.
 	 * @throws Exception
 	 */
@@ -232,7 +232,7 @@ public class BeyoundCompareToolHelper {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 28.
 	 * @throws Exception
 	 */
@@ -298,7 +298,7 @@ public class BeyoundCompareToolHelper {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 4. 28. 
 	 * @return
 	 */
@@ -307,7 +307,7 @@ public class BeyoundCompareToolHelper {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 12. 3.
 	 * @return
 	 */
@@ -316,7 +316,7 @@ public class BeyoundCompareToolHelper {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 28.
 	 * @throws Exception
 	 */
@@ -354,7 +354,7 @@ public class BeyoundCompareToolHelper {
 	/**
 	 * Folder Compare를 처리하기위한 인스턴스 생성 <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2020. 7. 9.
 	 * @return
 	 */
@@ -368,7 +368,7 @@ public class BeyoundCompareToolHelper {
 	/**
 	 * 디폴트 스크립트는 단순히 Beyound Compare을 실행시켜 비교한다.<br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 3. 17.
 	 * @return
 	 */
@@ -381,7 +381,7 @@ public class BeyoundCompareToolHelper {
 	/**
 	 * 스크립트를 활용해 비교 결과를 나타낸다 <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 3. 17.
 	 * @return
 	 */

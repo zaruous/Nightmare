@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper
  *	작성일   : 2021. 11. 19.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.frame;
 
@@ -74,7 +74,7 @@ import javafx.util.Pair;
 /**
  * 어플리케이션의 전체적인 구조에 대한 설정 담당. <br/>
  * 
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class ETFrameComposite extends AbstractCommonsApp {
@@ -125,7 +125,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	private EtConfigurationTreeView tvEtConfigurationTree;
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 22.
 	 * @return
 	 */
@@ -203,7 +203,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 24.
 	 * @param etFrameComposite
 	 */
@@ -240,7 +240,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 19.
 	 * @param message
 	 */
@@ -255,7 +255,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 22.
 	 */
 	@FXML
@@ -264,7 +264,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 3.
 	 * @param selectedItem
 	 * @return
@@ -283,7 +283,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 3.
 	 * @param selectedItem
 	 * @return
@@ -515,7 +515,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 22.
 	 * @param equipmentClassGuid
 	 * @return
@@ -579,7 +579,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 22.
 	 * @param equipmentClassGuid
 	 * @return
@@ -589,7 +589,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 21.
 	 * @param equipmentClassGuid
 	 * @return
@@ -647,7 +647,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 9.
 	 * @param equipmentGuid
 	 * @return
@@ -678,7 +678,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 22.
 	 * @param equipmentClassGuid
 	 * @return
@@ -688,7 +688,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 26.
 	 * @param parentEquipmentGuid
 	 * @return
@@ -698,7 +698,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 26.
 	 * @param equipmentClassGuid
 	 * @param parentEquipmentGuid
@@ -769,7 +769,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23.
 	 */
 	@FXML
@@ -778,7 +778,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23.
 	 */
 	@FXML
@@ -845,7 +845,7 @@ public class ETFrameComposite extends AbstractCommonsApp {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 26.
 	 */
 	@FXML

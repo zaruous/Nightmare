@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.comm
  *	작성일   : 2021. 11. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
@@ -27,7 +27,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class DateUtil {
@@ -265,7 +265,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2018. 11. 7.
 	 * @param date
 	 * @return
@@ -310,7 +310,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2018. 11. 14.
 	 * @param date
 	 * @param format
@@ -322,7 +322,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2018. 11. 14.
 	 * @param date
 	 * @param locale
@@ -592,7 +592,7 @@ public class DateUtil {
 	/**
 	 * calc date. <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 18.
 	 * @param date
 	 * @param field
@@ -606,7 +606,7 @@ public class DateUtil {
 	/**
 	 * calc date. <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 18.
 	 * @param date
 	 * @param field
@@ -622,7 +622,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2018. 11. 14.
 	 * @param date
 	 * @return
@@ -637,7 +637,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 11. 22.
 	 * @param <T>
 	 * @param startDate
@@ -650,7 +650,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 11. 22.
 	 * @param <T>
 	 * @param startDate
@@ -666,7 +666,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 12. 5.
 	 * @param <T>
 	 * @param startDate
@@ -681,7 +681,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 12. 5.
 	 * @param <T>
 	 * @param cStart
@@ -704,7 +704,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 12. 5.
 	 * @param startDate
 	 * @return
@@ -716,7 +716,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 12. 5.
 	 * @param startDate
 	 * @param endDate
@@ -729,7 +729,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 12. 5.
 	 * @param <T>
 	 * @param startDate

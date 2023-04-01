@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper
  *	작성일   : 2021. 7. 7.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare;
 
@@ -23,7 +23,7 @@ import com.kyj.fx.nightmare.comm.DbUtil;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class DbUpdate {
@@ -34,7 +34,7 @@ public class DbUpdate {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DbUpdate.class);
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 7. 7.
 	 * @param updateItems
 	 * @throws Exception
@@ -75,7 +75,7 @@ public class DbUpdate {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 7. 16.
 	 * @param con
 	 * @param update
@@ -115,7 +115,7 @@ public class DbUpdate {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 7. 19.
 	 * @param con
 	 * @param update

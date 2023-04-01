@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.frame
  *	작성일   : 2021. 11. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
@@ -48,7 +48,7 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class DialogUtil {
@@ -105,7 +105,7 @@ public class DialogUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 22.
 	 * @param ownerWindow
 	 * @return
@@ -139,7 +139,7 @@ public class DialogUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 22.
 	 * @param fileChooser
 	 */
@@ -276,7 +276,7 @@ public class DialogUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 29.
 	 * @param ex
 	 */
@@ -467,7 +467,7 @@ public class DialogUtil {
 
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 7. 
 	 * @param permission
 	 * @param domain
@@ -482,7 +482,7 @@ public class DialogUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 7. 
 	 * @param permission
 	 * @param domain
@@ -504,7 +504,7 @@ public class DialogUtil {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30.
 	 * @param permission
 	 * @param domain
@@ -526,7 +526,7 @@ public class DialogUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 6.
 	 * @param permission
 	 * @param domain
@@ -551,7 +551,7 @@ public class DialogUtil {
 	
 	/**
 	 * 인증정보를 임시적으로 저장하기 위한 용도로 사용 <br/>
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 7. 
 	 * @param permission
 	 * @param domain
@@ -582,7 +582,7 @@ public class DialogUtil {
 		private final PasswordField txVerifierPassword;
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2021. 11. 30.
 		 * @return
 		 */
@@ -591,7 +591,7 @@ public class DialogUtil {
 		}
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2021. 11. 30.
 		 * @param tokenProcessor
 		 */

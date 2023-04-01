@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.eqtree
  *	작성일   : 2021. 12. 9.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.eqtree;
 
@@ -23,7 +23,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class MenuItemEventHistoryPerform extends MenuItem {
@@ -49,7 +49,7 @@ public class MenuItemEventHistoryPerform extends MenuItem {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 9.
 	 * @param actionevent1
 	 */
@@ -85,7 +85,7 @@ public class MenuItemEventHistoryPerform extends MenuItem {
 	/**
 	 * 선택된 트리 아이템으로 할당된 부모 노드의 정보를 리턴 (장비 정보.) <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 9.
 	 * @param selectedItem
 	 * @return

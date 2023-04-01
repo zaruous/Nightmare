@@ -84,7 +84,7 @@ public class MenuItemImportEtScript extends MenuItem {
 			"Event_OnStart", "Event_OnComplete");
 	List<String> ACTION_TYPES2 = Arrays.asList("On Cancel", "On Pause", "On Restart", "On Update", "On Start", "On Complete");
 	/**
-	 * @author KYJ (callakrsos@naver.com)
+	 * @author KYJ (zaruous@naver.com)
 	 *
 	 */
 	enum Action {
@@ -97,7 +97,7 @@ public class MenuItemImportEtScript extends MenuItem {
 		int code;
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2022. 6. 27.
 		 * @param code
 		 * @return
@@ -176,7 +176,7 @@ public class MenuItemImportEtScript extends MenuItem {
 	
 
 	/**
-	 * @author KYJ (callakrsos@naver.com)
+	 * @author KYJ (zaruous@naver.com)
 	 *
 	 */
 	class RootPane extends BorderPane {
@@ -202,7 +202,7 @@ public class MenuItemImportEtScript extends MenuItem {
 		}
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2022. 6. 24.
 		 * @param actionevent1
 		 */
@@ -212,7 +212,7 @@ public class MenuItemImportEtScript extends MenuItem {
 	}
 
 	/**
-	 * @author KYJ (callakrsos@naver.com)
+	 * @author KYJ (zaruous@naver.com)
 	 *
 	 */
 	class DummyEtScriptComposite extends EquipmentClassEventScriptComposite {
@@ -228,7 +228,7 @@ public class MenuItemImportEtScript extends MenuItem {
 		}
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2022. 6. 24.
 		 * @param eventName
 		 * @param actionName

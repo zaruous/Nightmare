@@ -104,7 +104,7 @@ public class ExecutorDemons {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 3. 20. 
 	 * @param name
 	 * @return

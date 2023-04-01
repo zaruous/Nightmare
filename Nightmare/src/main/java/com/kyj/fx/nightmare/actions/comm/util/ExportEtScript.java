@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper
  *	작성일   : 2021. 7. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.comm.util;
 
@@ -20,7 +20,7 @@ import com.kyj.fx.nightmare.comm.IResultItemHandler;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class ExportEtScript {
@@ -45,7 +45,7 @@ public class ExportEtScript {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 7. 22.
 	 * @return
 	 * @throws Exception
@@ -62,7 +62,7 @@ public class ExportEtScript {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23.
 	 * @param equipmentClassName
 	 * @param outRootDir
@@ -100,7 +100,7 @@ public class ExportEtScript {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 7. 22.
 	 * @return
 	 * @throws Exception

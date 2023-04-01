@@ -2,7 +2,7 @@
  *	프로젝트 : gargoyle-commons
  *	패키지   : com.kyj.fx.commons.fx.controls.grid
  *	작성일   : 2019. 11. 11.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.grid;
 

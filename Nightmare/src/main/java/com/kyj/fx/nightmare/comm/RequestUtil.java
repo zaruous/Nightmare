@@ -196,7 +196,7 @@ public class RequestUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2018. 10. 15.
 	 * @param url
 	 * @param header
@@ -288,7 +288,7 @@ public class RequestUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2018. 10. 15.
 	 * @param url
 	 * @param response
@@ -418,7 +418,7 @@ public class RequestUtil {
 	}
 
 	// /**
-	// * @작성자 : KYJ (callakrsos@naver.com)
+	// * @작성자 : KYJ (zaruous@naver.com)
 	// * @작성일 : 2019. 9. 7.
 	// * @param url
 	// * @param out
@@ -783,7 +783,7 @@ public class RequestUtil {
 		 * 
 		 * put , delete, get <br/>
 		 * 
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2018. 11. 5.
 		 * @param reqEntry
 		 * @param headers
@@ -797,7 +797,7 @@ public class RequestUtil {
 		}
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2020. 7. 30.
 		 * @param <T>
 		 * @param reqEntry
@@ -894,7 +894,7 @@ public class RequestUtil {
 		}
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2018. 11. 5.
 		 * @param url
 		 * @param headers
@@ -909,7 +909,7 @@ public class RequestUtil {
 		}
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2019. 9. 2.
 		 * @param <T>
 		 * @param url
@@ -925,7 +925,7 @@ public class RequestUtil {
 		}
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2019. 9. 2.
 		 * @param <T>
 		 * @param url
@@ -941,7 +941,7 @@ public class RequestUtil {
 		}
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2018. 11. 5.
 		 * @param url
 		 * @param headers
@@ -956,7 +956,7 @@ public class RequestUtil {
 		}
 
 		/**
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2018. 11. 5.
 		 * @param url
 		 * @param headers

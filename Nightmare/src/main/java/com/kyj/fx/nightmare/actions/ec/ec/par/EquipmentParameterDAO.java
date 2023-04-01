@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.actions.ec.ec.par
  *	작성일   : 2021. 12. 27.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.ec.ec.par;
 
@@ -17,13 +17,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.kyj.fx.nightmare.comm.AbstractDAO;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class EquipmentParameterDAO extends AbstractDAO {
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 27.
 	 * @param name
 	 * @return
@@ -52,7 +52,7 @@ public class EquipmentParameterDAO extends AbstractDAO {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 27.
 	 * @param equipmentClassGuid
 	 * @return
@@ -81,7 +81,7 @@ public class EquipmentParameterDAO extends AbstractDAO {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 27.
 	 * @param eqName
 	 * @param eventName

@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper
  *	작성일   : 2021. 11. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.frame;
 
@@ -55,7 +55,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.util.Callback;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class ETFrameCompositeInitializer {
@@ -212,7 +212,7 @@ public class ETFrameCompositeInitializer {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 28. 
 	 * @param value
 	 * @return
@@ -229,7 +229,7 @@ public class ETFrameCompositeInitializer {
 	
 	/**
 	 * @param etConfigurationTreeDVO 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 28.
 	 * @param d
 	 * @return
@@ -278,7 +278,7 @@ public class ETFrameCompositeInitializer {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 28.
 	 * @param e
 	 */
@@ -307,7 +307,7 @@ public class ETFrameCompositeInitializer {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 28.
 	 * @param etConfigurationTreeDVO
 	 * @return
@@ -350,7 +350,7 @@ public class ETFrameCompositeInitializer {
 	/**
 	 * 리뷰 페이지 호출. <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 22.
 	 * @param e
 	 */

@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.actions.ec
  *	작성일   : 2021. 11. 24.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.b.ETScriptHelper.actions.ec;
 
@@ -12,7 +12,7 @@ import com.kyj.fx.nightmare.actions.ec.ec.EquipmentClassDVO;
 import com.kyj.fx.nightmare.actions.ec.ec.EquipmentClassesDAO;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 class EquipmentClassesDAOTest {

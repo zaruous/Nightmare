@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.actions.ec.states
  *	작성일   : 2021. 11. 29.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.ec.eq.states;
 
@@ -20,13 +20,13 @@ import com.kyj.fx.nightmare.comm.service.DmiService;
 import com.kyj.fx.nightmare.comm.service.XMLUtils;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class EquipmentEventStateService {
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30. 
 	 * @param saToken
 	 * @param items
@@ -79,7 +79,7 @@ public class EquipmentEventStateService {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 29.
 	 * @param equipmentClassName
 	 * @param equipmentName
@@ -91,7 +91,7 @@ public class EquipmentEventStateService {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 29.
 	 * @param equipmentGuid
 	 * @return
@@ -107,7 +107,7 @@ public class EquipmentEventStateService {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 29.
 	 * @param saToken
 	 * @param itemXml

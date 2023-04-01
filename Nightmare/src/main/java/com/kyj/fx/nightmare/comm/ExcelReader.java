@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.comm
  *	작성일   : 2021. 11. 26.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
@@ -27,7 +27,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class ExcelReader {
@@ -35,7 +35,7 @@ public class ExcelReader {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExcelReader.class);
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 26.
 	 * @param excelFile
 	 * @return
@@ -46,7 +46,7 @@ public class ExcelReader {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 26.
 	 * @param excelFile
 	 * @return
@@ -73,7 +73,7 @@ public class ExcelReader {
 	/**
 	 * 64비트 처리.<br/>
 	 * 
-	 * @author KYJ (callakrsos@naver.com)
+	 * @author KYJ (zaruous@naver.com)
 	 *
 	 */
 	class VbExcelReader {
@@ -128,7 +128,7 @@ public class ExcelReader {
 		/**
 		 * 데이터 로딩 처리.
 		 * 
-		 * @author KYJ (callakrsos@naver.com)
+		 * @author KYJ (zaruous@naver.com)
 		 *
 		 */
 		class OutputHandler extends Thread {
@@ -157,7 +157,7 @@ public class ExcelReader {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 26.
 	 * @param <T>
 	 * @param <K>
@@ -171,7 +171,7 @@ public class ExcelReader {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 3.
 	 * @param <K>
 	 * @param doc
@@ -219,7 +219,7 @@ public class ExcelReader {
 	/**
 	 * 엑셀에서 로딩된 XML파일로부터 데이터를 처리 <br/>
 	 * 
-	 * @author KYJ (callakrsos@naver.com)
+	 * @author KYJ (zaruous@naver.com)
 	 *
 	 */
 	@FunctionalInterface
@@ -227,7 +227,7 @@ public class ExcelReader {
 		/**
 		 * Data를 다른 값으로 대체하는 경우 사용 <br/>
 		 * 
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2021. 12. 3.
 		 * @param value
 		 * @return
@@ -237,7 +237,7 @@ public class ExcelReader {
 		/**
 		 * 특정 필드를 바인딩 처리하지 않을 경우에 사용 <br/>
 		 * 
-		 * @작성자 : KYJ (callakrsos@naver.com)
+		 * @작성자 : KYJ (zaruous@naver.com)
 		 * @작성일 : 2021. 12. 3.
 		 * @param colName
 		 * @return

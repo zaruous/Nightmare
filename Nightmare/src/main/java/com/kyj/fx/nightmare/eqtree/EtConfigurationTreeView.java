@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper
  *	작성일   : 2021. 11. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.eqtree;
 
@@ -20,12 +20,12 @@ import javafx.scene.control.TreeView;
  * 
  * ET에 대한 설정에 대한 정보를 기록.
  * 
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class EtConfigurationTreeView extends TreeView<EtConfigurationTreeDVO> {
@@ -54,7 +54,7 @@ public class EtConfigurationTreeView extends TreeView<EtConfigurationTreeDVO> {
 
 	/**
 	 * 텍스트 검색어시 트리 구조를 변경시키는 용도로 사용 <br/>
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23. 
 	 * @param text
 	 */

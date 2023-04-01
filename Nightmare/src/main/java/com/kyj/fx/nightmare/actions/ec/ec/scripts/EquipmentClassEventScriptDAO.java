@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts
  *	작성일   : 2021. 12. 3.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.ec.ec.scripts;
 
@@ -26,13 +26,13 @@ import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.grid.CodeDVO;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class EquipmentClassEventScriptDAO extends AbstractDAO {
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 3.
 	 * @return
 	 */
@@ -47,7 +47,7 @@ public class EquipmentClassEventScriptDAO extends AbstractDAO {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 6.
 	 * @param equipmentClassName
 	 * @param eventName
@@ -78,7 +78,7 @@ public class EquipmentClassEventScriptDAO extends AbstractDAO {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 3.
 	 * @param hashMap
 	 * @return
@@ -156,7 +156,7 @@ public class EquipmentClassEventScriptDAO extends AbstractDAO {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 3.
 	 * @param eventGuid
 	 * @return
@@ -167,7 +167,7 @@ public class EquipmentClassEventScriptDAO extends AbstractDAO {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 6. 24.
 	 * @param equipmentClassGuid
 	 * @return

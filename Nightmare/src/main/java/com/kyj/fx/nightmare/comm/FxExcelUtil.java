@@ -164,7 +164,7 @@ public class FxExcelUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 29.
 	 * @param exportExcelFile
 	 * @param dataSource
@@ -790,7 +790,7 @@ public class FxExcelUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 26.
 	 * @param excelFile
 	 * @return

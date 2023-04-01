@@ -129,7 +129,7 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2020. 10. 30.
 	 * @param t
 	 * @return
@@ -139,7 +139,7 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2020. 10. 30.
 	 * @param t
 	 * @param fieldNameFilter
@@ -152,7 +152,7 @@ public class ObjectUtil {
 	/**
 	 * find only key <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2018. 10. 8.
 	 * @param collection
 	 * @param t

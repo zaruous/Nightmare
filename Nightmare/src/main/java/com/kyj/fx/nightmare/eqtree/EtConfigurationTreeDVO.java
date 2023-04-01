@@ -2,7 +2,7 @@
  *	프로젝트 : ETScriptHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper
  *	작성일   : 2021. 11. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.eqtree;
 
@@ -15,7 +15,7 @@ import javafx.beans.property.StringProperty;
 /**
  * ET 설정에 관련된 항목을 정의하는 트리 트리 아이템 데이터셋 <br/>
  * 
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class EtConfigurationTreeDVO {
@@ -25,7 +25,7 @@ public class EtConfigurationTreeDVO {
 	private Map<String, Object> properties = new HashMap<>();
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 22.
 	 * @param key
 	 * @param value
@@ -35,7 +35,7 @@ public class EtConfigurationTreeDVO {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 22.
 	 * @return
 	 */
@@ -44,7 +44,7 @@ public class EtConfigurationTreeDVO {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 22.
 	 * @param properties
 	 */

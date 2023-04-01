@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.actions.ec.ec
  *	작성일   : 2021. 11. 29.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.ec.ec;
 
@@ -20,7 +20,7 @@ import com.kyj.fx.nightmare.comm.AbstractDVO;
 import javafx.scene.control.TableView;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class EquipmentClassTab extends AbstractEtTab implements OnLoadEquipmentClass, OnExcelTableViewList {

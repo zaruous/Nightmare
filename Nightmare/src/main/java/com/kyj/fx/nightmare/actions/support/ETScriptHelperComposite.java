@@ -29,7 +29,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class ETScriptHelperComposite extends BorderPane {
@@ -143,7 +143,7 @@ public class ETScriptHelperComposite extends BorderPane {
 
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 4. 28. 
 	 * @return
 	 */
@@ -152,7 +152,7 @@ public class ETScriptHelperComposite extends BorderPane {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 4. 28. 
 	 * @return
 	 */
@@ -193,7 +193,7 @@ public class ETScriptHelperComposite extends BorderPane {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 19.
 	 * @param message
 	 */

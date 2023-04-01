@@ -2,7 +2,7 @@
  *	프로젝트 : gargoyle-commons
  *	패키지   : com.kyj.fx.commons.fx.controls.nashorn
  *	작성일   : 2019. 2. 12.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.comm.service;
 
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public class DmiService {
@@ -73,7 +73,7 @@ public class DmiService {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 2. 15.
 	 * @return
 	 */
@@ -111,7 +111,7 @@ public class DmiService {
 	}
 
 	/**
-	 * @author KYJ (callakrsos@naver.com)
+	 * @author KYJ (zaruous@naver.com)
 	 *
 	 */
 	private final class AttrHelper extends VisitorSupport {
@@ -611,7 +611,7 @@ public class DmiService {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 12.
 	 * @param str
 	 * @return
@@ -627,7 +627,7 @@ public class DmiService {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2020. 7. 30.
 	 * @return
 	 */
@@ -636,7 +636,7 @@ public class DmiService {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2020. 7. 30.
 	 * @param credential
 	 */

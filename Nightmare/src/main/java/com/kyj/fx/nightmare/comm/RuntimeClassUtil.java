@@ -72,7 +72,7 @@ public class RuntimeClassUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 1. 14. 
 	 * @param encode
 	 * @param args
@@ -84,7 +84,7 @@ public class RuntimeClassUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 1. 14. 
 	 * @param encode
 	 * @param args
@@ -96,7 +96,7 @@ public class RuntimeClassUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 1. 14. 
 	 * @param encode
 	 * @param pb
@@ -616,7 +616,7 @@ public class RuntimeClassUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 28. 
 	 * @param args
 	 * @param errorHandler

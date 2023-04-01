@@ -157,7 +157,7 @@ public class DefaultFileTreeView extends TreeView<Path> {
 	/**
 	 * 텍스트 검색어시 트리 구조를 변경시키는 용도로 사용 <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 23.
 	 * @param text
 	 */

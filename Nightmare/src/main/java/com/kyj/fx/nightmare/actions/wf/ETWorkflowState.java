@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.actions.wf
  *	작성일   : 2022. 7. 22.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.wf;
 
@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public enum ETWorkflowState {
@@ -23,7 +23,7 @@ public enum ETWorkflowState {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 28. 
 	 * @return
 	 */
@@ -32,7 +32,7 @@ public enum ETWorkflowState {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 22.
 	 * @param code
 	 * @return

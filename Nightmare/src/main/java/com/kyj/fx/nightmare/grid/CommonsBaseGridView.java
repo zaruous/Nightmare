@@ -230,7 +230,7 @@ public class CommonsBaseGridView<T extends AbstractDVO> extends TableView<T> {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 30. 
 	 * @param <T>
 	 * @param model

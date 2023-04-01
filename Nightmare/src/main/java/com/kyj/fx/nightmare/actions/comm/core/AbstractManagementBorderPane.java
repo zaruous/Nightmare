@@ -2,7 +2,7 @@
  *	프로젝트 : ETHelper
  *	패키지   : com.kyj.fx.b.ETScriptHelper.actions.comm.core
  *	작성일   : 2021. 12. 7.
- *	작성자   : KYJ (callakrsos@naver.com)
+ *	작성자   : KYJ (zaruous@naver.com)
  *******************************/
 package com.kyj.fx.nightmare.actions.comm.core;
 
@@ -33,7 +33,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * @author KYJ (callakrsos@naver.com)
+ * @author KYJ (zaruous@naver.com)
  *
  */
 public abstract class AbstractManagementBorderPane<T extends AbstractDVO> extends BorderPane implements OnCommitService, OnReload {
@@ -124,7 +124,7 @@ public abstract class AbstractManagementBorderPane<T extends AbstractDVO> extend
 	/**
 	 * 배포 아이템 처리 구현<br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 7.
 	 * @param name
 	 * @param items
@@ -148,7 +148,7 @@ public abstract class AbstractManagementBorderPane<T extends AbstractDVO> extend
 	 * ret.put("entityId", entityId); ret.put("comment", txtComment.getText()); ret.put("userToken", userToken); ret.put("token", token);
 	 * ret.put("err", err);
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 7.
 	 * @param permission
 	 * @param domain
@@ -173,7 +173,7 @@ public abstract class AbstractManagementBorderPane<T extends AbstractDVO> extend
 	 * ret.put("permission", permission); ret.put("domain", domain); ret.put("application", application); ret.put("entityType", entityType);
 	 * ret.put("entityId", entityId); ret.put("comment", txtComment.getText());
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 7.
 	 * @param permission
 	 * @param domain
@@ -193,7 +193,7 @@ public abstract class AbstractManagementBorderPane<T extends AbstractDVO> extend
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 7.
 	 * @param login
 	 * @param purePwd
@@ -212,7 +212,7 @@ public abstract class AbstractManagementBorderPane<T extends AbstractDVO> extend
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 7.
 	 * @param login
 	 * @param purePwd
@@ -236,7 +236,7 @@ public abstract class AbstractManagementBorderPane<T extends AbstractDVO> extend
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 9.
 	 * @param ex
 	 */

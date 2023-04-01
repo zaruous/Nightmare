@@ -68,7 +68,7 @@ public class AbstractDAO {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 7. 28. 
 	 * @param query
 	 * @param paramMap
@@ -88,7 +88,7 @@ public class AbstractDAO {
 	}
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 2. 14.
 	 * @param query
 	 * @param paramMap
@@ -112,7 +112,7 @@ public class AbstractDAO {
 	
 	
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2020. 12. 16.
 	 * @param <T>
 	 * @param query
@@ -124,7 +124,7 @@ public class AbstractDAO {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2020. 12. 16.
 	 * @param <T>
 	 * @param query
@@ -226,7 +226,7 @@ public class AbstractDAO {
 	/**
 	 * 프로시저 호출 <br/>
 	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2018. 10. 24.
 	 * @param procedureName
 	 * @param paramMap

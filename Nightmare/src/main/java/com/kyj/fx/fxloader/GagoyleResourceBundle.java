@@ -88,7 +88,7 @@ public class GagoyleResourceBundle extends PropertyResourceBundle {
 	}
 
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2022. 5. 2. 
 	 * @param clazz
 	 * @param bundleName
