@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.kyj.fx.b.ETScriptHelper;
+package com.kyj.fx.nightmare;
 
 import java.io.File;
 import java.io.IOException;

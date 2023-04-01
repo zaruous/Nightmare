@@ -52,7 +52,7 @@ open module ETHelper {
 	
 	
 	
-	exports com.kyj.fx.b.ETScriptHelper;
+	exports com.kyj.fx.nightmare;
 	exports com.kyj.fx.b.ETScriptHelper.actions.comm.core;
 	exports com.kyj.fx.b.ETScriptHelper.actions.deploy;
 	exports com.kyj.fx.b.ETScriptHelper.actions.ec.ec;

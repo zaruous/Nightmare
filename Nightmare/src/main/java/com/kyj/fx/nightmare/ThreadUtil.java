@@ -4,7 +4,7 @@
  *	작성일   : 2016. 12. 27.
  *	작성자   : KYJ
  *******************************/
-package com.kyj.fx.b.ETScriptHelper;
+package com.kyj.fx.nightmare;
 
 import java.util.Map;
 import java.util.Optional;

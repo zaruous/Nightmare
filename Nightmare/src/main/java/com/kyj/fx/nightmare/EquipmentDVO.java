@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.kyj.fx.b.ETScriptHelper;
+package com.kyj.fx.nightmare;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

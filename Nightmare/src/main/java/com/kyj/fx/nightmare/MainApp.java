@@ -1,4 +1,4 @@
-package com.kyj.fx.b.ETScriptHelper;
+package com.kyj.fx.nightmare;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Locale;

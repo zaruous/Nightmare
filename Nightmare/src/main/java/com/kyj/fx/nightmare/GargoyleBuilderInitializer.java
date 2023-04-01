@@ -4,7 +4,7 @@
  *	작성일   : 2018. 6. 1.
  *	작성자   : KYJ
  *******************************/
-package com.kyj.fx.b.ETScriptHelper;
+package com.kyj.fx.nightmare;
 
 import com.kyj.fx.b.ETScriptHelper.comm.FxUtil;
 

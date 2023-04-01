@@ -1,4 +1,4 @@
-package com.kyj.fx.b.ETScriptHelper;
+package com.kyj.fx.nightmare;
 
 public class MainLauncher {
 

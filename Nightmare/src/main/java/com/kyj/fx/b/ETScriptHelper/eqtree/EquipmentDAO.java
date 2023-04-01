@@ -17,13 +17,13 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.kyj.fx.b.ETScriptHelper.EquipmentDVO;
-import com.kyj.fx.b.ETScriptHelper.EquipmentEventDVO;
 import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts.EquipmentScriptDVO;
 import com.kyj.fx.b.ETScriptHelper.comm.AbstractDAO;
 import com.kyj.fx.b.ETScriptHelper.comm.DbUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.Hex;
 import com.kyj.fx.b.ETScriptHelper.comm.ValueUtil;
+import com.kyj.fx.nightmare.EquipmentDVO;
+import com.kyj.fx.nightmare.EquipmentEventDVO;
 
 /**
  * @author KYJ (callakrsos@naver.com)

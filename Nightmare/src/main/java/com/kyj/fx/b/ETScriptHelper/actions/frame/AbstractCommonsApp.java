@@ -6,10 +6,10 @@
  *******************************/
 package com.kyj.fx.b.ETScriptHelper.actions.frame;
 
-import com.kyj.fx.b.ETScriptHelper.MainApp;
 import com.kyj.fx.b.ETScriptHelper.comm.DialogUtil;
 import com.kyj.fx.b.ETScriptHelper.comm.ResourceLoader;
 import com.kyj.fx.b.ETScriptHelper.comm.StageStore;
+import com.kyj.fx.nightmare.MainApp;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;

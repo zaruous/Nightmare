@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kyj.fx.b.ETScriptHelper.ETScriptComposite;
+import com.kyj.fx.nightmare.ETScriptComposite;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;

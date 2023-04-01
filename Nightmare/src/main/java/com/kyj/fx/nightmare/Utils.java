@@ -4,7 +4,7 @@
  *	작성일   : 2021. 11. 11.
  *	작성자   : KYJ (callakrsos@naver.com)
  *******************************/
-package com.kyj.fx.b.ETScriptHelper;
+package com.kyj.fx.nightmare;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;

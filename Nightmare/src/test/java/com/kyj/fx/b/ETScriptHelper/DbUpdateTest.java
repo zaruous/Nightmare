@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts.EquipmentScriptDVO;
 import com.kyj.fx.b.ETScriptHelper.comm.Hex;
 import com.kyj.fx.b.ETScriptHelper.eqtree.EquipmentDAO;
+import com.kyj.fx.nightmare.DbUpdate;
 
 /**
  * @author KYJ (callakrsos@naver.com)
@@ -32,7 +33,7 @@ class DbUpdateTest {
 
 	/**
 	 * Test method for
-	 * {@link com.kyj.fx.b.ETScriptHelper.DbUpdate#updateScript(java.util.List)}.
+	 * {@link com.kyj.fx.nightmare.DbUpdate#updateScript(java.util.List)}.
 	 * 
 	 * @throws Exception
 	 */
