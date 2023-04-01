@@ -19,10 +19,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kyj.fx.b.ETScriptHelper.comm.ExcelReader;
-import com.kyj.fx.b.ETScriptHelper.comm.IdGenUtil;
-import com.kyj.fx.b.ETScriptHelper.comm.service.ESig;
-import com.kyj.fx.b.ETScriptHelper.comm.service.XMLUtils;
+import com.kyj.fx.nightmare.actions.ec.ec.group.EquipmentClassGroupDVO;
+import com.kyj.fx.nightmare.actions.ec.ec.group.EquipmentClassGroupService;
+import com.kyj.fx.nightmare.comm.ExcelReader;
+import com.kyj.fx.nightmare.comm.IdGenUtil;
+import com.kyj.fx.nightmare.comm.service.ESig;
+import com.kyj.fx.nightmare.comm.service.XMLUtils;
 
 /**
  * @author KYJ (callakrsos@naver.com)
@@ -34,7 +36,7 @@ class EquipmentClassGroupServiceTest {
 
 	/**
 	 * Test method for
-	 * {@link com.kyj.fx.b.ETScriptHelper.actions.ec.ec.group.EquipmentClassGroupService#convertRuleGroupXml(java.util.List)}.
+	 * {@link com.kyj.fx.nightmare.actions.ec.ec.group.EquipmentClassGroupService#convertRuleGroupXml(java.util.List)}.
 	 * 
 	 * @throws Exception
 	 */

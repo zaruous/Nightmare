@@ -15,6 +15,9 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import com.kyj.fx.nightmare.comm.ExcelColumnExpression;
+import com.kyj.fx.nightmare.comm.FxExcelUtil;
+
 /**
  * @author KYJ (callakrsos@naver.com)
  *
@@ -23,7 +26,7 @@ class FxExcelUtilTest {
 
 	/**
 	 * Test method for
-	 * {@link com.kyj.fx.b.ETScriptHelper.comm.FxExcelUtil#createExcel(java.io.File, java.util.LinkedHashMap, com.kyj.fx.b.ETScriptHelper.comm.IExcelDataSetHandler, java.util.Map, boolean)}.
+	 * {@link com.kyj.fx.nightmare.comm.FxExcelUtil#createExcel(java.io.File, java.util.LinkedHashMap, com.kyj.fx.nightmare.comm.IExcelDataSetHandler, java.util.Map, boolean)}.
 	 */
 	@Test
 	void test() {
@@ -45,8 +48,7 @@ class FxExcelUtilTest {
 			ExcelColumnExpression key = new ExcelColumnExpression();
 			key.setDisplayText("Equipment Class Name");
 			key.setRealText("Equipment Class Name");
-			key.isVisible = true;
-
+			key.setVisible(true);
 			value.put(key, Arrays.asList("test", "test2", "test"));
 
 			dataSource.put("Sheet0", value);

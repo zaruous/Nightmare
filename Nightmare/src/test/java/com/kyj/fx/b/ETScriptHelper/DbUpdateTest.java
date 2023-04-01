@@ -15,10 +15,10 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts.EquipmentScriptDVO;
-import com.kyj.fx.b.ETScriptHelper.comm.Hex;
-import com.kyj.fx.b.ETScriptHelper.eqtree.EquipmentDAO;
 import com.kyj.fx.nightmare.DbUpdate;
+import com.kyj.fx.nightmare.actions.ec.ec.scripts.EquipmentScriptDVO;
+import com.kyj.fx.nightmare.comm.Hex;
+import com.kyj.fx.nightmare.eqtree.EquipmentDAO;
 
 /**
  * @author KYJ (callakrsos@naver.com)

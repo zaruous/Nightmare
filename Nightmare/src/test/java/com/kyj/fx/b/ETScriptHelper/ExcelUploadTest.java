@@ -31,12 +31,12 @@ import org.apache.http.message.BasicHeader;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import com.kyj.fx.b.ETScriptHelper.comm.AES256Util;
-import com.kyj.fx.b.ETScriptHelper.comm.GargoyleHostNameVertifier;
-import com.kyj.fx.b.ETScriptHelper.comm.GargoyleSSLVertifier;
-import com.kyj.fx.b.ETScriptHelper.comm.RequestUtil;
-import com.kyj.fx.b.ETScriptHelper.comm.ResourceLoader;
-import com.kyj.fx.b.ETScriptHelper.comm.ValueUtil;
+import com.kyj.fx.nightmare.comm.AES256Util;
+import com.kyj.fx.nightmare.comm.GargoyleHostNameVertifier;
+import com.kyj.fx.nightmare.comm.GargoyleSSLVertifier;
+import com.kyj.fx.nightmare.comm.RequestUtil;
+import com.kyj.fx.nightmare.comm.ResourceLoader;
+import com.kyj.fx.nightmare.comm.ValueUtil;
 
 /**
  * @author KYJ (callakrsos@naver.com)

@@ -9,6 +9,8 @@ package com.kyj.fx.b.ETScriptHelper.actions.ec.eq.eventform;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import com.kyj.fx.nightmare.actions.ec.eq.eventform.CancelEventPerformService;
+
 /**
  * @author KYJ (callakrsos@naver.com)
  *
@@ -17,7 +19,7 @@ class CancelEventPerformServiceTest {
 	@Disabled
 	/**
 	 * Test method for
-	 * {@link com.kyj.fx.b.ETScriptHelper.actions.ec.eq.eventform.CancelEventPerformService#cancel(java.lang.String, java.lang.String)}.
+	 * {@link com.kyj.fx.nightmare.actions.ec.eq.eventform.CancelEventPerformService#cancel(java.lang.String, java.lang.String)}.
 	 * 
 	 * @throws Exception
 	 */

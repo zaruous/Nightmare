@@ -13,7 +13,7 @@ import java.util.Collection;
 
 import org.apache.commons.io.DirectoryWalker;
 
-import com.kyj.fx.b.ETScriptHelper.actions.support.CommonsScriptPathDVO;
+import com.kyj.fx.nightmare.actions.support.CommonsScriptPathDVO;
 
 /**
  * @author KYJ (callakrsos@naver.com)

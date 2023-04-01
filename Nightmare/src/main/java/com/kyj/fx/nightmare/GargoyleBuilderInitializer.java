@@ -6,7 +6,7 @@
  *******************************/
 package com.kyj.fx.nightmare;
 
-import com.kyj.fx.b.ETScriptHelper.comm.FxUtil;
+import com.kyj.fx.nightmare.comm.FxUtil;
 
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.control.ListView;

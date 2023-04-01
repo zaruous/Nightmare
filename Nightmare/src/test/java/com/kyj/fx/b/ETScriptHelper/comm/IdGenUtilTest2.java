@@ -10,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import com.kyj.fx.nightmare.comm.IdGenUtil;
+
 /**
  * @author KYJ (callakrsos@naver.com)
  *
@@ -17,7 +19,7 @@ import org.junit.jupiter.api.Test;
 class IdGenUtilTest2 {
 
 	/**
-	 * Test method for {@link com.kyj.fx.b.ETScriptHelper.comm.IdGenUtil#generate()}.
+	 * Test method for {@link com.kyj.fx.nightmare.comm.IdGenUtil#generate()}.
 	 */
 	@Test
 	void testGenerate() {
@@ -33,7 +35,7 @@ class IdGenUtilTest2 {
 	}
 
 	/**
-	 * Test method for {@link com.kyj.fx.b.ETScriptHelper.comm.IdGenUtil#generate(char)}.
+	 * Test method for {@link com.kyj.fx.nightmare.comm.IdGenUtil#generate(char)}.
 	 */
 	@Test
 	void testGenerateChar() {

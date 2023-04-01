@@ -10,8 +10,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts.EquipmentScriptDVO;
-import com.kyj.fx.b.ETScriptHelper.comm.DateUtil;
+import com.kyj.fx.nightmare.actions.ec.ec.scripts.EquipmentScriptDVO;
+import com.kyj.fx.nightmare.comm.DateUtil;
 
 /**
  * @author KYJ (callakrsos@naver.com)

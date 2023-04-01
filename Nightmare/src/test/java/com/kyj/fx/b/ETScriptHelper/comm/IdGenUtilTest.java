@@ -8,6 +8,8 @@ package com.kyj.fx.b.ETScriptHelper.comm;
 
 import org.junit.jupiter.api.Test;
 
+import com.kyj.fx.nightmare.comm.IdGenUtil;
+
 /**
  * @author KYJ (callakrsos@naver.com)
  *
@@ -15,7 +17,7 @@ import org.junit.jupiter.api.Test;
 class IdGenUtilTest {
 
 	/**
-	 * Test method for {@link com.kyj.fx.b.ETScriptHelper.comm.IdGenUtil#randomGuid()}.
+	 * Test method for {@link com.kyj.fx.nightmare.comm.IdGenUtil#randomGuid()}.
 	 */
 	@Test
 	void testRandomGuid() {

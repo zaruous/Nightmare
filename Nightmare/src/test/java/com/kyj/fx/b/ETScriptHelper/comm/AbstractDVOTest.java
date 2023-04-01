@@ -12,7 +12,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.EquipmentClassDVO;
+import com.kyj.fx.nightmare.actions.ec.ec.EquipmentClassDVO;
 
 /**
  * @author KYJ (callakrsos@naver.com)

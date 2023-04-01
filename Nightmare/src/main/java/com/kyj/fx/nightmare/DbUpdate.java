@@ -18,9 +18,9 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts.EquipmentScriptDVO;
-import com.kyj.fx.b.ETScriptHelper.comm.DbUtil;
-import com.kyj.fx.b.ETScriptHelper.comm.ValueUtil;
+import com.kyj.fx.nightmare.actions.ec.ec.scripts.EquipmentScriptDVO;
+import com.kyj.fx.nightmare.comm.DbUtil;
+import com.kyj.fx.nightmare.comm.ValueUtil;
 
 /**
  * @author KYJ (callakrsos@naver.com)
@@ -99,7 +99,7 @@ public class DbUpdate {
 		return r;
 	}
 
-	static int deleteScript(Connection con , List<EquipmentScriptDVO> deleteItems) throws Exception {
+	public static int deleteScript(Connection con , List<EquipmentScriptDVO> deleteItems) throws Exception {
 		int r = -1;
 		String sql = "delete DMI_ET.dbo.ET_EventScripts  where 1=1  and SCRIPTGUID=?  and EVENTGUID=?";
 

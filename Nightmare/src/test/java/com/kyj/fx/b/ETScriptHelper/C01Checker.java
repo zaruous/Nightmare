@@ -14,7 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.dom4j.Document;
 import org.junit.jupiter.api.Test;
 
-import com.kyj.fx.b.ETScriptHelper.comm.service.XMLUtils;
+import com.kyj.fx.nightmare.comm.service.XMLUtils;
 
 /**
  * @author KYJ (callakrsos@naver.com)

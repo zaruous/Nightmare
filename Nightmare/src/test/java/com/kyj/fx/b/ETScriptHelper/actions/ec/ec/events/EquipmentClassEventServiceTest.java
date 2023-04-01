@@ -8,6 +8,8 @@ package com.kyj.fx.b.ETScriptHelper.actions.ec.ec.events;
 
 import org.junit.jupiter.api.Test;
 
+import com.kyj.fx.nightmare.actions.ec.ec.events.EquipmentClassEventService;
+
 /**
  * @author KYJ (callakrsos@naver.com)
  *
@@ -15,7 +17,7 @@ import org.junit.jupiter.api.Test;
 class EquipmentClassEventServiceTest {
 
 	/**
-	 * Test method for {@link com.kyj.fx.b.ETScriptHelper.actions.ec.ec.events.EquipmentClassEventService#item(java.lang.String)}.
+	 * Test method for {@link com.kyj.fx.nightmare.actions.ec.ec.events.EquipmentClassEventService#item(java.lang.String)}.
 	 * @throws Exception 
 	 */
 	@Test

@@ -9,6 +9,8 @@ package com.kyj.fx.b.ETScriptHelper.comm.service;
 import org.dom4j.Document;
 import org.junit.jupiter.api.Test;
 
+import com.kyj.fx.nightmare.comm.service.XMLUtils;
+
 /**
  * @author KYJ (callakrsos@naver.com)
  *

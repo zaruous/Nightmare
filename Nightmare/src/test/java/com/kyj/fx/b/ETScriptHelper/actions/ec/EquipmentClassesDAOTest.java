@@ -8,8 +8,8 @@ package com.kyj.fx.b.ETScriptHelper.actions.ec;
 
 import org.junit.jupiter.api.Test;
 
-import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.EquipmentClassDVO;
-import com.kyj.fx.b.ETScriptHelper.actions.ec.ec.EquipmentClassesDAO;
+import com.kyj.fx.nightmare.actions.ec.ec.EquipmentClassDVO;
+import com.kyj.fx.nightmare.actions.ec.ec.EquipmentClassesDAO;
 
 /**
  * @author KYJ (callakrsos@naver.com)

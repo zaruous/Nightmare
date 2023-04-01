@@ -10,6 +10,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.kyj.fx.nightmare.actions.ec.ec.events.EquipmentClassEventDAO;
+import com.kyj.fx.nightmare.actions.ec.ec.events.EtEventsDVO;
+
 /**
  * @author KYJ (callakrsos@naver.com)
  *
@@ -18,7 +21,7 @@ class EquipmentClassEventDAOTest {
 
 	/**
 	 * Test method for
-	 * {@link com.kyj.fx.b.ETScriptHelper.actions.ec.ec.events.EquipmentClassEventDAO#getEvent()}.
+	 * {@link com.kyj.fx.nightmare.actions.ec.ec.events.EquipmentClassEventDAO#getEvent()}.
 	 */
 	@Test
 	void testGetEvent() {

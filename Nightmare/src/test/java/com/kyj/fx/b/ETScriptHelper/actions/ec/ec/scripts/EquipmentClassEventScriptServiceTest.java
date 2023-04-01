@@ -18,9 +18,10 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kyj.fx.b.ETScriptHelper.comm.ResourceLoader;
-import com.kyj.fx.b.ETScriptHelper.comm.service.ESig;
-import com.kyj.fx.b.ETScriptHelper.comm.service.XMLUtils;
+import com.kyj.fx.nightmare.actions.ec.ec.scripts.EquipmentClassEventScriptService;
+import com.kyj.fx.nightmare.comm.ResourceLoader;
+import com.kyj.fx.nightmare.comm.service.ESig;
+import com.kyj.fx.nightmare.comm.service.XMLUtils;
 
 /**
  * @author KYJ (callakrsos@naver.com)
@@ -32,7 +33,7 @@ class EquipmentClassEventScriptServiceTest {
 	private static Logger LOGGER = LoggerFactory.getLogger(EquipmentClassEventScriptServiceTest.class);
 
 	/**
-	 * Test method for {@link com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts.EquipmentClassEventScriptService#item(java.lang.String)}.
+	 * Test method for {@link com.kyj.fx.nightmare.actions.ec.ec.scripts.EquipmentClassEventScriptService#item(java.lang.String)}.
 	 * 
 	 * @throws Exception
 	 */

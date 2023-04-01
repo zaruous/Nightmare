@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.kyj.fx.b.ETScriptHelper.comm.FileUtil;
+import com.kyj.fx.nightmare.comm.FileUtil;
 
 /**
  * @author (zaruous@naver.com)

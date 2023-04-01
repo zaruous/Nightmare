@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kyj.fx.b.ETScriptHelper.comm.ResourceLoader;
-import com.kyj.fx.b.ETScriptHelper.comm.service.ESig;
+import com.kyj.fx.nightmare.comm.ResourceLoader;
+import com.kyj.fx.nightmare.comm.service.ESig;
 
 /**
  * @author KYJ (callakrsos@naver.com)
@@ -23,7 +23,7 @@ class EquipmentClassEventScriptCompositeTest {
 	private static Logger LOGGER = LoggerFactory.getLogger(EquipmentClassEventScriptCompositeTest.class);
 
 	/**
-	 * Test method for {@link com.kyj.fx.b.ETScriptHelper.actions.ec.ec.scripts.EquipmentClassEventScriptComposite#onCommit()}.
+	 * Test method for {@link com.kyj.fx.nightmare.actions.ec.ec.scripts.EquipmentClassEventScriptComposite#onCommit()}.
 	 * 
 	 * @throws Exception
 	 */

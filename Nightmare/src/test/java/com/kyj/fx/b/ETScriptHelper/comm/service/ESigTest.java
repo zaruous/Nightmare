@@ -24,9 +24,11 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kyj.fx.b.ETScriptHelper.comm.DbUtil;
-import com.kyj.fx.b.ETScriptHelper.comm.FileUtil;
-import com.kyj.fx.b.ETScriptHelper.comm.ValueUtil;
+import com.kyj.fx.nightmare.comm.DbUtil;
+import com.kyj.fx.nightmare.comm.FileUtil;
+import com.kyj.fx.nightmare.comm.ValueUtil;
+import com.kyj.fx.nightmare.comm.service.ESig;
+import com.kyj.fx.nightmare.comm.service.XMLUtils;
 
 /**
  * @author KYJ (callakrsos@naver.com)

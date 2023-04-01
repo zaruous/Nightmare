@@ -18,7 +18,8 @@ import org.dom4j.tree.DefaultElement;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import com.kyj.fx.b.ETScriptHelper.comm.service.XMLUtils;
+import com.kyj.fx.nightmare.actions.ec.ec.rule.EquipmentClassRuleService;
+import com.kyj.fx.nightmare.comm.service.XMLUtils;
 
 /**
  * @author KYJ (callakrsos@naver.com)
@@ -29,7 +30,7 @@ class EquipmentClassRuleServiceTest {
 
 	EquipmentClassRuleService s = new EquipmentClassRuleService();
 	/**
-	 * Test method for {@link com.kyj.fx.b.ETScriptHelper.actions.ec.ec.rule.EquipmentClassRuleService#listRule(java.lang.String)}.
+	 * Test method for {@link com.kyj.fx.nightmare.actions.ec.ec.rule.EquipmentClassRuleService#listRule(java.lang.String)}.
 	 * 
 	 * @throws Exception
 	 */

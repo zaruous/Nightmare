@@ -12,10 +12,10 @@ import java.util.List;
 import org.dom4j.Document;
 import org.junit.jupiter.api.Test;
 
-import com.kyj.fx.b.ETScriptHelper.actions.ec.eq.states.EquipmentEventStateDVO;
-import com.kyj.fx.b.ETScriptHelper.comm.ExcelReader;
-import com.kyj.fx.b.ETScriptHelper.comm.ObjectUtil;
-import com.kyj.fx.b.ETScriptHelper.comm.service.XMLUtils;
+import com.kyj.fx.nightmare.actions.ec.eq.states.EquipmentEventStateDVO;
+import com.kyj.fx.nightmare.comm.ExcelReader;
+import com.kyj.fx.nightmare.comm.ObjectUtil;
+import com.kyj.fx.nightmare.comm.service.XMLUtils;
 
 /**
  * @author KYJ (callakrsos@naver.com)

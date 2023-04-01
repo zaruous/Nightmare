@@ -13,6 +13,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.junit.jupiter.api.Test;
 
+import com.kyj.fx.nightmare.comm.service.XMLUtils;
+
 /**
  * @author KYJ (callakrsos@naver.com)
  *
