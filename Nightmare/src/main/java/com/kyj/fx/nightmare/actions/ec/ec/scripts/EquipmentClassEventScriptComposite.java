@@ -44,7 +44,7 @@ import com.kyj.fx.nightmare.comm.IdGenUtil;
 import com.kyj.fx.nightmare.comm.Message;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.comm.service.XMLUtils;
-import com.kyj.fx.nightmare.grid.NumberingCellValueFactory;
+import com.kyj.fx.nightmare.ui.grid.NumberingCellValueFactory;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

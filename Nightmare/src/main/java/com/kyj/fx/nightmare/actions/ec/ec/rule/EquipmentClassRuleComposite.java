@@ -30,7 +30,7 @@ import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.JsonFormatter;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.comm.service.XMLUtils;
-import com.kyj.fx.nightmare.grid.AnnotationOptions;
+import com.kyj.fx.nightmare.ui.grid.AnnotationOptions;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

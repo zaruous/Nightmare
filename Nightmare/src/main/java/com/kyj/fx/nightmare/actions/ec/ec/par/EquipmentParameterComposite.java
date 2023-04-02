@@ -29,8 +29,8 @@ import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.IdGenUtil;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.comm.service.XMLUtils;
-import com.kyj.fx.nightmare.grid.AnnotationOptions;
-import com.kyj.fx.nightmare.grid.CodeDVO;
+import com.kyj.fx.nightmare.ui.grid.AnnotationOptions;
+import com.kyj.fx.nightmare.ui.grid.CodeDVO;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

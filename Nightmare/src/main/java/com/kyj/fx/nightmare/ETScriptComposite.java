@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.nightmare.actions.ec.ec.scripts.EquipmentScriptDVO;
-import com.kyj.fx.nightmare.actions.frame.ETFrameComposite;
 import com.kyj.fx.nightmare.actions.support.CommonsScriptPathDVO;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.FileUtil;
@@ -25,9 +24,10 @@ import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.Hex;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.ValueUtil;
-import com.kyj.fx.nightmare.eqtree.EquipmentClassDVO;
-import com.kyj.fx.nightmare.eqtree.EquipmentDAO;
-import com.kyj.fx.nightmare.grid.AnnotationOptions;
+import com.kyj.fx.nightmare.ui.frame.ETFrameComposite;
+import com.kyj.fx.nightmare.ui.grid.AnnotationOptions;
+import com.kyj.fx.nightmare.ui.tree.eqtree.EquipmentClassDVO;
+import com.kyj.fx.nightmare.ui.tree.eqtree.EquipmentDAO;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;

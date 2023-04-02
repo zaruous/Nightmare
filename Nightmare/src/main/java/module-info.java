@@ -63,12 +63,12 @@ open module ETHelper {
 	exports com.kyj.fx.nightmare.actions.ec.ec.scripts;
 	exports com.kyj.fx.nightmare.actions.ec.eq.eventform;
 	exports com.kyj.fx.nightmare.actions.ec.eq.states;
-	exports com.kyj.fx.nightmare.actions.frame;
+	exports com.kyj.fx.nightmare.ui.frame;
 	exports com.kyj.fx.nightmare.actions.support;
 	exports com.kyj.fx.nightmare.comm;
 	exports com.kyj.fx.nightmare.comm.service;
-	exports com.kyj.fx.nightmare.eqtree;
-	exports com.kyj.fx.nightmare.grid;
+	exports com.kyj.fx.nightmare.ui.tree.eqtree;
+	exports com.kyj.fx.nightmare.ui.grid;
 	exports com.kyj.fx.fxloader;
 
 }

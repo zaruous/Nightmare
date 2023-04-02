@@ -4,7 +4,7 @@
 package com.kyj.fx.nightmare.actions.ec.eq.cp;
 
 import com.kyj.fx.nightmare.comm.AbstractDVO;
-import com.kyj.fx.nightmare.grid.ColumnWidth;
+import com.kyj.fx.nightmare.ui.grid.ColumnWidth;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

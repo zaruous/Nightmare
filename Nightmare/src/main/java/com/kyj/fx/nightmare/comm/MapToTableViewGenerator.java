@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.kyj.fx.nightmare.grid.NumberingCellValueFactory;
+import com.kyj.fx.nightmare.ui.grid.NumberingCellValueFactory;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

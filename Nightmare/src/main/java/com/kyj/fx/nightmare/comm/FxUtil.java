@@ -14,9 +14,9 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.kyj.fx.nightmare.GargoyleBuilderInitializer;
-import com.kyj.fx.nightmare.grid.AnnotationOptions;
-import com.kyj.fx.nightmare.grid.IColumnMapper;
-import com.kyj.fx.nightmare.grid.IOptions;
+import com.kyj.fx.nightmare.ui.grid.AnnotationOptions;
+import com.kyj.fx.nightmare.ui.grid.IColumnMapper;
+import com.kyj.fx.nightmare.ui.grid.IOptions;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

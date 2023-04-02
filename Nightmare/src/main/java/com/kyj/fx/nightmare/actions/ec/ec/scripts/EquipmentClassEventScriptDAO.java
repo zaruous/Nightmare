@@ -23,7 +23,7 @@ import com.kyj.fx.nightmare.actions.ec.ec.events.EtEventsDVO;
 import com.kyj.fx.nightmare.comm.AbstractDAO;
 import com.kyj.fx.nightmare.comm.Hex;
 import com.kyj.fx.nightmare.comm.ValueUtil;
-import com.kyj.fx.nightmare.grid.CodeDVO;
+import com.kyj.fx.nightmare.ui.grid.CodeDVO;
 
 /**
  * @author KYJ (zaruous@naver.com)

@@ -6,8 +6,8 @@
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
-import com.kyj.fx.nightmare.actions.frame.AbstractCommonsApp;
-import com.kyj.fx.nightmare.actions.frame.ETFrameComposite;
+import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
+import com.kyj.fx.nightmare.ui.frame.ETFrameComposite;
 
 import javafx.stage.Stage;
 

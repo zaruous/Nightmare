@@ -19,9 +19,9 @@ import org.controlsfx.control.table.TableFilter.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kyj.fx.nightmare.grid.CommonsBaseGridView;
-import com.kyj.fx.nightmare.grid.IColumnMapper;
-import com.kyj.fx.nightmare.grid.IOptions;
+import com.kyj.fx.nightmare.ui.grid.CommonsBaseGridView;
+import com.kyj.fx.nightmare.ui.grid.IColumnMapper;
+import com.kyj.fx.nightmare.ui.grid.IOptions;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;

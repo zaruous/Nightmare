@@ -58,6 +58,8 @@ public class ResourceLoader {
 	 */
 	public static final String APP_VERSION = "app.version";
 
+	public static final String DEFAULT_WORKSPACE_PATH = "default.workspace.location";
+
 	public static synchronized ResourceLoader getInstance() {
 		if (loader == null) {
 			loader = new ResourceLoader();

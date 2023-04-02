@@ -17,8 +17,8 @@ import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.comm.template.Sql;
 import com.kyj.fx.nightmare.comm.template.Template;
-import com.kyj.fx.nightmare.grid.AnnotationOptions;
-import com.kyj.fx.nightmare.grid.CommonsBaseGridView;
+import com.kyj.fx.nightmare.ui.grid.AnnotationOptions;
+import com.kyj.fx.nightmare.ui.grid.CommonsBaseGridView;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

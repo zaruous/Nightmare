@@ -18,7 +18,7 @@ import com.kyj.fx.nightmare.comm.FileUtil;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.ValueUtil;
-import com.kyj.fx.nightmare.grid.AnnotationOptions;
+import com.kyj.fx.nightmare.ui.grid.AnnotationOptions;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;

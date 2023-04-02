@@ -265,9 +265,6 @@
 		</dependency>
 
 
-		<!-- <dependency> <groupId>org.apache.tomcat.embed</groupId> <artifactId>tomcat-embed-core</artifactId> 
-			<version>9.0.62</version> </dependency> -->
-
 		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -368,9 +365,6 @@
 		</dependency>
 
 
-		<!-- https://mvnrepository.com/artifact/xml-apis/xml-apis -->
-		<!-- <dependency> <groupId>xml-apis</groupId> <artifactId>xml-apis</artifactId> 
-			<version>1.0.b2</version> </dependency> -->
 
 		<dependency>
 			<groupId>jaxen</groupId>
@@ -454,6 +448,40 @@
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.9.2</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.9.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>5.9.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.9.2</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy</artifactId>
+			<version>3.0.17</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-jsr223</artifactId>
+			<version>3.0.17</version>
 		</dependency>
 
 	</dependencies>

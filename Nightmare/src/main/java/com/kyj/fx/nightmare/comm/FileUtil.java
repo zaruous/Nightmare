@@ -440,4 +440,65 @@ public class FileUtil {
 		Files.walkFileTree(file.toPath(), visitor);
 		return arrayList;
 	}
+	
+
+	/**
+	 * refer readConversion(File f, Charset encoding) <br/>
+	 * 
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2019. 1. 24.
+	 * @param f
+	 * @return
+	 */
+	public static String readConversion(File f) {
+		return FileContentConversionUtil.conversion(f);
+	}
+	
+	/**
+	 * 파일확장자 리턴
+	 *
+	 * @작성자 : KYJ
+	 * @작성일 : 2016. 10. 4.
+	 * @param extension
+	 */
+	public static String getFileExtension(File fileName) {
+		return getFileExtension(fileName.getName());
+	}
+	
+	/**
+	 * 파일확장자 리턴
+	 *
+	 * @작성자 : KYJ
+	 * @작성일 : 2016. 10. 4.
+	 * @param fileName
+	 * @return
+	 */
+	public static String getFileExtension(String fileName) {
+		int dotIndex = -1;
+		int length = fileName.length();
+
+		for (int i = length - 1; i >= 0; i--) {
+			if (fileName.charAt(i) == '.') {
+				dotIndex = i;
+				break;
+			}
+		}
+		return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+	}
+	
+	/**
+	 * 파일내용에 인코딩 정보가 존재하면 그 인코딩을 리턴합니다. </br>
+	 * 만약에 인코딩정보가 없다면 UTF-8을 리턴합니다 </br>
+	 * 
+	 * @작성자 : KYJ
+	 * @작성일 : 2017. 11. 1.
+	 * @param f
+	 *            인코딩을 찾을 파일.
+	 * @return 인코딩
+	 * @throws IOException
+	 */
+	public static String findEncoding(File f) {
+		return FileEncodingFinder.getEncoding(f);
+		// return new FileEncodingFinder(f).getEncoding();
+	}
 }

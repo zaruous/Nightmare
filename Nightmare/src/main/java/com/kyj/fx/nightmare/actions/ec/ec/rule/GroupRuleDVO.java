@@ -7,7 +7,7 @@
 package com.kyj.fx.nightmare.actions.ec.ec.rule;
 
 import com.kyj.fx.nightmare.comm.AbstractDVO;
-import com.kyj.fx.nightmare.grid.ColumnVisible;
+import com.kyj.fx.nightmare.ui.grid.ColumnVisible;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

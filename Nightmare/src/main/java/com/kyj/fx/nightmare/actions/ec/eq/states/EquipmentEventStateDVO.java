@@ -7,9 +7,9 @@
 package com.kyj.fx.nightmare.actions.ec.eq.states;
 
 import com.kyj.fx.nightmare.comm.AbstractDVO;
-import com.kyj.fx.nightmare.grid.ColumnVisible;
-import com.kyj.fx.nightmare.grid.ColumnWidth;
-import com.kyj.fx.nightmare.grid.UseCommonClick;
+import com.kyj.fx.nightmare.ui.grid.ColumnVisible;
+import com.kyj.fx.nightmare.ui.grid.ColumnWidth;
+import com.kyj.fx.nightmare.ui.grid.UseCommonClick;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

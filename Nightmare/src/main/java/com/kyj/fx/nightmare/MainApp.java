@@ -6,11 +6,11 @@ import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kyj.fx.nightmare.actions.frame.MainFormComposite;
 import com.kyj.fx.nightmare.comm.Message;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
+import com.kyj.fx.nightmare.ui.frame.MainFormComposite;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
