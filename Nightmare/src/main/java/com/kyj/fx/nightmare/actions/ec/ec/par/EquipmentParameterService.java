@@ -46,7 +46,7 @@ public class EquipmentParameterService {
 	public Document update(String token, String updateXml) throws Exception {
 		
 		
-//		https://p3mesdev/et/WebService/EventsTx.asmx?wsdl
+//		https://url/et/WebService/EventsTx.asmx?wsdl
 		String rootUrl = ResourceLoader.getInstance().get(ResourceLoader.SYNCADE_ROOT_URL);
 		DmiService dmiService = new DmiService(rootUrl + "/et/WebService/EventsTx.asmx?wsdl");
 		Object execute = dmiService.execute("Update", "EventsTxSoap", new String[] { token, updateXml } );

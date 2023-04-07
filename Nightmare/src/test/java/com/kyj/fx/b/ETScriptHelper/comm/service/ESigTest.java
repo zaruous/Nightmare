@@ -45,13 +45,6 @@ class ESigTest {
 		Node selectSingleNode = load.selectSingleNode("//Person/@name");
 		System.out.println(selectSingleNode.getText());
 	}
-	@Disabled
-	@Test
-	void test() throws Exception {
-		var sig = new ESig("https://p3mesdev");
-		String createToken = sig.createToken("kyjun.kim", "12", "5", "Syncade", "DMI ET", "EquipmentClasses", "0", "");
-		System.out.println(createToken);
-	}
 
 	@Test
 	public void ttest() throws SQLException, Exception {
@@ -73,7 +66,6 @@ class ESigTest {
 		sb.append("order by versionnumber desc)\n");
 		sb.append(") \n");
 
-		
 		DbUtil.select(DbUtil.getConnection(), sb.toString(), 2, 2,
 				new BiFunction<ResultSetMetaData, ResultSet, List<Map<String, String>>>() {
 
@@ -81,40 +73,42 @@ class ESigTest {
 					public List<Map<String, String>> apply(ResultSetMetaData t, ResultSet u) {
 						var m = new HashMap<String, String>();
 						try {
-							int i= 0;
+							int i = 0;
 							while (u.next()) {
-								
+
 								String n = u.getString("FILEPATHFROM");
 								String name = new File(n).getName();
-								
+
 								try (InputStream binaryStream = u.getBinaryStream("BLOB")) {
-									
+
 									byte[] b = ValueUtil.toByte(binaryStream);
-									LOGGER.debug("{}" , new String(b,"utf-8"));
+									LOGGER.debug("{}", new String(b, "utf-8"));
 									FileUtil.writeFile(name, binaryStream);
-									
+
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
-								
-//								new ZipInputStream(null)
-								
-//								try (BufferedReader reader =  new BufferedReader(u.getNCharacterStream("BLOB"))) {
-//									String temp = null;
-//									
-//									while( (temp = reader.readLine())!=null) {
-//										LOGGER.debug(temp);
-//									}
-//									
-//								} catch (Exception e) {
-//									e.printStackTrace();
-//								}
-								
+
+								// new ZipInputStream(null)
+
+								// try (BufferedReader reader = new
+								// BufferedReader(u.getNCharacterStream("BLOB")))
+								// {
+								// String temp = null;
+								//
+								// while( (temp = reader.readLine())!=null) {
+								// LOGGER.debug(temp);
+								// }
+								//
+								// } catch (Exception e) {
+								// e.printStackTrace();
+								// }
+
 							}
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}
-						
+
 						return Arrays.asList(m);
 					}
 				});

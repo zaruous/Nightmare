@@ -39,7 +39,7 @@ public class EquipmentClassEventScriptService {
 	 * @throws Exception
 	 */
 	public Object update(String saToken, String itemXml) throws Exception {
-		// https://p3mesdev/et/WebService/EventsTx.asmx?wsdl
+		// https://url/et/WebService/EventsTx.asmx?wsdl
 		DmiService s = new DmiService(
 				ResourceLoader.getInstance().get(ResourceLoader.SYNCADE_ROOT_URL) + "/et/WebService/EventsTx.asmx?wsdl");
 		return s.execute("Update", "EventsTxSoap", new String[] { saToken, itemXml });

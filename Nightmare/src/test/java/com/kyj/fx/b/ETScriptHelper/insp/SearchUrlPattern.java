@@ -35,7 +35,7 @@ public class SearchUrlPattern {
 
 		for (String pattern : patterns) {
 			Pattern regex = Pattern.compile(pattern);
-			var rootFile = new File("C:\\Users\\KYJ\\git\\Gargoyle");
+			var rootFile = new File("");
 			// File[] listFiles = rootFile.listFiles();
 			List<File> recursive = FileUtil.recursive(rootFile, dir -> {
 				return dir.getFileName().toString().equals("target");
