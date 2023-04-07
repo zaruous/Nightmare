@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 
 import com.kyj.fx.nightmare.comm.FileUtil;
 
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
+
 /**
  * @author (zaruous@naver.com)
  *
@@ -30,7 +32,7 @@ public class SearchIpPattern {
 
 		for (String pattern : patterns) {
 			Pattern regex = Pattern.compile(pattern);
-			var rootFile = new File("");
+			var rootFile = new File("C:\\Users\\KYJ\\git\\Gargoyle");
 			// File[] listFiles = rootFile.listFiles();
 			List<File> recursive = FileUtil.recursive(rootFile, dir -> {
 				return dir.getFileName().toString().equals("target");
@@ -41,8 +43,10 @@ public class SearchIpPattern {
 					// String name = file.getName();
 					String readToString = FileUtil.readToString(file);
 					Matcher matcher = regex.matcher(readToString);
-					if (matcher.find())
+					if (matcher.find()) {
+						System.out.println(matcher.group()+"]" + file.getAbsolutePath());
 						return true;
+					}
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -52,7 +56,9 @@ public class SearchIpPattern {
 				return false;
 			});
 
-			recursive.forEach(System.out::println);
+			recursive.forEach(a -> {
+				
+			});
 			Assertions.assertTrue(recursive.size() > 0);
 		}
 
