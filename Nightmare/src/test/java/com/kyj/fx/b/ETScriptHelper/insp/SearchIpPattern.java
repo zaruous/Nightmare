@@ -9,6 +9,7 @@ package com.kyj.fx.b.ETScriptHelper.insp;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,11 +41,16 @@ public class SearchIpPattern {
 					File file = path.toFile();
 					// String name = file.getName();
 					String readToString = FileUtil.readToString(file);
+
 					Matcher matcher = regex.matcher(readToString);
-					if (matcher.find()) {
-						System.out.println(matcher.group()+"]" + file.getAbsolutePath());
-						return true;
+					int matchCnt = 0;
+					
+					while (matcher.find()) {
+						System.out.println(matcher.group() + "]" + file.getAbsolutePath());
+						matchCnt++;
 					}
+					if(matchCnt > 0)
+						return true;
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -55,7 +61,7 @@ public class SearchIpPattern {
 			});
 
 			recursive.forEach(a -> {
-				
+
 			});
 			Assertions.assertTrue(recursive.size() > 0);
 		}

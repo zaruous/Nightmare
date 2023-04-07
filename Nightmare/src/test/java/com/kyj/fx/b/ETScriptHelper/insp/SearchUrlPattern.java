@@ -24,11 +24,10 @@ import com.kyj.fx.nightmare.comm.FileUtil;
 public class SearchUrlPattern {
 
 	String[] patterns = { "http(s)?://[a-zA-Z0-9.-]+(\\.[a-zA-Z]{2,})?(:\\d{1,5})?(/\\S*)?" };
-	String[] extFilter = { ".png" , ".fxml", ".xml" };
-	String[] igmoreUrlPattern = { "http://www.w3.org" , "https://trends.google.com", "http://www.opensource.org"
-			,"http://ajax.googleapis.com", "https://ko.wikipedia.org", "http://xml.apache.org" , "http://www.fontrix.com",
-			"https://dev.naver.com", "http://ns.adobe.com" , "http://docs.oracle.com"
-	};
+	String[] extFilter = { ".png", ".fxml", ".xml" };
+	String[] igmoreUrlPattern = { "http://www.w3.org", "https://trends.google.com", "http://www.opensource.org",
+			"http://ajax.googleapis.com", "https://ko.wikipedia.org", "http://xml.apache.org", "http://www.fontrix.com",
+			"https://dev.naver.com", "http://ns.adobe.com", "http://docs.oracle.com" };
 
 	@Test
 	public void test() throws IOException {
@@ -43,26 +42,37 @@ public class SearchUrlPattern {
 
 				try {
 					File file = path.toFile();
-					
+
 					String lowerCase = file.getName().toLowerCase();
-					
-					
-					for(String ext : extFilter) { if(lowerCase.endsWith(ext)) return false; }
-					
+
+					for (String ext : extFilter) {
+						if (lowerCase.endsWith(ext))
+							return false;
+					}
+
 					String readToString = FileUtil.readToString(file);
 					Matcher matcher = regex.matcher(readToString);
-					if (matcher.find()) {
-						String group = matcher.group();
-						
-						
-						for(String url : igmoreUrlPattern) {
-							if(group.contains(url)) return false;
-						}
-						
-						
-						System.out.println(group+"]" + file.getAbsolutePath());
-						return true;
+
+					int matchCnt = 0;
+
+					while (matcher.find()) {
+						System.out.println(matcher.group() + "]" + file.getAbsolutePath());
+						matchCnt++;
 					}
+					if (matchCnt > 0)
+						return true;
+
+//					if (matcher.find()) {
+//						String group = matcher.group();
+//
+//						for (String url : igmoreUrlPattern) {
+//							if (group.contains(url))
+//								return false;
+//						}
+//
+//						System.out.println(group + "]" + file.getAbsolutePath());
+//						return true;
+//					}
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -73,7 +83,7 @@ public class SearchUrlPattern {
 			});
 
 			recursive.forEach(a -> {
-				
+
 			});
 			Assertions.assertTrue(recursive.size() > 0);
 		}
