@@ -21,9 +21,14 @@ import com.kyj.fx.nightmare.comm.FileUtil;
  * @author (zaruous@naver.com)
  *
  */
-public class SearchIpPattern {
+public class SearchUrlPattern {
 
-	String[] patterns = { "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b" };
+	String[] patterns = { "http(s)?://[a-zA-Z0-9.-]+(\\.[a-zA-Z]{2,})?(:\\d{1,5})?(/\\S*)?" };
+	String[] extFilter = { ".png" , ".fxml", ".xml" };
+	String[] igmoreUrlPattern = { "http://www.w3.org" , "https://trends.google.com", "http://www.opensource.org"
+			,"http://ajax.googleapis.com", "https://ko.wikipedia.org", "http://xml.apache.org" , "http://www.fontrix.com",
+			"https://dev.naver.com", "http://ns.adobe.com" , "http://docs.oracle.com"
+	};
 
 	@Test
 	public void test() throws IOException {
@@ -38,11 +43,24 @@ public class SearchIpPattern {
 
 				try {
 					File file = path.toFile();
-					// String name = file.getName();
+					
+					String lowerCase = file.getName().toLowerCase();
+					
+					
+					for(String ext : extFilter) { if(lowerCase.endsWith(ext)) return false; }
+					
 					String readToString = FileUtil.readToString(file);
 					Matcher matcher = regex.matcher(readToString);
 					if (matcher.find()) {
-						System.out.println(matcher.group()+"]" + file.getAbsolutePath());
+						String group = matcher.group();
+						
+						
+						for(String url : igmoreUrlPattern) {
+							if(group.contains(url)) return false;
+						}
+						
+						
+						System.out.println(group+"]" + file.getAbsolutePath());
 						return true;
 					}
 
