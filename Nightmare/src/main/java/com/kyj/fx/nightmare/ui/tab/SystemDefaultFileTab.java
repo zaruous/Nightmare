@@ -24,7 +24,7 @@ import javafx.scene.layout.BorderPane;
  */
 public class SystemDefaultFileTab extends Tab {
 
-	private static final TextArea textArea = new TextArea();
+	private final TextArea textArea = new TextArea();
 	private ObjectProperty<File> f = new SimpleObjectProperty<File>();
 
 	public SystemDefaultFileTab() {
