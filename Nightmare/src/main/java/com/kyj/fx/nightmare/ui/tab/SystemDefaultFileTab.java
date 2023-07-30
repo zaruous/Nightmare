@@ -9,9 +9,12 @@ package com.kyj.fx.nightmare.ui.tab;
 import java.io.File;
 
 import com.kyj.fx.nightmare.comm.FileUtil;
+import com.kyj.fx.nightmare.comm.IdGenUtil;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Tab;
@@ -24,13 +27,14 @@ import javafx.scene.layout.BorderPane;
  */
 public class SystemDefaultFileTab extends Tab {
 
+	private StringProperty tabId = new SimpleStringProperty(IdGenUtil.generate());
 	private final TextArea textArea = new TextArea();
 	private ObjectProperty<File> f = new SimpleObjectProperty<File>();
 
 	public SystemDefaultFileTab() {
 		setContent(new BorderPane(textArea));
 		setClosable(true);
-		
+
 		this.f.addListener(new ChangeListener<File>() {
 
 			@Override
@@ -44,6 +48,7 @@ public class SystemDefaultFileTab extends Tab {
 
 				setText(newValue.getName());
 				textArea.setText(readFile(newValue));
+				tabId.set(newValue.getAbsolutePath());
 			}
 		});
 	}
@@ -56,9 +61,10 @@ public class SystemDefaultFileTab extends Tab {
 	public void setFile(File f) {
 		this.f.set(f);
 	}
+
 	/**
 	 * @작성자 : (zaruous@naver.com)
-	 * @작성일 : 2023. 4. 2. 
+	 * @작성일 : 2023. 4. 2.
 	 * @return
 	 */
 	public File getFile() {
@@ -73,6 +79,18 @@ public class SystemDefaultFileTab extends Tab {
 	 */
 	protected String readFile(File newValue) {
 		return FileUtil.readConversion(newValue);
+	}
+
+	public final StringProperty tabIdProperty() {
+		return this.tabId;
+	}
+
+	public final String getTabId() {
+		return this.tabIdProperty().get();
+	}
+
+	public final void setTabId(final String tabId) {
+		this.tabIdProperty().set(tabId);
 	}
 
 }

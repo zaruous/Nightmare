@@ -18,10 +18,10 @@ import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.ui.tab.SystemDefaultFileTab;
+import com.kyj.fx.nightmare.ui.tab.SystemDefaultFileTabPaneManager;
 import com.kyj.fx.nightmare.ui.tree.filetree.DefaultFileTreeItem;
 import com.kyj.fx.nightmare.ui.tree.filetree.DefaultFileTreeView;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -35,7 +35,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -59,6 +58,8 @@ public class UtilFrameComposite extends AbstractCommonsApp {
 
 	private DefaultFileTreeView fileTreeView;
 
+	private SystemDefaultFileTabPaneManager tabPaneManager;
+
 	public UtilFrameComposite() {
 		FXMLLoader loader = FxUtil.newLaoder();
 		loader.setLocation(UtilFrameComposite.class.getResource("UtilView.fxml"));
@@ -73,6 +74,9 @@ public class UtilFrameComposite extends AbstractCommonsApp {
 
 	@FXML
 	public void initialize() {
+
+		tabPaneManager = new SystemDefaultFileTabPaneManager(this.tpManagement);
+
 		// tab context Menu setup
 		this.tpManagement.setContextMenu(tabCommonContextMenu());
 
@@ -152,11 +156,8 @@ public class UtilFrameComposite extends AbstractCommonsApp {
 		if (f.isDirectory())
 			return;
 
-		SystemDefaultFileTab tab = new SystemDefaultFileTab();
-		tab.setFile(f);
-		this.tpManagement.getTabs().add(tab);
-		this.tpManagement.getSelectionModel().selectLast();
-
+		Tab add = tabPaneManager.add(f);
+		
 	}
 
 	@FXML

@@ -7,6 +7,7 @@
 package com.kyj.fx.b.ETScriptHelper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.dom4j.Document;
@@ -36,13 +37,17 @@ public class OdbcConnectionTest {
 		Document doc = XMLUtils.load(readExcel);
 		EquipmentEventStateDVO to = new EquipmentEventStateDVO();
 		List<EquipmentEventStateDVO> populateList = ExcelReader.populateList(doc, EquipmentEventStateDVO.class);
-		populateList.forEach(v ->{
-			System.out.println(ObjectUtil.toMap(v));	
+		populateList.forEach(v -> {
+			System.out.println(ObjectUtil.toMap(v));
 		});
-		
 
 		// System.out.println(readExcel);
 
+	}
+
+	@Test
+	public void test2() {
+		
 	}
 
 }
