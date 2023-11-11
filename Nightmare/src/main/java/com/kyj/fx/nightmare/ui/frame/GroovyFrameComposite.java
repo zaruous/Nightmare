@@ -6,18 +6,21 @@
  *******************************/
 package com.kyj.fx.nightmare.ui.frame;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kyj.fx.groovy.DefaultScriptEngine;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.ValueUtil;
-import com.kyj.fx.nightmare.ui.tab.SystemDefaultFileTab;
+import com.kyj.fx.nightmare.ui.tab.ExecutionDefaultTab;
 import com.kyj.fx.nightmare.ui.tab.SystemDefaultFileTabPaneManager;
 import com.kyj.fx.nightmare.ui.tree.filetree.DefaultFileTreeItem;
 import com.kyj.fx.nightmare.ui.tree.filetree.DefaultFileTreeView;
@@ -43,9 +46,9 @@ import javafx.scene.layout.BorderPane;
  * @author (zaruous@naver.com)
  *
  */
-public class UtilFrameComposite extends AbstractCommonsApp {
+public class GroovyFrameComposite extends AbstractCommonsApp {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UtilFrameComposite.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GroovyFrameComposite.class);
 
 	@FXML
 	TabPane tpManagement;
@@ -58,11 +61,11 @@ public class UtilFrameComposite extends AbstractCommonsApp {
 
 	private DefaultFileTreeView fileTreeView;
 
-	private SystemDefaultFileTabPaneManager<SystemDefaultFileTab> tabPaneManager;
+	private SystemDefaultFileTabPaneManager<ExecutionDefaultTab> tabPaneManager;
 
-	public UtilFrameComposite() {
+	public GroovyFrameComposite() {
 		FXMLLoader loader = FxUtil.newLaoder();
-		loader.setLocation(UtilFrameComposite.class.getResource("UtilView.fxml"));
+		loader.setLocation(GroovyFrameComposite.class.getResource("Groovy.fxml"));
 		loader.setRoot(this);
 		loader.setController(this);
 		try {
@@ -75,13 +78,11 @@ public class UtilFrameComposite extends AbstractCommonsApp {
 	@FXML
 	public void initialize() {
 
-		tabPaneManager = new SystemDefaultFileTabPaneManager<>(this.tpManagement) {
+		tabPaneManager = new SystemDefaultFileTabPaneManager<ExecutionDefaultTab>(this.tpManagement) {
 
 			@Override
-			public SystemDefaultFileTab createNewTab(File f) {
-				SystemDefaultFileTab systemDefaultFileTab = new SystemDefaultFileTab();
-				systemDefaultFileTab.setFile(f);
-				return systemDefaultFileTab;
+			public ExecutionDefaultTab createNewTab(File f) {
+				return new ExecutionDefaultTab(f);
 			}
 
 		};
@@ -91,6 +92,12 @@ public class UtilFrameComposite extends AbstractCommonsApp {
 
 		/* draw fileTreeView */
 		fileTreeView = new DefaultFileTreeView();
+		fileTreeView.setFileFilter(path -> {
+			File file = path.toFile();
+			if (file.isDirectory())
+				return true;
+			return true;
+		});
 		fileTreeView.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		borLeft.setCenter(fileTreeView);
 		fileTreeView.addEventHandler(MouseEvent.MOUSE_CLICKED, fileTreeViewOnMouseClick);
@@ -181,7 +188,34 @@ public class UtilFrameComposite extends AbstractCommonsApp {
 	}
 
 	@FXML
-	public void btnCommitOnAction() {
+	public void btnRunOnAction() throws IOException {
+		ExecutionDefaultTab activeTab = tabPaneManager.getActiveTab();
+		String codeText = activeTab.getCodeText();
+		DefaultScriptEngine engine = new DefaultScriptEngine();
+//		new StringReader();
+//		engine.setReader(new Print);
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		PrintWriter writer = new PrintWriter(out);
+		engine.setWriter(writer);
+		engine.setErrorWriter(writer);
+
+		try {
+			activeTab.getConsole().clear();
+			Object execute = engine.execute(codeText);
+			activeTab.getConsole().appendText(execute == null ? "" : execute.toString());
+			writer.flush();
+			activeTab.getConsole().appendText(out.toString());
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			String jsonString = ValueUtil.toString(e);
+			activeTab.getConsole().appendText(jsonString);
+
+		} finally {
+			writer.close();
+			out.close();
+		}
 
 	}
 

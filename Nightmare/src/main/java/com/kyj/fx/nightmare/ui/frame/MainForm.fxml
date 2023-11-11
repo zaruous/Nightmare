@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root id="root" prefHeight="504.0" prefWidth="957.0" stylesheets="@MainForm.css" type="BorderPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root id="root" prefHeight="504.0" prefWidth="957.0" stylesheets="@MainForm.css" type="BorderPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -19,6 +19,7 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <VBox onMouseClicked="#vbEquipmentOnClick" prefHeight="200.0" prefWidth="100.0" style="-fx-cursor: hand;" styleClass="vbox-item">
@@ -38,7 +39,20 @@
                <children>
                   <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label  styleClass="vbox-item-label" text="Utils">
+                        <Label styleClass="vbox-item-label" text="Utils">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox onMouseClicked="#groovyOnClick" prefHeight="200.0" prefWidth="100.0" style="-fx-cursor: hand;" styleClass="vbox-item" GridPane.rowIndex="1">
+               <children>
+                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="vbox-item-label" text="Groovy">
                            <font>
                               <Font size="11.0" />
                            </font>

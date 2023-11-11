@@ -10,7 +10,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
@@ -18,10 +17,13 @@ import javafx.scene.control.TabPane;
  * @author (zaruous@naver.com)
  *
  */
-public class SystemDefaultFileTabPaneManager {
+/**
+ * @param <T>
+ */
+public abstract class SystemDefaultFileTabPaneManager<T extends SystemDefaultFileTab> {
 
 	private TabPane tabpane;
-	private Map<String, SystemDefaultFileTab> cache = new HashMap<>();
+	private Map<String, T> cache = new HashMap<>();
 
 	public SystemDefaultFileTabPaneManager(TabPane tabpane) {
 		this.tabpane = tabpane;
@@ -32,7 +34,7 @@ public class SystemDefaultFileTabPaneManager {
 	 * @작성일 : 2023. 7. 30.
 	 * @param tab
 	 */
-	public void add(SystemDefaultFileTab tab) {
+	public void add(T tab) {
 		this.cache.put(tab.getTabId(), tab);
 		this.tabpane.getTabs().add(tab);
 	}
@@ -44,17 +46,31 @@ public class SystemDefaultFileTabPaneManager {
 	 * @return
 	 */
 	public Tab add(File f) {
-		SystemDefaultFileTab tab = null;
+		T tab = null;
 		if (cache.containsKey(f.getAbsolutePath())) {
 			tab = cache.get(f.getAbsolutePath());
 		} else {
-			tab = new SystemDefaultFileTab();
-			tab.setFile(f);
+			tab = createNewTab(f);
 			add(tab);
 		}
-		
+
 		this.tabpane.getSelectionModel().select(tab);
 		return tab;
+	}
+
+	/**
+	 * @param f
+	 * @return
+	 */
+	public abstract T createNewTab(File f);
+
+	/**
+	 * @return
+	 */
+	public T getActiveTab() {
+		T selectedItem = (T) this.tabpane.getSelectionModel().getSelectedItem();
+		return selectedItem;
+
 	}
 
 }

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.swing.Icon;
@@ -45,6 +46,7 @@ public class DefaultFileTreeView extends TreeView<Path> {
 
 	private ObjectProperty<Path> rootPath = new SimpleObjectProperty<Path>();
 	private ObjectProperty<TreeItem<Path>> originalRoot = new SimpleObjectProperty<>();
+	private Predicate<Path> fileFilter = f -> true;
 
 	public DefaultFileTreeView() {
 		FxUtil.installClipboardKeyEvent(this);
@@ -72,7 +74,8 @@ public class DefaultFileTreeView extends TreeView<Path> {
 		this.rootProperty().addListener(new ChangeListener<TreeItem<Path>>() {
 
 			@Override
-			public void changed(ObservableValue<? extends TreeItem<Path>> arg0, TreeItem<Path> arg1, TreeItem<Path> arg2) {
+			public void changed(ObservableValue<? extends TreeItem<Path>> arg0, TreeItem<Path> arg1,
+					TreeItem<Path> arg2) {
 				rootPath.setValue(arg2.getValue());
 			}
 		});
@@ -96,13 +99,14 @@ public class DefaultFileTreeView extends TreeView<Path> {
 				if (selectedItem.getChildren().size() == 0) {
 					try {
 
-						Files.walk(currentPath, 1).skip(1).sorted(Utils.PATH_NAME_COMPARE).forEach(path -> {
-							File file = path.toFile();
-							ImageView value = createImageIconView(file);
-							DefaultFileTreeItem child = new DefaultFileTreeItem(path);
-							child.setGraphic(value);
-							selectedItem.getChildren().add(child);
-						});
+						Files.walk(currentPath, 1).skip(1).sorted(Utils.PATH_NAME_COMPARE).filter(fileFilter)
+								.forEach(path -> {
+									File file = path.toFile();
+									ImageView value = createImageIconView(file);
+									DefaultFileTreeItem child = new DefaultFileTreeItem(path);
+									child.setGraphic(value);
+									selectedItem.getChildren().add(child);
+								});
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -124,7 +128,8 @@ public class DefaultFileTreeView extends TreeView<Path> {
 			FileSystemView fileSystemView = FileSystemView.getFileSystemView();
 			Icon icon = fileSystemView.getSystemIcon(file);
 
-			BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+			BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(),
+					BufferedImage.TYPE_INT_ARGB);
 			icon.paintIcon(null, bufferedImage.getGraphics(), 0, 0);
 			fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
 		} else {
@@ -191,6 +196,14 @@ public class DefaultFileTreeView extends TreeView<Path> {
 
 			this.setRoot(other);
 		}
+	}
+
+	public Predicate<Path> getFileFilter() {
+		return fileFilter;
+	}
+
+	public void setFileFilter(Predicate<Path> fileFilter) {
+		this.fileFilter = fileFilter;
 	}
 
 }

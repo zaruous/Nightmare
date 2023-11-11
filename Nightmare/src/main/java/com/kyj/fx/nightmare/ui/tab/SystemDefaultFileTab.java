@@ -52,6 +52,8 @@ public class SystemDefaultFileTab extends Tab {
 			}
 		});
 	}
+	
+	public TextArea getTextArea() { return this.textArea; }
 
 	/**
 	 * @작성자 : (zaruous@naver.com)

@@ -49,9 +49,14 @@ open module ETHelper {
 	requires java.xml;
 	requires com.zaxxer.hikari;
 	requires org.apache.commons.text;
+	requires java.net.http;
+	requires org.codehaus.groovy;
+	requires gargoyle.groovy;
 	
 	
 	
+	
+
 	exports com.kyj.fx.nightmare;
 	exports com.kyj.fx.nightmare.actions.comm.core;
 	exports com.kyj.fx.nightmare.actions.deploy;

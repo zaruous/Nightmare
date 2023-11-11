@@ -9,6 +9,7 @@ package com.kyj.fx.nightmare.ui.tree.filetree;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 
 /**
@@ -28,6 +29,11 @@ public class DefaultFileTreeItem extends TreeItem<Path> {
 	@Override
 	public boolean isLeaf() {
 		return Files.isRegularFile(getValue());
+	}
+
+	@Override
+	public ObservableList<TreeItem<Path>> getChildren() {
+		return super.getChildren();
 	}
 
 }
