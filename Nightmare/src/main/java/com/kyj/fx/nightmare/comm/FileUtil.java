@@ -501,4 +501,19 @@ public class FileUtil {
 		return FileEncodingFinder.getEncoding(f);
 		// return new FileEncodingFinder(f).getEncoding();
 	}
+
+	/**
+	 * @param string
+	 * @return
+	 * @throws IOException
+	 */
+	public static File createNewTempFile(String string, ExceptionHandler handle) {
+		File f = new File(FileUtil.getTempFileSystem(), string);
+		try {
+			f.createNewFile();
+		} catch (IOException e) {
+			handle.handle(e);
+		}
+		return f;
+	}
 }

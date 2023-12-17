@@ -10,6 +10,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
@@ -29,6 +32,17 @@ public abstract class SystemDefaultFileTabPaneManager<T extends SystemDefaultFil
 		this.tabpane = tabpane;
 	}
 
+	/**
+	 * @param <T>
+	 * @param eventType
+	 * @param eventHandler
+	 */
+	public <E extends Event> void  addEventListener(
+            final EventType<E> eventType,
+            final EventHandler<? super E> eventHandler) {
+		this.tabpane.addEventHandler(eventType, eventHandler);
+	}
+	
 	/**
 	 * @작성자 : (zaruous@naver.com)
 	 * @작성일 : 2023. 7. 30.
@@ -71,6 +85,13 @@ public abstract class SystemDefaultFileTabPaneManager<T extends SystemDefaultFil
 		T selectedItem = (T) this.tabpane.getSelectionModel().getSelectedItem();
 		return selectedItem;
 
+	}
+
+	/**
+	 * 
+	 */
+	public void selectLast() {
+		this.tabpane.getSelectionModel().selectLast();
 	}
 
 }

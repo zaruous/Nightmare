@@ -51,6 +51,8 @@ public class SystemDefaultFileTab extends Tab {
 				tabId.set(newValue.getAbsolutePath());
 			}
 		});
+		
+		
 	}
 	
 	public TextArea getTextArea() { return this.textArea; }

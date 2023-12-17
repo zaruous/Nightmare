@@ -26,7 +26,7 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 		String strLocale = ResourceLoader.getInstance().get(ResourceLoader.DEFAULT_LOCALE);
 		Locale locale = Locale.KOREAN;
 		if (!ValueUtil.isEmpty(strLocale)) {
-			locale = new Locale(strLocale);
+			locale = Locale.of(strLocale);
 		}
 		LOGGER.debug("Default Loacale : {} " , locale);
 		Locale.setDefault(locale);

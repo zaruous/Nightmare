@@ -17,8 +17,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.groovy.DefaultScriptEngine;
+import com.kyj.fx.nightmare.comm.DateUtil;
+import com.kyj.fx.nightmare.comm.DialogUtil;
+import com.kyj.fx.nightmare.comm.FileUtil;
 import com.kyj.fx.nightmare.comm.FxUtil;
+import com.kyj.fx.nightmare.comm.GargoyleExtensionFilters;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
+import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.ui.tab.ExecutionDefaultTab;
 import com.kyj.fx.nightmare.ui.tab.SystemDefaultFileTabPaneManager;
@@ -31,6 +36,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -38,6 +44,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -50,6 +57,9 @@ public class GroovyFrameComposite extends AbstractCommonsApp {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GroovyFrameComposite.class);
 
+	@FXML
+	private Label lblStatus;
+	
 	@FXML
 	TabPane tpManagement;
 
@@ -86,6 +96,65 @@ public class GroovyFrameComposite extends AbstractCommonsApp {
 			}
 
 		};
+		tabPaneManager.addEventListener(KeyEvent.KEY_PRESSED, ev -> {
+
+			switch (ev.getCode()) {
+			case F5: {
+				if (ev.isConsumed())
+					return;
+				ev.consume();
+
+				try {
+					btnRunOnAction();
+				} catch (IOException e) {
+					LOGGER.error(ValueUtil.toString(e));
+				}
+			}
+				break;
+			case S: {
+				if (ev.isControlDown()) {
+					if (ev.isConsumed())
+						return;
+					ev.consume();
+					ExecutionDefaultTab activeTab = tabPaneManager.getActiveTab();
+					
+					File outFile = DialogUtil.showFileSaveDialog(StageStore.getPrimaryStage(), chooser -> {
+						chooser.setTitle("File Save");
+						String initPath = initPath();
+						chooser.setInitialDirectory(new File(initPath));
+//						chooser.setSelectedExtensionFilter();
+						chooser.getExtensionFilters().add(GargoyleExtensionFilters.GROOVY_FILTER);
+						chooser.setInitialFileName(activeTab.getFile().getName());
+					});
+					if (outFile == null)
+						return;
+					try {
+						FileUtil.writeFile(outFile, tabPaneManager.getActiveTab().getCodeText());
+						showStatusMessage(outFile.getAbsolutePath() + " saved.");
+						activeTab.setFile(outFile);
+						activeTab.setIsTemp(false);
+					} catch (IOException e) {
+						DialogUtil.showExceptionDailog(e);
+					}
+
+				}
+				
+			}
+			case N:
+			{
+				if (ev.isControlDown()) {
+					if (ev.isConsumed())
+						return;
+					ev.consume();
+					createNewTempTab();
+				}
+			}
+			default:
+				break;
+			}
+
+		});
+		createNewTempTab();
 
 		// tab context Menu setup
 		this.tpManagement.setContextMenu(tabCommonContextMenu());
@@ -102,11 +171,27 @@ public class GroovyFrameComposite extends AbstractCommonsApp {
 		borLeft.setCenter(fileTreeView);
 		fileTreeView.addEventHandler(MouseEvent.MOUSE_CLICKED, fileTreeViewOnMouseClick);
 
-		String defLoacation = ResourceLoader.getInstance().get(ResourceLoader.DEFAULT_WORKSPACE_PATH);
+		String defLoacation = initPath();
 		// treeview default path.
 		Path path = Paths.get(new File(defLoacation).getAbsolutePath());
 		fileTreeView.setRoot(new DefaultFileTreeItem(path));
 
+	}
+
+	private void createNewTempTab() {
+		File newTempFile = FileUtil.createNewTempFile(DateUtil.getCurrentDateString() + ".groovy", err -> {
+			LOGGER.error(ValueUtil.toString(err));
+		});
+
+		tabPaneManager.add(new ExecutionDefaultTab(newTempFile, true));
+		tabPaneManager.selectLast();
+	}
+
+	private String initPath() {
+		String string = ResourceLoader.getInstance().get(ResourceLoader.DEFAULT_WORKSPACE_PATH);
+		if(string.isBlank())
+			string = System.getProperty("user.dir");
+		return string;
 	}
 
 	/**
@@ -222,6 +307,11 @@ public class GroovyFrameComposite extends AbstractCommonsApp {
 	@FXML
 	public void btnReloadOnAction() {
 
+	}
+
+	@Override
+	public void showStatusMessage(String message) {
+		this.lblStatus.setText(message);
 	}
 
 }

@@ -9,7 +9,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<fx:root maxHeight="367.0" maxWidth="500.0" prefHeight="367.0" prefWidth="463.0" type="BorderPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="367.0" maxWidth="500.0" prefHeight="367.0" prefWidth="463.0" 
+type="BorderPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
 	<center>
 		<GridPane BorderPane.alignment="CENTER">
 			<columnConstraints>

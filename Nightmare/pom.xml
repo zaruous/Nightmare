@@ -22,7 +22,7 @@
 		<logback.version>1.2.11</logback.version>
 		<!-- <slf4j.version>2.0.0-alpha7</slf4j.version> -->
 		<slf4j.version>1.7.36</slf4j.version>
-		<java.version>17</java.version>
+		<java.version>21</java.version>
 
 		<spring-framework.version>5.3.19</spring-framework.version>
 		<!-- <spring-framework.version>4.3.19.RELEASE</spring-framework.version> -->
@@ -90,9 +90,11 @@
 								</excludes>
 							</artifactSet>
 							<createDependencyReducedPom>true</createDependencyReducedPom>
-							<outputFile>target/lib/ETHelper-${project.version}-all.jar</outputFile>
+							<outputFile>
+								target/lib/ETHelper-${project.version}-all.jar</outputFile>
 
-							<!-- <filters> <filter> <artifact>*:*</artifact> <excludes> <exclude>META-INF/*.SF</exclude> 
+							<!-- <filters> <filter> <artifact>*:*</artifact>
+							<excludes> <exclude>META-INF/*.SF</exclude> 
 								<exclude>META-INF/*.DSA</exclude> <exclude>META-INF/*.RSA</exclude> </excludes> 
 								</filter> </filters> -->
 
@@ -167,7 +169,6 @@
 		</dependency>
 
 
-
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -186,17 +187,17 @@
 			<version>2.11.0</version>
 		</dependency>
 
-		<!-- <dependency> <groupId>com.microsoft.sqlserver</groupId> <artifactId>mssql-jdbc</artifactId> 
+		<!-- <dependency> <groupId>com.microsoft.sqlserver</groupId>
+		<artifactId>mssql-jdbc</artifactId> 
 			<version>7.0.0.jre8</version> </dependency> -->
 
-		<!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
+		<!--
+		https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
 			<version>3.1.3</version>
 		</dependency>
-
-
 
 
 		<dependency>
@@ -223,7 +224,8 @@
 			<version>${spring-framework.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		<!--
+		https://mvnrepository.com/artifact/org.springframework/spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -238,7 +240,8 @@
 		<!-- <version>1.7</version> -->
 		<!-- </dependency> -->
 
-		<!-- https://mvnrepository.com/artifact/org.apache.velocity/velocity-engine-core -->
+		<!--
+		https://mvnrepository.com/artifact/org.apache.velocity/velocity-engine-core -->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity-engine-core</artifactId>
@@ -254,7 +257,8 @@
 		<!-- </dependency> -->
 
 		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-jdbc -->
-		<!-- <dependency> <groupId>org.apache.tomcat</groupId> <artifactId>tomcat-jdbc</artifactId> 
+		<!-- <dependency> <groupId>org.apache.tomcat</groupId>
+		<artifactId>tomcat-jdbc</artifactId> 
 			<version>9.0.62</version> </dependency> -->
 
 		<!-- https://mvnrepository.com/artifact/hikari-cp/hikari-cp -->
@@ -365,7 +369,6 @@
 		</dependency>
 
 
-
 		<dependency>
 			<groupId>jaxen</groupId>
 			<artifactId>jaxen</artifactId>
@@ -376,31 +379,31 @@
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>16</version>
+			<version>21</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-graphics</artifactId>
-			<version>16</version>
+			<version>21</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-base</artifactId>
-			<version>16</version>
+			<version>21</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
-			<version>16</version>
+			<version>21</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-swing</artifactId>
-			<version>16</version>
+			<version>21</version>
 		</dependency>
 
 
@@ -442,7 +445,8 @@
 		</dependency>
 
 
-		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<!--
+		https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
@@ -463,7 +467,8 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher -->
+		<!--
+		https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
@@ -483,12 +488,12 @@
 			<artifactId>groovy-jsr223</artifactId>
 			<version>3.0.19</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.kyj.fx</groupId>
 			<artifactId>gargoyle-groovy</artifactId>
 			<version>0.0.1</version>
-		</dependency>	
+		</dependency>
 
 		<dependency>
 			<groupId>org.fxmisc.richtext</groupId>
@@ -497,11 +502,21 @@
 		</dependency>
 
 
-<!--		<dependency>-->
-<!--			<groupId>kyj.Fx.visual</groupId>-->
-<!--			<artifactId>VisualFxVoEditor</artifactId>-->
-<!--			<version>0.0.1-SNAPSHOT</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.13.1</version> <!-- or use the latest version available -->
+		</dependency>
+
+
+		<dependency>
+		    <groupId>org.apache.pdfbox</groupId>
+		    <artifactId>pdfbox</artifactId>
+		    <version>2.0.24</version> <!-- Check for the latest version -->
+		</dependency>
+
+
+
 	</dependencies>
 
 	<repositories>

@@ -52,6 +52,9 @@ open module ETHelper {
 	requires java.net.http;
 	requires org.codehaus.groovy;
 	requires gargoyle.groovy;
+	requires org.apache.pdfbox;
+	/*PDF ITEXT*/
+
 	
 	
 	

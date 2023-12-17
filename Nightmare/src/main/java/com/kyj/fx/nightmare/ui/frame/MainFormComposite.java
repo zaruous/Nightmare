@@ -41,7 +41,7 @@ public class MainFormComposite extends BorderPane {
 	 */
 	@FXML
 	public void vbEquipmentOnClick() {
-		extracted(new ETFrameComposite());
+		launch(new ETFrameComposite());
 	}
 
 	/**
@@ -50,18 +50,22 @@ public class MainFormComposite extends BorderPane {
 	 */
 	@FXML
 	public void utilsOnClick() {
-		extracted(new UtilFrameComposite());
+		launch(new UtilFrameComposite());
 	}
 
 	@FXML
 	public void groovyOnClick() {
-		extracted(new GroovyFrameComposite());
+		launch(new GroovyFrameComposite());
 	}
 
+	@FXML
+	public void notebookOnClick(){
+		launch(new NotebookComposite());
+	}
 	/**
 	 * @param compisite
 	 */
-	private void extracted(AbstractCommonsApp compisite) {
+	private void launch(AbstractCommonsApp compisite) {
 		Stage stage = StageStore.getPrimaryStage();
 		StageStore.setApp(compisite);
 		Scene scene = stage.getScene();
