@@ -40,8 +40,13 @@ public class GroovyScriptEngine {
 	/**
 	 */
 	public GroovyScriptEngine() {
+		this(true);
+	}
+	
+	public GroovyScriptEngine(boolean loadCore) {
 		createEngine(Collections.emptyMap());
-		loadDefault();
+		if(loadCore)
+			loadDefault();
 	}
 
 	/**
@@ -100,8 +105,8 @@ public class GroovyScriptEngine {
 	 * @param script
 	 * @throws ScriptException
 	 */
-	public void eval(String script) throws ScriptException {
-		this.groovyEngine.eval(script.concat(System.lineSeparator()).concat(scriptBuffer.toString()));
+	public Object eval(String script) throws ScriptException {
+		return this.groovyEngine.eval(script.concat(System.lineSeparator()).concat(scriptBuffer.toString()));
 	}
 
 	

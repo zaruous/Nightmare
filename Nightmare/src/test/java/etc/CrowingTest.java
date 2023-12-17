@@ -6,7 +6,6 @@ package etc;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -18,6 +17,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
 import com.kyj.fx.nightmare.comm.PDFUtil;
@@ -27,8 +27,17 @@ import com.kyj.fx.nightmare.comm.PDFUtil;
  */
 public class CrowingTest {
 
+	/**
+	 *  페이지를 파싱하고 데이터를 객체에 보관
+	 */
 	static class Page {
+		/**
+		 *  URL
+		 */
 		String url;
+		/**
+		 *  [X]화. 해당 정보를 파일명으로 사용하기 위함.
+		 */
 		String name;
 
 		public Page(String url, String name) {
@@ -44,11 +53,18 @@ public class CrowingTest {
 
 	}
 
+	/**
+	 * 파싱된 결과를 확인하기 위함.
+	 */
 	@Test
 	public void listPagesTest() {
 		listPages().forEach(System.out::println);
 	}
 
+	/**
+	 * 페이지 목록을 리턴한다.
+	 * @return
+	 */
 	public List<Page> listPages() {
 
 		try {
@@ -77,6 +93,9 @@ public class CrowingTest {
 		}
 	}
 
+	/**
+	 * 페이지를 파싱해서 리스트를 추출하고, 각 차수를 파일에 저장한다 
+	 */
 	@Test
 	public void get() {
 
@@ -112,6 +131,11 @@ public class CrowingTest {
 
 	}
 	
+	/**
+	 * 파일로 만들어진 txt를 pdf에 저장하기 위한 처리
+	 * @throws IOException
+	 */
+	@Ignore
 	@Test
 	public void createPdfFileTest() throws IOException {
 		

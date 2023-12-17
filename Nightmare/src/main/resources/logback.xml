@@ -1,33 +1,26 @@
 <configuration>
+	<contextName>Nightmare</contextName>
 	<!-- console로 log 남기기 -->
-	<appender name="console"
-		class="ch.qos.logback.core.ConsoleAppender">
-		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>%-5level %d{HH:mm:ss.SSS} [%thread] %logger[%method:%line]-%msg%n</pattern>
-		</encoder>
-	</appender>
+  <appender name="SYSOUT" class="ch.qos.logback.core.ConsoleAppender">
+   <encoder>
+     <pattern>
+        %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+      </pattern>
+    </encoder>
+  </appender>
 
 	<!-- 이 아래에 있는 애들 다 log로 찍겠다. -->
-	<logger name="com.kyj.fx.nightmare" level="DEBUG">
-		<appender-ref ref="console" />
+	<logger name="com.kyj.fx.nightmare" level="DEBUG" additivity="false">
+		<appender-ref ref="SYSOUT" />
 	</logger>
-	<logger name="com.sun.javafx.tk.quantum" level="ERROR">
-		<appender-ref ref="console" />
+	
+	<logger name="com.kyj.fx.groovy" level="DEBUG" additivity="false">
+		<appender-ref ref="SYSOUT" />
 	</logger>
-	<logger name="javafx" level="ERROR">
-		<appender-ref ref="console" />
-	</logger>
-
-
-	<!-- 이 아래에 있는 애들 다 log로 찍겠다. -->
-<!-- 	<logger name="org.apache.pdfbox" level="DEBUG"> -->
-<!-- 		<appender-ref ref="console" /> -->
-<!-- 	</logger> -->
-
-	<!-- 이 아래에 있는 애들 다 log로 찍겠다. -->
-	<!-- <logger name="org.springframework" level="DEBUG" /> -->
-	<root level="DEBUG">
-		<appender-ref ref="console" />
+	
+	
+	<root level="DEBUG" additivity="false">
+		<appender-ref ref="SYSOUT" />
 	</root>
 
 </configuration>

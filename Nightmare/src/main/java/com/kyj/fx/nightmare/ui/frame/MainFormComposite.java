@@ -65,7 +65,7 @@ public class MainFormComposite extends BorderPane {
 	/**
 	 * @param compisite
 	 */
-	private void launch(AbstractCommonsApp compisite) {
+	protected void launch(AbstractCommonsApp compisite) {
 		Stage stage = StageStore.getPrimaryStage();
 		StageStore.setApp(compisite);
 		Scene scene = stage.getScene();
