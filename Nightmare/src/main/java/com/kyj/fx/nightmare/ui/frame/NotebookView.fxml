@@ -47,7 +47,12 @@
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+            <Menu mnemonicParsing="false" text="Code Assist">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#miImportOnAction" text="import" />
+              </items>
+            </Menu>
+          <Menu mnemonicParsing="false" text="Window">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#miHomeOnAction" text="Home" />
             </items>

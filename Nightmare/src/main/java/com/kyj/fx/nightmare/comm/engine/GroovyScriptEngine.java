@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -37,15 +38,16 @@ public class GroovyScriptEngine {
 
 	private ScriptEngine groovyEngine;
 	private StringBuilder scriptBuffer = new StringBuilder();
+
 	/**
 	 */
 	public GroovyScriptEngine() {
 		this(true);
 	}
-	
+
 	public GroovyScriptEngine(boolean loadCore) {
 		createEngine(Collections.emptyMap());
-		if(loadCore)
+		if (loadCore)
 			loadDefault();
 	}
 
@@ -86,7 +88,8 @@ public class GroovyScriptEngine {
 	 * @return
 	 */
 	protected ScriptContext createContext() {
-		return new SimpleScriptContext();
+		SimpleScriptContext simpleScriptContext = new SimpleScriptContext();
+		return simpleScriptContext;
 	};
 
 	/**
@@ -96,6 +99,7 @@ public class GroovyScriptEngine {
 	 * @throws ScriptException
 	 */
 	public void eval(Reader reader) throws ScriptException {
+		
 		this.groovyEngine.eval(reader);
 	}
 
@@ -106,32 +110,38 @@ public class GroovyScriptEngine {
 	 * @throws ScriptException
 	 */
 	public Object eval(String script) throws ScriptException {
-		return this.groovyEngine.eval(script.concat(System.lineSeparator()).concat(scriptBuffer.toString()));
+		return this.groovyEngine.eval(
+				script.concat(System.lineSeparator())
+				.concat(scriptBuffer.toString()));
 	}
 
-	
-
-	private void loadDefault() {
-		// init.
-		scriptBuffer.setLength(0);
+	public List<String> loadScripts() {
 		File commonsFile = new File(new File("").getAbsolutePath(), "groovy/commons");
 		try {
 			CommonsGroovyFileVisitor visitor = new CommonsGroovyFileVisitor();
 			Files.walkFileTree(commonsFile.toPath(), visitor);
 
-			visitor.getItems().forEach(path -> {
+			return visitor.getItems().stream().map(path -> {
 				try {
-					scriptBuffer.append(FileUtil.readToString(path.toFile())).append(System.lineSeparator());
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+					return FileUtil.readToString(path.toFile());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			});
+				return "";
+			}).collect(Collectors.toList());
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return Collections.emptyList();
+	}
+
+	private void loadDefault() {
+		// init.
+		scriptBuffer.setLength(0);
+		loadScripts().forEach(script -> {
+			scriptBuffer.append(script).append(System.lineSeparator());
+		});
 
 	}
 

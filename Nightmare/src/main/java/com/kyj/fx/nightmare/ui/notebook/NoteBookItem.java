@@ -3,6 +3,8 @@
  */
 package com.kyj.fx.nightmare.ui.notebook;
 
+import java.util.List;
+
 import javax.script.ScriptException;
 
 import com.kyj.fx.nightmare.comm.engine.GroovyScriptEngine;
@@ -21,6 +23,16 @@ public class NoteBookItem {
 	public NoteBookItem(String title) {
 		this.setTitle(title);
 		groovyScriptEngine = new GroovyScriptEngine(false);
+		List<String> scripts = groovyScriptEngine.loadScripts();
+		scripts.forEach(script ->{
+			try {
+				groovyScriptEngine.eval(script);
+				System.out.println(script);
+			} catch (ScriptException e) {
+				e.printStackTrace();
+			}
+		});
+		
 	}
 	
 	/**
@@ -28,8 +40,12 @@ public class NoteBookItem {
 	 * @return 
 	 * @throws ScriptException
 	 */
-	public Object run(String script) throws ScriptException {
-		return groovyScriptEngine.eval(script);
+	public Object run(String script) {
+		try {
+			return groovyScriptEngine.eval(script);
+		} catch (ScriptException e) {
+			return e;
+		}
 	}
 	
 	
