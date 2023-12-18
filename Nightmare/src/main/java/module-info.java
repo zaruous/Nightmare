@@ -54,6 +54,7 @@ open module ETHelper {
 	requires gargoyle.groovy;
 	requires org.apache.pdfbox;
 	requires javafx.web;
+	requires com.fasterxml.jackson.databind;
 	/*PDF ITEXT*/
 
 	

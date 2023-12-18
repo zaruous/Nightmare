@@ -25,6 +25,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -169,6 +170,8 @@ public class NotebookComposite extends AbstractCommonsApp {
 //					execute(e);
 //				}
 //			}
+			
+			new Button("asdasd").setOnMouseClicked(getOnDragDetected());
 
 			Platform.runLater(() -> {
 				ScrollPane n = new ScrollPane(new Label(string));
