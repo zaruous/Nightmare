@@ -53,6 +53,7 @@ open module ETHelper {
 	requires org.codehaus.groovy;
 	requires gargoyle.groovy;
 	requires org.apache.pdfbox;
+	requires javafx.web;
 	/*PDF ITEXT*/
 
 	

@@ -5,6 +5,7 @@ package com.kyj.fx.nightmare.ui.frame;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,8 @@ import javafx.util.Callback;
  * 
  */
 public class NotebookComposite extends AbstractCommonsApp {
+	private static final double _150D = 150d;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(NotebookComposite.class);
 
 	@FXML
@@ -52,8 +55,9 @@ public class NotebookComposite extends AbstractCommonsApp {
 	private TextField txtInput;
 
 	private ObjectProperty<NoteBookItem> current = new SimpleObjectProperty<NoteBookItem>();
-//	@FXML
-//	private List<NoteBookItem> notebooks = FXCollections.observableArrayList(); 
+
+	private int historyPos = 0;
+	private ArrayList<String> historyCommand = new ArrayList<>();
 
 	public NotebookComposite() {
 
@@ -129,6 +133,10 @@ public class NotebookComposite extends AbstractCommonsApp {
 		String text = txtInput.getText();
 		if (text.isBlank())
 			return;
+
+		historyCommand.add(text);
+		historyPos = historyCommand.size() - 1;
+
 		if ("clear".equals(text)) {
 			vbResult.getChildren().clear();
 			txtInput.setText("");
@@ -144,52 +152,85 @@ public class NotebookComposite extends AbstractCommonsApp {
 				txtInput.setText("");
 				return;
 			}
-
-			if (run instanceof String || run instanceof Number) {
-				Platform.runLater(() -> {
-					ScrollPane e = new ScrollPane(new Label(run.toString()));
-					e.setPrefHeight(150d);
-					vbResult.getChildren().add(e);
-					txtInput.setText("");
-				});
-				return;
-			} else if (run instanceof Throwable) {
-				Platform.runLater(() -> {
-					Label content = new Label(ValueUtil.toString((Throwable) run));
-					ScrollPane e = new ScrollPane(content);
-					e.setPrefHeight(150d);
-					vbResult.getChildren().add(e);
-					txtInput.setText("");
-				});
-				return;
-			} else if (run instanceof Node) {
-				Platform.runLater(() -> {
-					vbResult.getChildren().add((Node) run);
-					txtInput.setText("");
-				});
-				return;
-			} else if (run instanceof Parent) {
-				Platform.runLater(() -> {
-					vbResult.getChildren().add((Parent) run);
-					txtInput.setText("");
-				});
-				return;
-			} else if (run instanceof Pane) {
-				Platform.runLater(() -> {
-					vbResult.getChildren().add((Pane) run);
-					txtInput.setText("");
-				});
-				return;
-			}
-
-			Platform.runLater(() -> {
-				vbResult.getChildren().add(new Label(run.toString()));
-				txtInput.setText("");
-			});
-
-//			new WebView();
+			execute(run);
 		});
 
+	}
+
+	private void execute(Object run) {
+		if (run instanceof String || run instanceof Number) {
+
+			String string = run.toString();
+			//2023.12.18 java21에서 웹뷰로드에 문제가 있다.
+//			if (string.startsWith("http://") || string.startsWith("https://")) {
+//				try {
+//					execute(URI.create(string).toURL());
+//				} catch (MalformedURLException e) {
+//					execute(e);
+//				}
+//			}
+
+			Platform.runLater(() -> {
+				ScrollPane n = new ScrollPane(new Label(string));
+				n.setFitToWidth(true);
+				n.setMinHeight(_150D);
+				vbResult.getChildren().add(n);
+				txtInput.setText("");
+			});
+			return;
+		} else if (run instanceof Throwable) {
+			Platform.runLater(() -> {
+				Label content = new Label(ValueUtil.toString((Throwable) run));
+				ScrollPane n = new ScrollPane(content);
+				n.setMinHeight(_150D);
+				vbResult.getChildren().add(n);
+				
+				txtInput.setText("");
+			});
+			return;
+		} else if (run instanceof Node) {
+			Platform.runLater(() -> {
+				Node n = (Node) run;
+				vbResult.getChildren().add(n);
+				
+				txtInput.setText("");
+			});
+			return;
+		} else if (run instanceof Parent) {
+			Platform.runLater(() -> {
+				Parent n = (Parent) run;
+				vbResult.getChildren().add(n);
+				txtInput.setText("");
+			});
+			return;
+		} else if (run instanceof Pane) {
+			Platform.runLater(() -> {
+				Pane n = (Pane) run;
+				n.setMinHeight(_150D);
+				vbResult.getChildren().add(n);
+				txtInput.setText("");
+			});
+			return;
+		} 
+		//2023.12.18 java21에서 웹뷰로드에 문제가 있다.
+//		else if (run instanceof URL) {
+//			Platform.runLater(() -> {
+//				WebView webView = new WebView();
+//				
+//				webView.setMinHeight(_150D);
+//				vbResult.getChildren().add(webView);
+//				webView.getEngine().load(run.toString());
+//				txtInput.setText("");
+//			});
+//			return;
+//		}
+
+		Platform.runLater(() -> {
+			Label n = new Label(run.toString());
+			n.setMinHeight(150d);
+			vbResult.getChildren().add(n);
+			txtInput.setText("");
+		});
 	}
 
 	/**
@@ -201,8 +242,27 @@ public class NotebookComposite extends AbstractCommonsApp {
 
 	@FXML
 	public void txtInputOnKeyPressed(KeyEvent ke) {
-		if (ke.getCode() == KeyCode.ENTER)
+		if (ke.getCode() == KeyCode.ENTER) {
 			btnEnterOnAction();
+		} else if (ke.getCode() == KeyCode.UP) {
+			System.out.println(historyPos);
+			int index = historyPos;
+			if (index < 0)
+				return;
+
+			String cmd = historyCommand.get(index);
+			txtInput.setText(cmd);
+			historyPos = index - 1;
+		} else if (ke.getCode() == KeyCode.DOWN) {
+			System.out.println(historyPos);
+			int index = historyPos + 1;
+			if (index >= historyCommand.size())
+				return;
+			System.out.println(index);
+			String cmd = historyCommand.get(index);
+			txtInput.setText(cmd);
+			historyPos = index;
+		}
 	}
 
 	private String loadImportScript() {
@@ -210,7 +270,7 @@ public class NotebookComposite extends AbstractCommonsApp {
 		if (!file.exists()) {
 			return "";
 		}
-		
+
 		String script = FileUtil.readConversion(file);
 		return script;
 	}
@@ -219,13 +279,14 @@ public class NotebookComposite extends AbstractCommonsApp {
 		String property = System.getProperty("user.dir");
 		return new File(property, "groovy/import/import.groovy");
 	}
+
 	@FXML
 	public void miImportOnAction() {
-		
+
 		TextArea parent = new TextArea(loadImportScript());
-		FxUtil.createStageAndShow(parent, stage->{
-			stage.addEventFilter(KeyEvent.KEY_PRESSED, ev->{
-				if(ev.getCode() == KeyCode.S && ev.isControlDown()) {
+		FxUtil.createStageAndShow(parent, stage -> {
+			stage.addEventFilter(KeyEvent.KEY_PRESSED, ev -> {
+				if (ev.getCode() == KeyCode.S && ev.isControlDown()) {
 					String text = parent.getText();
 					try {
 						FileUtil.writeFile(importScriptFile(), text);
