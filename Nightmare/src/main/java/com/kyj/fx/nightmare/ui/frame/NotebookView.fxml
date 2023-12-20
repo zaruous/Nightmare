@@ -7,24 +7,31 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
 
 <fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="587.0" prefWidth="830.0" type="BorderPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <SplitPane prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <items>
-            <BorderPane prefHeight="200.0" prefWidth="200.0">
+      <SplitPane dividerPositions="0.7992895204262878" orientation="VERTICAL" BorderPane.alignment="CENTER">
+         <items>
+            <SplitPane prefHeight="160.0" prefWidth="200.0">
+              <items>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <center>
+                        <ScrollPane fx:id="spContent" fitToHeight="true" fitToWidth="true" pannable="true" BorderPane.alignment="CENTER" />
+                     </center>
+                  </BorderPane>
+              </items>
+            </SplitPane>
+            <BorderPane minHeight="-Infinity" prefHeight="110.0" prefWidth="830.0">
+               <right>
+                  <Button fx:id="btnEnter" mnemonicParsing="false" onAction="#btnEnterOnAction" text="Enter" BorderPane.alignment="CENTER" />
+               </right>
                <center>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" BorderPane.alignment="CENTER">
-                     <content>
-                        <VBox fx:id="vbResult" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
-                     </content>
-                  </ScrollPane>
+                  <TextArea fx:id="txtInput" onKeyPressed="#txtInputOnKeyPressed" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                </center>
             </BorderPane>
-        </items>
+         </items>
       </SplitPane>
    </center>
    <left>
@@ -60,14 +67,4 @@
         </menus>
       </MenuBar>
    </top>
-   <bottom>
-      <BorderPane minHeight="-Infinity" BorderPane.alignment="CENTER">
-         <center>
-            <TextField fx:id="txtInput" onKeyPressed="#txtInputOnKeyPressed" style="-fx-border-width: 1px; -fx-border-color: black;" />
-         </center>
-         <right>
-            <Button fx:id="btnEnter" mnemonicParsing="false" onAction="#btnEnterOnAction" text="Enter" BorderPane.alignment="CENTER" />
-         </right>
-      </BorderPane>
-   </bottom>
 </fx:root>

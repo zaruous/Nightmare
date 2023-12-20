@@ -11,8 +11,6 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kyj.fx.nightmare.ETScriptComposite;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -81,7 +79,7 @@ public class BaseDialogComposite extends BorderPane {
 //			FxUtil.loadRoot(BaseDialogComposite.class, this);
 			
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(ETScriptComposite.class.getResource("BasaeDialog.fxml"));
+			loader.setLocation(BaseDialogComposite.class.getResource("BasaeDialog.fxml"));
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();

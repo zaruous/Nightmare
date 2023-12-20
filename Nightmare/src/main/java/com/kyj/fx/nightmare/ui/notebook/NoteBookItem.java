@@ -11,16 +11,19 @@ import com.kyj.fx.nightmare.comm.engine.GroovyScriptEngine;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.layout.VBox;
 
 /**
  * 
  */
 public class NoteBookItem {
 
+	private VBox vbResult;
 	private StringProperty title = new SimpleStringProperty();
 	private GroovyScriptEngine groovyScriptEngine;
 
 	public NoteBookItem(String title) {
+		vbResult = new VBox();
 		this.setTitle(title);
 		groovyScriptEngine = new GroovyScriptEngine(false);
 		List<String> scripts = groovyScriptEngine.loadScripts();
@@ -65,6 +68,14 @@ public class NoteBookItem {
 
 	public final void setTitle(final String title) {
 		this.titleProperty().set(title);
+	}
+
+	public VBox getVbResult() {
+		return vbResult;
+	}
+
+	public void setVbResult(VBox vbResult) {
+		this.vbResult = vbResult;
 	}
 
 }

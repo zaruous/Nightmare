@@ -99,7 +99,6 @@ public class GroovyScriptEngine {
 	 * @throws ScriptException
 	 */
 	public void eval(Reader reader) throws ScriptException {
-		
 		this.groovyEngine.eval(reader);
 	}
 

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
@@ -24,6 +25,7 @@ import com.kyj.fx.nightmare.comm.service.ESig;
 import com.kyj.fx.nightmare.comm.service.XMLUtils;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -37,6 +39,10 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -54,6 +60,92 @@ import javafx.util.Pair;
 public class DialogUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DialogUtil.class);
 
+	public static Optional<Pair<String, String>> showInputDialog(Node owner, String title, String message) {
+		return showInputDialog(owner.getScene().getWindow(), title, message, "", null);
+	}
+	
+	public static Optional<Pair<String, String>> showInputDialog(Node owner, String title, String message, Predicate<String> satisfied) {
+		return showInputDialog(FxUtil.getWindow(owner), title, message, "", satisfied);
+	}
+	
+	public static Optional<Pair<String, String>> showInputDialog(Window owner, String title, String message) {
+		return showInputDialog(owner, title, message, "", null);
+	}
+	
+	public static Optional<Pair<String, String>> showInputDialog(String title, String message, String inputValue) {
+		return showInputDialog(StageStore.getPrimaryStage(), title, message, inputValue, null);
+	}
+	
+	public static Optional<Pair<String, String>> showInputDialog(Window owner, String title, String message, String inputValue,
+			Predicate<String> satisfied) {
+
+		BaseDialogComposite composite = new BaseDialogComposite(title, message);
+		Button btnOk = new Button("OK");
+		btnOk.setMinWidth(80d);
+		Button btnCancel = new Button("Cancel");
+		btnCancel.setMinWidth(80d);
+		composite.addButton(btnOk);
+		composite.addButton(btnCancel);
+
+		TextField text = new TextField();
+		if (ValueUtil.isNotEmpty(inputValue)) {
+			text.setText(inputValue);
+		}
+
+		text.setOnAction(ev -> {
+
+			btnOk.fireEvent(mouseEventForDummy());
+
+		});
+
+		composite.setGraphic(text);
+		Optional<Pair<String, String>> empty = Optional.empty();
+		SimpleObjectProperty<Optional<Pair<String, String>>> prop = new SimpleObjectProperty<>(empty);
+
+		// Modal
+		composite.show(owner, stage -> {
+			stage.initModality(Modality.APPLICATION_MODAL);
+			text.requestFocus();
+
+			text.addEventHandler(KeyEvent.KEY_RELEASED, ev -> {
+				if (ev.getCode() == KeyCode.ENTER) {
+
+					Optional<Pair<String, String>> pair = Optional.of(new Pair<>("OK", text.getText()));
+					prop.set(pair);
+
+					if (satisfied != null) {
+
+						if (satisfied.test(text.getText())) {
+							stage.close();
+						}
+					}
+
+				} else {
+
+					if (satisfied != null) {
+						if (satisfied.test(text.getText())) {
+							btnOk.setDisable(false);
+						} else
+							btnOk.setDisable(true);
+
+					}
+				}
+			});
+
+			btnOk.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+				Optional<Pair<String, String>> pair = Optional.of(new Pair<>("OK", text.getText()));
+				prop.set(pair);
+				stage.close();
+			});
+
+			btnCancel.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+				stage.close();
+			});
+
+		});
+
+		return prop.get();
+	}
 	public static Optional<Pair<String, String>> showYesOrNoDialog(String title, String message) {
 		return showYesOrNoDialog(StageStore.getPrimaryStage(), title, message, null, null);
 	}
@@ -847,5 +939,23 @@ public class DialogUtil {
 			setTokenProcessor(a -> "<SimpleLoginDialog/>");
 		}
 
+	}
+	
+	/**
+	 * @작성자 : KYJ
+	 * @작성일 : 2017. 9. 18.
+	 * @return
+	 */
+	public static MouseEvent mouseEventForDummy() {
+		return mouseEventForDummy(1);
+	}
+
+	public static MouseEvent mouseEventForDummy(int clickCount) {
+		return mouseEventForDummy(MouseButton.PRIMARY, clickCount);
+	}
+
+	public static MouseEvent mouseEventForDummy(MouseButton button, int clickCount) {
+		return new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0, button, clickCount, false, false, false, false, false, false, false,
+				false, false, false, null);
 	}
 }
