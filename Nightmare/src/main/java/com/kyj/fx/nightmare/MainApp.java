@@ -80,7 +80,10 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 		stage.setWidth(width);
 		stage.setHeight(height);
 		
-		stage.setTitle(Message.getInstance().getMessage("%MainApp_000001", ResourceLoader.getInstance().get(ResourceLoader.APP_VERSION)));
+		String appVersion = ResourceLoader.getInstance().get(ResourceLoader.APP_VERSION);
+		String appTitle = Message.getInstance().getMessage("%MainApp_000001",  appVersion);
+		System.out.println("appTitle : " + appTitle + " appVersion : " + appVersion );
+		stage.setTitle(appTitle);
 		// stage.setScene(scene);
 		stage.show();
 	}
