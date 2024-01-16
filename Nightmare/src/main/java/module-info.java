@@ -1,20 +1,26 @@
 open module ETHelper {
 
 	requires transitive spring.jdbc;
-	requires spring.core;
 	requires transitive spring.tx;
+	
+	requires transitive javafx.graphics;
+	requires transitive javafx.web;
+	requires transitive javafx.controls;
+	requires transitive javafx.base;
+	requires transitive javafx.swing;
+	
+	requires spring.core;
+	
 	requires spring.beans;
 
-	requires javafx.controls;
-	requires javafx.base;
-	requires javafx.swing;
+	
 	// The type FXMLLoader from module javafx.fxml may not be accessible to
 	// clients due to missing 'requires transitive'
 
 	requires transitive javafx.fxml;
 	// The type Stage from module javafx.graphics may not be accessible to
 	// clients due to missing 'requires transitive'
-	requires transitive javafx.graphics;
+	
 	requires org.apache.commons.io;
 	requires java.sql;
 
@@ -53,7 +59,7 @@ open module ETHelper {
 	requires org.codehaus.groovy;
 	requires gargoyle.groovy;
 	requires org.apache.pdfbox;
-	requires javafx.web;
+	
 	requires com.fasterxml.jackson.databind;
 	/*PDF ITEXT*/
 
