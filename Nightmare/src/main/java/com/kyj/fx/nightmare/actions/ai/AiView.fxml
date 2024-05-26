@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="587.0" prefWidth="830.0" stylesheets="@AiView.css" type="BorderPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <BorderPane prefHeight="555.0" prefWidth="196.0" BorderPane.alignment="CENTER">
+         <center>
+            <ListView fx:id="lvChats" maxWidth="1.7976931348623157E308" style="-fx-border-color: black; -fx-border-width: 1px;" />
+         </center>
+      </BorderPane>
+   </left>
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File" />
+          <Menu mnemonicParsing="false" text="Window">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#miHomeOnAction" text="Home" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <ScrollPane fitToHeight="true" fitToWidth="true" focusTraversable="false" maxWidth="1.7976931348623157E308" pannable="true" snapToPixel="false">
+         <content>
+            <ListView fx:id="lvResult" prefHeight="200.0" prefWidth="200.0" />
+         </content>
+      </ScrollPane>
+   </center>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <TextArea fx:id="txtPrompt" onKeyPressed="#txtPromptOnKeyPressed" prefHeight="57.0" prefWidth="558.0" />
+            <VBox alignment="CENTER">
+               <children>
+                  <Button maxWidth="120.0" mnemonicParsing="false" onAction="#btnEnterOnAction" prefWidth="120.0" text="Enter" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </bottom>
+</fx:root>

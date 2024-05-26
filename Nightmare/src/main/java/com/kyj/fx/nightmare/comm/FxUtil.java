@@ -7,18 +7,21 @@
 package com.kyj.fx.nightmare.comm;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.kyj.fx.fxloader.FxLoader;
 import com.kyj.fx.nightmare.GargoyleBuilderInitializer;
 import com.kyj.fx.nightmare.ui.grid.AnnotationOptions;
 import com.kyj.fx.nightmare.ui.grid.IColumnMapper;
 import com.kyj.fx.nightmare.ui.grid.IOptions;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,6 +29,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
@@ -36,6 +43,18 @@ import javafx.util.StringConverter;
  */
 public class FxUtil {
 
+	/**
+	 * background color 객체 성성후 리턴
+	 * 
+	 * @작성자 : KYJ
+	 * @작성일 : 2018. 6. 19.
+	 * @param fill
+	 * @return
+	 */
+	public static Background getBackgroundColor(Paint fill) {
+		return new Background(new BackgroundFill(fill, CornerRadii.EMPTY, Insets.EMPTY));
+	}
+	
 	/********************************
 	 * 작성일 : 2016. 8. 23. 작성자 : KYJ
 	 *
@@ -369,6 +388,59 @@ public class FxUtil {
 	 */
 	public static <T> void installClipboardKeyEvent(ListView<T> tv) {
 		FxListViewUtil.installClipboardKeyEvent(tv, null);
+	}
+
+	/********************************
+	 * 작성일 : 2016. 5. 21. 작성자 : KYJ
+	 *
+	 * FXMLController에 정의된 내용을 기준으로 FXML을 로드한다.
+	 *
+	 * @param controllerClass
+	 * @param instance
+	 * @return
+	 * @throws GargoyleException
+	 * @throws NullPointerException
+	 * @throws IOException
+	 ********************************/
+	public static <T, C> T loadRoot(Class<C> controllerClass, Object instance) throws Exception {
+		return FxLoader.load(controllerClass, instance, null, null);
+	}
+
+	/********************************
+	 * 작성일 : 2016. 5. 21. 작성자 : KYJ
+	 *
+	 * FXMLController에 정의된 내용을 기준으로 FXML을 로드한다.
+	 *
+	 * @param controllerClass
+	 * @return
+	 * @throws GargoyleException
+	 * @throws NullPointerException
+	 * @throws IOException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 ********************************/
+	public static <T, C> T loadRoot(Class<C> controllerClass) throws Exception {
+		return FxLoader.load(controllerClass, controllerClass.newInstance(), null, null);
+	}
+
+	/********************************
+	 * 작성일 : 2016. 5. 28. 작성자 : KYJ
+	 *
+	 * ref loadRoot() method.
+	 *
+	 * 에러를 뱉지않고 핸들링할 수 있는 파라미터를 받음.
+	 *
+	 * @param controllerClass
+	 * @param errorCallback
+	 * @return
+	 ********************************/
+	private static <T, C> T loadRoot(Class<C> controllerClass, Consumer<Exception> errorCallback) {
+		try {
+			return FxLoader.load(controllerClass, controllerClass.newInstance(), null, null);
+		} catch (Exception e) {
+			errorCallback.accept(e);
+		}
+		return null;
 	}
 
 	

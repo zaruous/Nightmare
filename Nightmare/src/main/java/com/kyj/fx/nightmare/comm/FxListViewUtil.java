@@ -31,8 +31,7 @@ public class FxListViewUtil {
 	 * @param tb
 	 ********************************/
 	public static <T> void installClipboardKeyEvent(ListView<T> tv, StringConverter<T> converter) {
-
-		tv.addEventHandler(KeyEvent.KEY_RELEASED, ev -> {
+		tv.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
 
 			// Copy
 			if (KeyCode.C == ev.getCode() && ev.isControlDown() && !ev.isAltDown() && !ev.isShiftDown()) {

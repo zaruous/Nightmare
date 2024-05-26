@@ -8,6 +8,7 @@ package com.kyj.fx.nightmare.ui.frame;
 
 import java.io.IOException;
 
+import com.kyj.fx.nightmare.actions.ai.AiComposite;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.StageStore;
 
@@ -61,6 +62,15 @@ public class MainFormComposite extends BorderPane {
 	@FXML
 	public void notebookOnClick(){
 		launch(new NotebookComposite());
+	}
+	
+	@FXML
+	public void aiOnClick(){
+		try {
+			launch(new AiComposite());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * @param compisite

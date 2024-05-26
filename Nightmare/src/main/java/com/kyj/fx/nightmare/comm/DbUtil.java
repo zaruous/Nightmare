@@ -98,7 +98,7 @@ public class DbUtil {
 		synchronized (dataSourceCache) {
 			if (dataSourceCache.containsKey(key)) {
 				dataSource = dataSourceCache.get(key);
-//				dataSource.checkAbandoned();
+				// dataSource.checkAbandoned();
 			}
 
 			if (dataSource == null) {
@@ -121,21 +121,19 @@ public class DbUtil {
 				configuration.setValidationTimeout(30000);
 				configuration.setConnectionInitSql("select 1 ");
 				configuration.setConnectionTestQuery("select 1");
-				
-				
-				
+
 				dataSource = new HikariDataSource(configuration);
-//				dataSource.setDriverClassName(driver);
-//				dataSource.setUrl(url);
-//				dataSource.setUsername(id);
-//				dataSource.setPassword(pass);
-//				dataSource.setDefaultAutoCommit(false);
-//				dataSource.setInitialSize(2);
-//				dataSource.setLoginTimeout(3);
-//				dataSource.setTestOnConnect(true);
-//				dataSource.setTestOnBorrow(true);
-//				dataSource.setValidationQuery("select 1");
-				
+				// dataSource.setDriverClassName(driver);
+				// dataSource.setUrl(url);
+				// dataSource.setUsername(id);
+				// dataSource.setPassword(pass);
+				// dataSource.setDefaultAutoCommit(false);
+				// dataSource.setInitialSize(2);
+				// dataSource.setLoginTimeout(3);
+				// dataSource.setTestOnConnect(true);
+				// dataSource.setTestOnBorrow(true);
+				// dataSource.setValidationQuery("select 1");
+
 				if (handler != null)
 					handler.accept(dataSource);
 
@@ -163,18 +161,18 @@ public class DbUtil {
 
 		if (dataSourceCache.containsKey(key)) {
 			DataSource dataSource = dataSourceCache.get(key);
-//			dataSource.checkAbandoned();
+			// dataSource.checkAbandoned();
 			return dataSource.getConnection();
 		} else {
-//			DataSource dataSource = new DataSource();
-//			dataSource.setDriverClassName(driver);
-//			dataSource.setUrl(url);
-//			dataSource.setUsername(id);
-//			dataSource.setPassword(pass);
-//			dataSource.setDefaultAutoCommit(false);
-//			dataSource.setInitialSize(1);
-//			dataSource.setLoginTimeout(3);
-			
+			// DataSource dataSource = new DataSource();
+			// dataSource.setDriverClassName(driver);
+			// dataSource.setUrl(url);
+			// dataSource.setUsername(id);
+			// dataSource.setPassword(pass);
+			// dataSource.setDefaultAutoCommit(false);
+			// dataSource.setInitialSize(1);
+			// dataSource.setLoginTimeout(3);
+
 			HikariConfig configuration = new HikariConfig();
 			configuration.setDriverClassName(driver);
 			configuration.setJdbcUrl(url);
@@ -187,7 +185,7 @@ public class DbUtil {
 			configuration.setConnectionInitSql("select 1 ");
 			configuration.setConnectionTestQuery("select 1");
 			DataSource dataSource = new HikariDataSource(configuration);
-			
+
 			dataSourceCache.put(key, dataSource);
 			return dataSource.getConnection();
 		}
@@ -263,5 +261,59 @@ public class DbUtil {
 		// }
 
 		return arrayList;
+	}
+
+	public static Map<String, Object> selectOne(final Connection con, final String sql) throws Exception {
+		return selectOne(con, sql, 1, 1 , DEFAULT_PREPAREDSTATEMENT_CONVERTER, (meta, rs) ->{
+			try {
+				MapBaseRowMapper mapBaseRowMapper = new MapBaseRowMapper();
+				return mapBaseRowMapper.mapRow(rs, 0);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return Collections.emptyMap();
+		});	
+	}
+	public static Map<String, Object> selectOne(final Connection con, final String sql, int fetchCount, int limitedSize,
+			BiFunction<Connection, String, PreparedStatement> prestatementConvert,
+			BiFunction<ResultSetMetaData, ResultSet, Map<String, Object>> convert) throws Exception {
+
+		Map<String, Object> ret = Collections.emptyMap();
+
+		try {
+
+			noticeQuery(sql);
+
+			PreparedStatement prepareStatement = null;
+			ResultSet executeQuery = null;
+
+			/* 쿼리 타임아웃 시간 설정 SEC */
+			// int queryTimeout = getQueryTimeout();
+
+			prepareStatement = prestatementConvert.apply(con, sql); // con.prepareStatement(sql);
+			// postgre-sql can't
+			// prepareStatement.setQueryTimeout(queryTimeout);
+			if (prepareStatement != null) {
+				if (!(limitedSize <= 0)) {
+					prepareStatement.setMaxRows(limitedSize);
+				}
+
+				if (fetchCount > 0) {
+					prepareStatement.setFetchSize(fetchCount);
+				}
+				executeQuery = prepareStatement.executeQuery();
+
+				ResultSetMetaData metaData = executeQuery.getMetaData();
+
+				ret = convert.apply(metaData, executeQuery);
+			}
+
+		} catch (Throwable e) {
+			throw e;
+		}
+
+
+		return ret;
+
 	}
 }
