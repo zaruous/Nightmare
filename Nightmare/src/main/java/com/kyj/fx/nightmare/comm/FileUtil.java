@@ -23,6 +23,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +35,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.io.file.PathUtils;
+import org.apache.commons.io.file.SimplePathVisitor;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,10 +146,8 @@ public class FileUtil {
 	/**
 	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2019. 12. 9.
-	 * @param f
-	 *            reading target.
-	 * @param charset
-	 *            encoding.
+	 * @param f       reading target.
+	 * @param charset encoding.
 	 * @param handler
 	 * @return if on error return null.
 	 */
@@ -318,7 +321,8 @@ public class FileUtil {
 	 * @param errorHandler
 	 * @return
 	 */
-	private static boolean fileAction(File file, BiFunction<File, Consumer<Exception>, Boolean> action, Consumer<Exception> errorHandler) {
+	private static boolean fileAction(File file, BiFunction<File, Consumer<Exception>, Boolean> action,
+			Consumer<Exception> errorHandler) {
 		if (Desktop.isDesktopSupported()) {
 			if (file.exists()) {
 				return action.apply(file, errorHandler);
@@ -381,11 +385,10 @@ public class FileUtil {
 			return walk.collect(Collectors.toList());
 		}
 	}
-	
-	
+
 	/**
 	 * @작성자 : (zaruous@naver.com)
-	 * @작성일 : 2023. 4. 1. 
+	 * @작성일 : 2023. 4. 1.
 	 * @param file
 	 * @param skipDirFilter
 	 * @return
@@ -403,7 +406,8 @@ public class FileUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public static List<File> recursive(File file, Predicate<Path> skipDirFilter, Predicate<Path> isAppend) throws IOException {
+	public static List<File> recursive(File file, Predicate<Path> skipDirFilter, Predicate<Path> isAppend)
+			throws IOException {
 
 		List<File> arrayList = new ArrayList<File>();
 		SimpleFileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
@@ -420,7 +424,7 @@ public class FileUtil {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 //				System.out.println("File name: " + file.toAbsolutePath());
-				if(isAppend.test(file))
+				if (isAppend.test(file))
 					arrayList.add(file.toFile());
 				return FileVisitResult.CONTINUE;
 			}
@@ -440,7 +444,6 @@ public class FileUtil {
 		Files.walkFileTree(file.toPath(), visitor);
 		return arrayList;
 	}
-	
 
 	/**
 	 * refer readConversion(File f, Charset encoding) <br/>
@@ -453,7 +456,7 @@ public class FileUtil {
 	public static String readConversion(File f) {
 		return FileContentConversionUtil.conversion(f);
 	}
-	
+
 	/**
 	 * 파일확장자 리턴
 	 *
@@ -464,7 +467,7 @@ public class FileUtil {
 	public static String getFileExtension(File fileName) {
 		return getFileExtension(fileName.getName());
 	}
-	
+
 	/**
 	 * 파일확장자 리턴
 	 *
@@ -485,15 +488,14 @@ public class FileUtil {
 		}
 		return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
 	}
-	
+
 	/**
 	 * 파일내용에 인코딩 정보가 존재하면 그 인코딩을 리턴합니다. </br>
 	 * 만약에 인코딩정보가 없다면 UTF-8을 리턴합니다 </br>
 	 * 
 	 * @작성자 : KYJ
 	 * @작성일 : 2017. 11. 1.
-	 * @param f
-	 *            인코딩을 찾을 파일.
+	 * @param f 인코딩을 찾을 파일.
 	 * @return 인코딩
 	 * @throws IOException
 	 */
@@ -515,5 +517,45 @@ public class FileUtil {
 			handle.handle(e);
 		}
 		return f;
+	}
+
+	public static void cleanDirtyFilesAsynch() {
+		String tmpdir = ResourceLoader.getInstance().get(ResourceLoader.AI_CREATE_WAVE_FILE_DIR, "tmp");
+		cleanDirtyFilesAsynch(Path.of(tmpdir).toAbsolutePath());
+	}
+
+	/**
+	 * 임시 지정된 경로 파일을 삭제.
+	 * 
+	 * @return
+	 */
+	public static void cleanDirtyFilesAsynch(Path pa) {
+		String str_day = ResourceLoader.getInstance().get(ResourceLoader.AI_CREATE_WAVE_FILE_DELETE_PERIOD_DAY, "1");
+		int days = Integer.parseInt(str_day);		
+		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
+			try {
+				PathUtils.deleteDirectory(pa);
+				PathUtils.visitFileTree(new SimplePathVisitor() {
+					@Override
+					public FileVisitResult visitFile(Path path, BasicFileAttributes attr) throws IOException {
+						
+						
+						FileTime creationTime = attr.creationTime();
+						
+						LocalDate fileDate = LocalDate.ofInstant(creationTime.toInstant(), ZoneId.systemDefault());
+						LocalDate cutoffDate = LocalDate.now().minusDays(days);
+						boolean delFlag = fileDate.isBefore(cutoffDate) && path.getFileName().toString().endsWith(".wav");
+						LOGGER.debug("path : {}\t date: {}\t deleteFlag:{} ", path, fileDate, delFlag);
+						if(delFlag)
+							Files.deleteIfExists(path);
+						
+						return super.visitFile(path, attr);
+					}
+					
+				}, pa);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 }

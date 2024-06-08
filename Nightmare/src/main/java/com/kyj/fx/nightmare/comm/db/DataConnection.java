@@ -9,8 +9,15 @@ import javax.sql.DataSource;
 import com.kyj.fx.nightmare.comm.DbUtil;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 
-public class MariaDbStore {
+public class DataConnection {
 
+	/**
+	 * @return
+	 * @throws SQLException
+	 */
+	public Connection getConnection() throws SQLException {
+		return getConnection(ds ->{});
+	}
 	/**
 	 * @param handler
 	 * @return

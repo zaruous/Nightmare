@@ -38,8 +38,11 @@ public class DbUtil {
 	 * @작성일 : 2021. 11. 22.
 	 * @param sql
 	 */
+	public static void noticeQuery(String sql, Map<String, Object> paramMap) {
+		LOGGER.debug("{}\nparameters:{}", sql, paramMap);
+	}
 	public static void noticeQuery(String sql) {
-		LOGGER.debug(sql);
+		LOGGER.debug("{}", sql);
 	}
 
 	public static DataSource getDataSource() throws Exception {
@@ -115,7 +118,7 @@ public class DbUtil {
 				configuration.setJdbcUrl(url);
 				configuration.setUsername(id);
 				configuration.setPassword(pass);
-				configuration.setAutoCommit(false);
+				configuration.setAutoCommit(true);
 				configuration.setMaximumPoolSize(2);
 				configuration.setConnectionTimeout(30000);
 				configuration.setValidationTimeout(30000);
@@ -178,7 +181,7 @@ public class DbUtil {
 			configuration.setJdbcUrl(url);
 			configuration.setUsername(id);
 			configuration.setPassword(pass);
-			configuration.setAutoCommit(false);
+			configuration.setAutoCommit(true);
 			configuration.setMaximumPoolSize(2);
 			configuration.setConnectionTimeout(3000);
 			configuration.setValidationTimeout(3000);

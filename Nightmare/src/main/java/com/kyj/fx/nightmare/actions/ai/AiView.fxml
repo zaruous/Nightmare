@@ -32,22 +32,29 @@
       </MenuBar>
    </top>
    <center>
-      <ScrollPane fitToHeight="true" fitToWidth="true" focusTraversable="false" maxWidth="1.7976931348623157E308" pannable="true" snapToPixel="false">
+      <ScrollPane fitToHeight="true" fitToWidth="true" focusTraversable="false" maxWidth="1.7976931348623157E308" pannable="true" prefHeight="465.0" prefWidth="634.0" snapToPixel="false">
          <content>
-            <ListView fx:id="lvResult" prefHeight="200.0" prefWidth="200.0" />
+            <VBox>
+               <children>
+                  <ListView fx:id="lvResult" prefHeight="525.0" prefWidth="632.0" styleClass="lvResult" VBox.vgrow="ALWAYS" />
+                  <HBox>
+                     <children>
+                        <TextArea fx:id="txtPrompt" maxWidth="1.7976931348623157E308" onKeyPressed="#txtPromptOnKeyPressed" HBox.hgrow="ALWAYS" />
+                        <VBox alignment="CENTER" spacing="10.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#btnEnterOnAction" prefWidth="80.0" text="Enter" />
+                               <Button fx:id="btnMic" onAction="#btnMicOnAction" prefWidth="80.0" text="마이크">
+<!--       	                               <graphic> -->
+<!--       							            <SVGPath content="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z" fill="black" /> -->
+<!--       							        </graphic> -->
+                              </Button>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
          </content>
       </ScrollPane>
    </center>
-   <bottom>
-      <HBox BorderPane.alignment="CENTER">
-         <children>
-            <TextArea fx:id="txtPrompt" onKeyPressed="#txtPromptOnKeyPressed" prefHeight="57.0" prefWidth="558.0" />
-            <VBox alignment="CENTER">
-               <children>
-                  <Button maxWidth="120.0" mnemonicParsing="false" onAction="#btnEnterOnAction" prefWidth="120.0" text="Enter" />
-               </children>
-            </VBox>
-         </children>
-      </HBox>
-   </bottom>
 </fx:root>

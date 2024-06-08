@@ -18,8 +18,12 @@
 		<appender-ref ref="SYSOUT" />
 	</logger>
 	
+	<logger name="org.apache.http.wire" level="ERROR" additivity="false">
+		<appender-ref ref="SYSOUT" />
+	</logger>
 	
-	<root level="DEBUG" additivity="false">
+	
+	<root level="INFO" additivity="false">
 		<appender-ref ref="SYSOUT" />
 	</root>
 

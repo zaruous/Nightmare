@@ -6,26 +6,25 @@ package com.kyj.fx.nightmare.actions.ai;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 
 /**
  * 
  */
-public class CodeLabel extends Label {
+public class CodeLabel extends DefaultLabel {
 
 	public CodeLabel() {
-		super();		
-		getStyleClass().add("codeLabel");
+		super();
+
 	}
 
 	public CodeLabel(String text, Node graphic) {
 		super(text, graphic);
-		getStyleClass().add("codeLabel");
+
 	}
 
 	public CodeLabel(String text) {
 		super(text);
-		getStyleClass().add("codeLabel");
+
 	}
 
 	private StringProperty codeType = new SimpleStringProperty();

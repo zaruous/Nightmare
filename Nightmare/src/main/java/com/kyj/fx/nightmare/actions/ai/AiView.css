@@ -1,6 +1,4 @@
 .list-cell:filled:selected, .list-cell:filled:selected:hover, .list-cell:filled:selected:focused {
-    -fx-background-color: transparent;
-    -fx-text-fill: black; /* 선택된 셀의 텍스트 색상을 설정합니다 (기본: 검정) */
     -fx-border-color: black; /* 테두리 색상을 검정으로 설정 */
     -fx-border-width: 1px; /* 테두리 두께를 1픽셀로 설정 */
 }
@@ -9,7 +7,19 @@
     -fx-background-color: transparent;
     -fx-text-fill: black; /* 기본 텍스트 색상을 설정합니다 (기본: 검정) */
 }
+.me {
+	-fx-text-fill: red;
+}
 
 #codeLabel{
 	-fx-font-weight : bold;
+}
+
+.button {
+	-fx-background-color: transparent;
+	-fx-border-color : black;
+	-fx-border-radius: 5px;
+	-fx-border-width : 1px;
+	-fx-border-style : solid;
+	-fx-text-fill: black;
 }

@@ -177,7 +177,7 @@ public class AbstractDAO {
 			sql = writer.toString();
 		}
 		DbUtil.noticeQuery(sql);
-		return template.batchUpdate(sql, paramMaps);
+		return getNamedJdbcTemplate().batchUpdate(sql, paramMaps);
 	}
 
 	/*
@@ -191,8 +191,9 @@ public class AbstractDAO {
 
 			sql = writer.toString();
 		}
-		DbUtil.noticeQuery(sql);
-		return template.update(sql, paramMap);
+		
+		DbUtil.noticeQuery(sql, paramMap);
+		return getNamedJdbcTemplate().update(sql, paramMap);
 	}
 
 	/**
@@ -210,7 +211,7 @@ public class AbstractDAO {
 			sql = writer.toString();
 		}
 		DbUtil.noticeQuery(sql);
-		return template.batchUpdate(sql, paramMaps);
+		return getNamedJdbcTemplate().batchUpdate(sql, paramMaps);
 	}
 
 	public <T> List<T> queryForList(String sql, Map<String, Object> paramMap, Class<T> clazz) {
@@ -220,7 +221,7 @@ public class AbstractDAO {
 			sql = writer.toString();
 		}
 		DbUtil.noticeQuery(sql);
-		return template.queryForList(sql, paramMap, clazz);
+		return getNamedJdbcTemplate().queryForList(sql, paramMap, clazz);
 	}
 
 	/**

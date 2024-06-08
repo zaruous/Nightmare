@@ -61,7 +61,7 @@ public class ExecutorDemons {
 	 */
 	private static ExecutorService gargoyleSystemExecutorService;
 	static {
-		gargoyleSystemExecutorService = newFixedThreadExecutor(3);
+		gargoyleSystemExecutorService = Executors.newVirtualThreadPerTaskExecutor();
 	}
 
 	/**

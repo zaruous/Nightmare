@@ -52,6 +52,15 @@ public class ResourceLoader {
 	
 	public static final String FILE_ENCODING = "file.encoding";
 	public static final String SUN_JNU_ENCODING = "sun.jnu.encoding";
+	
+	//#AI에서 음성파일 녹음시 파일 생성 여부
+	public static final String AI_CREATE_WAVE_FILE_YN = "ai.create.wave.file.yn";
+	public static final String AI_CREATE_WAVE_FILE_DIR = "ai.create.wave.file.dir";
+	public static final String AI_CREATE_WAVE_FILE_DELETE_PERIOD_DAY = "ai.create.wave.file.delete.period.day";
+	//자동으로 음성을 플레이할것인지 여부
+	public static final String AI_AUTO_PLAY_SOUND_YN = "ai.auto.play.sound.yn";
+	
+	
 	/**
 	 * 앱 버젼 <br/>
 	 * @최초생성일 2021. 12. 8.
