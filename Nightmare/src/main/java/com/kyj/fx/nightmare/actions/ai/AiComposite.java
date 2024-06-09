@@ -33,7 +33,9 @@ import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 
 import chat.rest.api.service.core.VirtualPool;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -77,9 +79,11 @@ public class AiComposite extends AbstractCommonsApp {
 	MixerSettings mixerSettings;
 	// AI 리스트뷰 컨텍스트
 	ContextMenu speechCtx = new ContextMenu();
-	boolean useMicrophoneFlag; 
+//	boolean useMicrophoneFlag;
+	BooleanProperty useMicrophoneFlag = new SimpleBooleanProperty();
 	
 	public AiComposite() throws Exception {
+		
 		FxUtil.loadRoot(AiComposite.class, this);
 	}
 
@@ -96,11 +100,9 @@ public class AiComposite extends AbstractCommonsApp {
 		}
 	};
 
-	
 	@FXML
 	public void initialize() {
-		useMicrophoneFlag = "Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_AUTO_PLAY_SOUND_YN, "N"));
-		
+		useMicrophoneFlag.set( "Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_AUTO_PLAY_SOUND_YN, "N")));
 		MenuItem miPlayMyVoice = new MenuItem("Play my voice");
 		miPlayMyVoice.setOnAction(ac -> {
 			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
@@ -115,22 +117,23 @@ public class AiComposite extends AbstractCommonsApp {
 			playingObject.set(null);
 			playingObject.set(lbl);
 		});
+		speechCtx.getItems().add(miPlaySound);
 		
 		MenuItem miRunCode = new MenuItem("Run Code");
 		miRunCode.setOnAction(ac -> {
 			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
-			if(lbl instanceof CodeLabel) {
+			if (lbl instanceof CodeLabel) {
 				CodeLabel cl = (CodeLabel) lbl;
 				GroovyScriptEngine engine = new GroovyScriptEngine();
 				try {
 					engine.eval(cl.getText());
 				} catch (ScriptException e) {
 					e.printStackTrace();
-				}	
+				}
 			}
-			
+
 		});
-		
+
 		speechCtx.getItems().add(miRunCode);
 
 		this.lvResult.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -192,21 +195,23 @@ public class AiComposite extends AbstractCommonsApp {
 
 			@Override
 			public void changed(ObservableValue<? extends DefaultLabel> observable, DefaultLabel oldValue, DefaultLabel newValue) {
-				if (oldValue != null)
-				{
+				if (!useMicrophoneFlag.get())
+					return;
+
+				if (oldValue != null) {
 					oldValue.setOnPlayEnd(null);
 					oldValue.setOnPlayStart(null);
 					oldValue.stop();
 				}
-					
+
 				if (newValue != null) {
-					newValue.setOnPlayStart(v ->{
+					newValue.setOnPlayStart(v -> {
 						btnMicStop.setDisable(false);
 					});
-					newValue.setOnPlayEnd(v ->{
+					newValue.setOnPlayEnd(v -> {
 						btnMicStop.setDisable(true);
 					});
-					
+
 					newValue.playSound();
 				}
 			}
@@ -247,7 +252,8 @@ public class AiComposite extends AbstractCommonsApp {
 
 							String content2 = c.getMessage().getContent();
 
-							if ("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_AUTO_PLAY_SOUND_YN, "N"))) {
+							
+							if (useMicrophoneFlag.get()) {
 								var allData = new DefaultLabel(content2);
 								playingObject.set(allData);
 							}
@@ -312,15 +318,15 @@ public class AiComposite extends AbstractCommonsApp {
 	@FXML
 	public void btnMicOnAction() {
 
-		if(!useMicrophoneFlag)
-		{
+		if (!useMicrophoneFlag.get()) {
 			Pair<String, String> pair = DialogUtil.showYesOrNoDialog("마이크 선택", "마이크 설정이 비활성화되어 있습니다. 활성화 하시겠습니까?").get();
-			if("Y".equals(pair.getValue())) {
+			if ("Y".equals(pair.getValue())) {
 				miMicrophoneOnAction();
+				useMicrophoneFlag.set(true);
 			}
 			return;
 		}
-		
+
 		if (audioHelper == null)
 			audioHelper = new AudioHelper();
 
@@ -364,11 +370,12 @@ public class AiComposite extends AbstractCommonsApp {
 				audioHelper.setMixer(mixerSettings.getMixer());
 				audioHelper.start();
 				btnMic.setText(audioHelper.isRecording() ? "중지" : "마이크");
-			} 
-			catch(MixerNotFound e) {
+			} catch (MixerNotFound e) {
 				DialogUtil.showMessageDialog(e.getMessage());
-			}
-			catch (IOException e) {
+			} catch (IllegalArgumentException e) {
+				LOGGER.error(ValueUtil.toString(e));
+				DialogUtil.showMessageDialog("지원되지않는 마이크 형식입니다.");
+			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -395,8 +402,8 @@ public class AiComposite extends AbstractCommonsApp {
 						// String name = selectedItem.getName();
 						Info info = selectedItem.getInfo();
 
-						mixerSettings.load();
 						mixerSettings.createSettings(info);
+						mixerSettings.load();
 
 						// SaveComplete=저장되었습니다.
 						DialogUtil.showMessageDialog(Message.getInstance().getMessage("SaveComplete"));

@@ -177,8 +177,7 @@ public class AudioHelper {
 
 			// 데이터 라인 열기
 			if (!AudioSystem.isLineSupported(info)) {
-				System.err.println("Line not supported");
-				System.exit(0);
+				throw new RuntimeException("Line not supported");
 			}
 
 			targetLine = (TargetDataLine) mixer.getLine(info);
