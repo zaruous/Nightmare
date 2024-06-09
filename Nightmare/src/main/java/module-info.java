@@ -57,7 +57,7 @@ open module ETHelper {
 	requires org.apache.commons.text;
 	requires java.net.http;
 	requires org.codehaus.groovy;
-	requires gargoyle.groovy;
+	//requires gargoyle.groovy;
 	requires org.apache.pdfbox;
 	
 	requires com.fasterxml.jackson.databind;

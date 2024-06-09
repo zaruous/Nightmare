@@ -506,11 +506,11 @@
 			<version>3.0.19</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.kyj.fx</groupId>
-			<artifactId>gargoyle-groovy</artifactId>
-			<version>0.0.1</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.kyj.fx</groupId>-->
+<!--			<artifactId>gargoyle-groovy</artifactId>-->
+<!--			<version>0.0.1</version>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>org.fxmisc.richtext</groupId>
@@ -546,11 +546,13 @@
 			<artifactId>chat-rest-api</artifactId>
 			<version>1.0.1</version>
 		</dependency>
-		<!--		<dependency>-->
-		<!--		    <groupId>com.kyj.fx</groupId>-->
-		<!--		    <artifactId>fxloader</artifactId>-->
-		<!--		    <version>2.0.0</version>-->
-		<!--		</dependency>-->
+		
+		<!--그루비 동적 라이브러리 관리 -->
+		<dependency>
+		    <groupId>org.apache.ivy</groupId>
+		    <artifactId>ivy</artifactId>
+		    <version>2.5.0</version> 
+		</dependency>
 
 	</dependencies>
 

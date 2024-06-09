@@ -24,7 +24,6 @@ public class AudioHelper {
 	AudioRecorder recorder = new AudioRecorder();
 	private ByteArrayOutputStream out = new ByteArrayOutputStream();
 	private int recordFlag;
-	
 
 	public Mixer getMixer() {
 		return recorder.getMixer();
@@ -34,23 +33,19 @@ public class AudioHelper {
 		recorder.setMixer(mixer);
 	}
 
-	public void start() throws IOException {
+	public void start() throws Exception {
 
 		if (ValueUtil.isEmpty(recorder.getMixer()))
-			throw new RuntimeException("마이크 설정이 없습니다. mixerName을 정의해주세요.");
+			throw new MixerNotFound("마이크 설정이 없습니다. mixerName을 정의해주세요.");
 
 		out = new ByteArrayOutputStream();
 		// 녹음 시작
-		try {
-			recorder.startRecording();
-			recordFlag = 1;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		recorder.startRecording();
+		recordFlag = 1;
 
 	}
 
-	public byte[] stop() {
+	public byte[] stop() throws IOException {
 
 		// 녹음 중지 및 데이터 가져오기
 		byte[] audioData = recorder.stopRecording();
@@ -62,10 +57,7 @@ public class AudioHelper {
 			System.out.println("Recording stopped and saved.");
 			recordFlag = 0;
 			return data = out.toByteArray();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-		return null;
 	}
 
 	public boolean isRecording() {
@@ -77,14 +69,14 @@ public class AudioHelper {
 	public byte[] getData() {
 		return data;
 	}
-	
+
 	/**
 	 * @param audioData
 	 * @param out
 	 * @throws Exception
 	 */
 	public static void writeWav(byte[] audioData, OutputStream out) throws Exception {
-//		AudioRecorder recorder = new AudioRecorder();
+		// AudioRecorder recorder = new AudioRecorder();
 		// 녹음 데이터 파일로 저장
 		AudioFormat audioFormat = new AudioFormat(16000, 16, 2, true, true);
 		try (ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
@@ -94,58 +86,61 @@ public class AudioHelper {
 			LOGGER.debug("Recording stopped and saved.");
 		}
 	}
-	
-//
-//	public static void main(String[] args) {
-//
-//		// 사용 가능한 믹서를 나열
-//		
-//		Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
-//		System.out.println("사용 가능한 믹서 목록:");
-//		Mixer mixer = AudioSystem.getMixer(mixerInfos[20]);
-//		for (int i = 0; i < mixerInfos.length; i++) {
-//			LOGGER.debug(i + ": " + mixerInfos[i].getName() + " - " + mixerInfos[i].getDescription());
-//			if("마이크(2- H710)".equals(mixerInfos[i].getName()))
-//			{
-//				mixer = AudioSystem.getMixer(mixerInfos[i]);
-//				break;
-//			}
-//		}
-////		Mixer mixer = AudioSystem.getMixer(mixerInfos[20]);
-//
-//		AudioRecorder recorder = new AudioRecorder();
-//		// 녹음 파일 경로 설정
-//		String filePath = "recorded_audio.wav";
-//		File file = new File(filePath);
-//
-//		try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-//			// 녹음 시작
-//			recorder.startRecording(mixer);
-//			LOGGER.debug("Recording started... Press Enter to stop.");
-//
-//			try {
-//				// 사용자 입력 대기
-//				System.in.read();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//
-//			// 녹음 중지 및 데이터 가져오기
-//			byte[] audioData = recorder.stopRecording();
-//
-//			// 녹음 데이터 파일로 저장
-//			try (ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
-//					AudioInputStream audioInputStream = new AudioInputStream(bais, recorder.getAudioFormat(),
-//							audioData.length / recorder.getAudioFormat().getFrameSize())) {
-//				AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, fileOutputStream);
-//				LOGGER.debug("Recording stopped and saved.");
-//			}
-//
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//		}
-//	}
-	
+
+	//
+	// public static void main(String[] args) {
+	//
+	// // 사용 가능한 믹서를 나열
+	//
+	// Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
+	// System.out.println("사용 가능한 믹서 목록:");
+	// Mixer mixer = AudioSystem.getMixer(mixerInfos[20]);
+	// for (int i = 0; i < mixerInfos.length; i++) {
+	// LOGGER.debug(i + ": " + mixerInfos[i].getName() + " - " +
+	// mixerInfos[i].getDescription());
+	// if("마이크(2- H710)".equals(mixerInfos[i].getName()))
+	// {
+	// mixer = AudioSystem.getMixer(mixerInfos[i]);
+	// break;
+	// }
+	// }
+	//// Mixer mixer = AudioSystem.getMixer(mixerInfos[20]);
+	//
+	// AudioRecorder recorder = new AudioRecorder();
+	// // 녹음 파일 경로 설정
+	// String filePath = "recorded_audio.wav";
+	// File file = new File(filePath);
+	//
+	// try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+	// // 녹음 시작
+	// recorder.startRecording(mixer);
+	// LOGGER.debug("Recording started... Press Enter to stop.");
+	//
+	// try {
+	// // 사용자 입력 대기
+	// System.in.read();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	//
+	// // 녹음 중지 및 데이터 가져오기
+	// byte[] audioData = recorder.stopRecording();
+	//
+	// // 녹음 데이터 파일로 저장
+	// try (ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
+	// AudioInputStream audioInputStream = new AudioInputStream(bais,
+	// recorder.getAudioFormat(),
+	// audioData.length / recorder.getAudioFormat().getFrameSize())) {
+	// AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE,
+	// fileOutputStream);
+	// LOGGER.debug("Recording stopped and saved.");
+	// }
+	//
+	// } catch (Exception e1) {
+	// e1.printStackTrace();
+	// }
+	// }
+
 	class AudioRecorder {
 
 		// 타겟 데이터 라인
@@ -187,7 +182,7 @@ public class AudioHelper {
 			}
 
 			targetLine = (TargetDataLine) mixer.getLine(info);
-//				targetLine = (TargetDataLine) AudioSystem.getLine(info);
+			// targetLine = (TargetDataLine) AudioSystem.getLine(info);
 			targetLine.open(format);
 			targetLine.start();
 			recording = true;
@@ -227,4 +222,3 @@ public class AudioHelper {
 		}
 	}
 }
-

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.script.ScriptException;
 import javax.sound.sampled.Mixer.Info;
 
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import com.kyj.fx.nightmare.comm.Message;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
+import com.kyj.fx.nightmare.comm.engine.GroovyScriptEngine;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 
 import chat.rest.api.service.core.VirtualPool;
@@ -49,6 +51,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
+import javafx.util.Pair;
 import javafx.util.StringConverter;
 
 /**
@@ -74,7 +77,8 @@ public class AiComposite extends AbstractCommonsApp {
 	MixerSettings mixerSettings;
 	// AI 리스트뷰 컨텍스트
 	ContextMenu speechCtx = new ContextMenu();
-
+	boolean useMicrophoneFlag; 
+	
 	public AiComposite() throws Exception {
 		FxUtil.loadRoot(AiComposite.class, this);
 	}
@@ -92,8 +96,11 @@ public class AiComposite extends AbstractCommonsApp {
 		}
 	};
 
+	
 	@FXML
 	public void initialize() {
+		useMicrophoneFlag = "Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_AUTO_PLAY_SOUND_YN, "N"));
+		
 		MenuItem miPlayMyVoice = new MenuItem("Play my voice");
 		miPlayMyVoice.setOnAction(ac -> {
 			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
@@ -108,7 +115,23 @@ public class AiComposite extends AbstractCommonsApp {
 			playingObject.set(null);
 			playingObject.set(lbl);
 		});
-		speechCtx.getItems().add(miPlaySound);
+		
+		MenuItem miRunCode = new MenuItem("Run Code");
+		miRunCode.setOnAction(ac -> {
+			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
+			if(lbl instanceof CodeLabel) {
+				CodeLabel cl = (CodeLabel) lbl;
+				GroovyScriptEngine engine = new GroovyScriptEngine();
+				try {
+					engine.eval(cl.getText());
+				} catch (ScriptException e) {
+					e.printStackTrace();
+				}	
+			}
+			
+		});
+		
+		speechCtx.getItems().add(miRunCode);
 
 		this.lvResult.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.lvResult.setCellFactory(new Callback<ListView<DefaultLabel>, ListCell<DefaultLabel>>() {
@@ -158,6 +181,7 @@ public class AiComposite extends AbstractCommonsApp {
 					boolean speechMenuVisible = item instanceof SpechLabel;
 					miPlayMyVoice.setVisible(speechMenuVisible);
 					miPlaySound.setVisible(!speechMenuVisible);
+					miRunCode.setVisible(item instanceof CodeLabel);
 				});
 				return listCell;
 			}
@@ -288,6 +312,15 @@ public class AiComposite extends AbstractCommonsApp {
 	@FXML
 	public void btnMicOnAction() {
 
+		if(!useMicrophoneFlag)
+		{
+			Pair<String, String> pair = DialogUtil.showYesOrNoDialog("마이크 선택", "마이크 설정이 비활성화되어 있습니다. 활성화 하시겠습니까?").get();
+			if("Y".equals(pair.getValue())) {
+				miMicrophoneOnAction();
+			}
+			return;
+		}
+		
 		if (audioHelper == null)
 			audioHelper = new AudioHelper();
 
@@ -331,7 +364,13 @@ public class AiComposite extends AbstractCommonsApp {
 				audioHelper.setMixer(mixerSettings.getMixer());
 				audioHelper.start();
 				btnMic.setText(audioHelper.isRecording() ? "중지" : "마이크");
-			} catch (IOException e) {
+			} 
+			catch(MixerNotFound e) {
+				DialogUtil.showMessageDialog(e.getMessage());
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -366,7 +405,7 @@ public class AiComposite extends AbstractCommonsApp {
 
 			});
 			root.setBottom(btn);
-			FxUtil.createStageAndShow(root, stage -> {
+			FxUtil.createStageAndShowAndWait(root, stage -> {
 				stage.setWidth(800d);
 				stage.initOwner(StageStore.getPrimaryStage());
 			});
