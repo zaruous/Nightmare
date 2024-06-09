@@ -8,18 +8,35 @@ package com.kyj.fx.nightmare.comm;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.fxloader.FxLoader;
 import com.kyj.fx.nightmare.GargoyleBuilderInitializer;
+import com.kyj.fx.nightmare.comm.ValueUtil.IndexCaseTypes;
 import com.kyj.fx.nightmare.ui.grid.AnnotationOptions;
+import com.kyj.fx.nightmare.ui.grid.ColumnName;
+import com.kyj.fx.nightmare.ui.grid.ColumnVisible;
+import com.kyj.fx.nightmare.ui.grid.ColumnWidth;
 import com.kyj.fx.nightmare.ui.grid.IColumnMapper;
 import com.kyj.fx.nightmare.ui.grid.IOptions;
+import com.kyj.fx.nightmare.ui.grid.NonEditable;
 
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -42,7 +59,234 @@ import javafx.util.StringConverter;
  *
  */
 public class FxUtil {
+	private static final Logger LOGGER = LoggerFactory.getLogger(FxUtil.class);
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2020. 9. 25.
+	 * @param <T>
+	 * @param modifyList
+	 * @return
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
+	 */
+	public static <T> TableView<T> createTableView(List<T> modifyList)
+			throws NoSuchFieldException, SecurityException, NoSuchMethodException {
+		T t = modifyList.get(0);
+		TableView<T> tv = new TableView<T>();
+		Class<T> clazz = (Class<T>) t.getClass();
+		generateTableColumns(clazz, tv, "tc");
+		tbAutoMapping(clazz, tv, "tc");
+		tv.getItems().setAll(modifyList);
+		return tv;
+	}
+	
+	/**
+	 * 번거로운 테이블 value 맵핑을 간편하게 하기 위해 만듬. <br/>
+	 * ㅠ
+	 * 
+	 * 조건 : fxml작성된 id와 vo 필드에 xxproperty 명이 일치하는 대상이 조건이며 <br/>
+	 * 
+	 * 틀린경우는 로그를 출력. <r/>
+	 * 
+	 * @작성자 : KYJ
+	 * @작성일 : 2018. 1. 30.
+	 * @param beanClass
+	 * @param tb
+	 * @param startPrefix
+	 *            테이블 컬럼 preffix. <br/>
+	 */
+	public static <T> void tbAutoMapping(Class<T> beanClass, TableView<T> tb, String startPrefix) {
+		tbAutoMapping(beanClass, tb, startPrefix, null);
+	}
+	/**
+	 * 번거로운 테이블 value 맵핑을 간편하게 하기 위해 만듬. <br/>
+	 * ㅠ
+	 * 
+	 * 조건 : fxml작성된 id와 vo 필드에 xxproperty 명이 일치하는 대상이 조건이며 <br/>
+	 * 
+	 * 틀린경우는 로그를 출력. <r/>
+	 * 
+	 * 2019.11.13 컬럼에 하위 항목도 존재하는 경우 대상에 추가하도록 수정.
+	 * 
+	 * @작성자 : KYJ
+	 * @작성일 : 2018. 1. 31.
+	 * @param beanClass
+	 * @param tb
+	 * @param startPrefix
+	 * @param filter
+	 *            자동으로 지정하지않을 컬럼이 존재한경우
+	 */
+	public static <T> void tbAutoMapping(Class<T> beanClass, TableView<T> tb, String startPrefix, Predicate<TableColumn<T, ?>> filter) {
+		// ObservableList<TableColumn<T, ?>> columns = tb.getColumns();
+		LinkedList<TableColumn<T, ?>> columns = new LinkedList<TableColumn<T, ?>>();
+		columns.addAll(tb.getColumns());
+		while (!columns.isEmpty()) {
+			TableColumn<T, ?> col = columns.pop();
 
+			ObservableList<TableColumn<T, ?>> sub = col.getColumns();
+			if (sub != null && !sub.isEmpty())
+				columns.addAll(sub);
+
+			if (filter != null) {
+				if (!filter.test(col)) {
+					continue;
+				}
+			}
+
+			col.setCellValueFactory(callback -> {
+
+				String id = col.getId();
+				if (id.startsWith(startPrefix)) {
+
+					String beanProperyName = ValueUtil.getIndexLowercase(id.replace(startPrefix, ""), 0) + "Property";
+					boolean existsPropertyMethod = false;
+
+					try {
+						Method declaredMethod = null;
+						try {
+							declaredMethod = beanClass.getDeclaredMethod(beanProperyName);
+							existsPropertyMethod = true;
+						} catch (NoSuchMethodException e) {
+							/* Nothing */}
+
+						if (!existsPropertyMethod) {
+							String getterMethod = "get" + ValueUtil.getIndexcase(id.replace(startPrefix, ""), 0, IndexCaseTypes.UPPERCASE);
+							try {
+								declaredMethod = beanClass.getDeclaredMethod(getterMethod);
+							} catch (NoSuchMethodException e) {
+								/* Nothing */}
+						}
+
+						if (declaredMethod == null)
+							throw new RuntimeException("no suitable method found ");
+
+						if (declaredMethod != null) {
+							if (!declaredMethod.isAccessible()) {
+								declaredMethod.setAccessible(true);
+							}
+						}
+
+						if (existsPropertyMethod) {
+							T value = callback.getValue();
+							Object invoke = declaredMethod.invoke(value);
+							if (invoke instanceof ObservableValue) {
+								return (ObservableValue) invoke;
+							}
+						}
+						// method is null.
+						else {
+							T value = callback.getValue();
+							Object invoke = declaredMethod.invoke(value);
+							return (ObservableValue) new ReadOnlyStringWrapper(invoke == null ? "" : invoke.toString());
+						}
+
+					} catch (Exception e) {
+						LOGGER.error(ValueUtil.toString("fail to bind property. ", e));
+					}
+
+				}
+				return null;
+			});
+
+		}
+
+	}
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2020. 9. 14.
+	 * @param <T>
+	 * @param beanClass
+	 * @param tb
+	 * @param startPrefix
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
+	 */
+	public static <T> void generateTableColumns(Class<T> beanClass, TableView<T> tb, String startPrefix)
+			throws NoSuchFieldException, SecurityException, NoSuchMethodException {
+		generateTableColumns(beanClass, tb, startPrefix, null);
+	}
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2020. 9. 9.
+	 * @param <T>
+	 * @param beanClass
+	 * @param tb
+	 * @param startPrefix
+	 * @param filter
+	 * @throws SecurityException
+	 * @throws NoSuchFieldException
+	 * @throws NoSuchMethodException
+	 */
+	public static <T> void generateTableColumns(Class<T> beanClass, TableView<T> tb, String startPrefix,
+			Predicate<TableColumn<T, ?>> filter) throws NoSuchFieldException, SecurityException, NoSuchMethodException {
+
+		Field[] declaredFields = beanClass.getDeclaredFields();
+		Method[] declaredMethods = beanClass.getDeclaredMethods();
+
+		// HashBag fieldNames = new HashBag();
+		List<String> fieldNames = new ArrayList<String>(declaredFields.length);
+		List<String> methodNames = new ArrayList<String>(declaredMethods.length);
+
+		// int columnIndex = 0;
+		for (Field f : declaredFields) {
+			fieldNames.add(f.getName());
+		}
+
+		for (Method f : declaredMethods) {
+			methodNames.add(f.getName());
+		}
+
+		Iterator<String> it = fieldNames.iterator();
+		while (it.hasNext()) {
+			String fieldName = it.next();
+			// Class<?> type = beanClass.getDeclaredField(fieldName).getType();
+			// Method getterMethod = beanClass.getDeclaredMethod();
+
+			if (!methodNames.contains("get" + ValueUtil.capitalize(fieldName)))
+				continue;
+
+			// Method setterMethod = beanClass.getDeclaredMethod("set" +
+			// ValueUtil.capitalize(fieldName), Object.class);
+			if (!methodNames.contains("set" + ValueUtil.capitalize(fieldName)))
+				continue;
+
+			String preffixName = startPrefix + ValueUtil.capitalize(fieldName);
+
+			TableColumn<T, ?> tc = new TableColumn<>();
+			tc.setId(preffixName);
+
+			Field field = beanClass.getDeclaredField(fieldName);
+			ColumnName cn = field.getAnnotation(ColumnName.class);
+			if (cn != null) {
+				if (ValueUtil.isNotEmpty(cn.messageId())) {
+					String name = Message.getInstance().getMessage(cn.messageId());
+					tc.setText(name);
+				} else
+					tc.setText(cn.value());
+			} else
+				tc.setText(fieldName);
+
+			ColumnWidth cw = field.getAnnotation(ColumnWidth.class);
+			if (cw != null) {
+				tc.setPrefWidth(cw.value());
+			}
+
+			ColumnVisible cv = field.getAnnotation(ColumnVisible.class);
+			if (cv != null)
+				tc.setVisible(cv.value());
+
+			NonEditable ne = field.getAnnotation(NonEditable.class);
+			tc.setEditable(ne == null);
+
+			if (filter != null) {
+				if (!filter.test(tc))
+					continue;
+			}
+			tb.getColumns().add(tc);
+		}
+	}
 	/**
 	 * background color 객체 성성후 리턴
 	 * 

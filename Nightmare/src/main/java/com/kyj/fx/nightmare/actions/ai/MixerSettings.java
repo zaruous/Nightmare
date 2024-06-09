@@ -70,7 +70,7 @@ public class MixerSettings {
 		return "";
 	}
 	
-	private void createSettings(Info info) {
+	public void createSettings(Info info) {
 		Path of = Path.of(".mixerSettings");
 		try {
 			Files.writeString(of, info.getName());

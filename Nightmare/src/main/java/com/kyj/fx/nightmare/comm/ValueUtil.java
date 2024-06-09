@@ -39,6 +39,10 @@ import com.google.gson.Gson;
  */
 public class ValueUtil {
 
+	public static String capitalize(String name) {
+		return StringUtils.capitalize(name);
+	}
+	
 	public static boolean isNotEmpty(Object obj) {
 		boolean flag = true;
 		if (obj != null) {

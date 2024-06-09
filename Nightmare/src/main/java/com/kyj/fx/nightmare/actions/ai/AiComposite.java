@@ -9,6 +9,10 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.sound.sampled.Mixer.Info;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +23,18 @@ import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO.Choice;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.FxClipboardUtil;
 import com.kyj.fx.nightmare.comm.FxUtil;
+import com.kyj.fx.nightmare.comm.Message;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
+import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 
 import chat.rest.api.service.core.VirtualPool;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -33,9 +43,11 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
@@ -46,7 +58,7 @@ import javafx.util.StringConverter;
 public class AiComposite extends AbstractCommonsApp {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AiComposite.class);
-	
+
 	@FXML
 	private ListView lvChats;
 	@FXML
@@ -54,7 +66,14 @@ public class AiComposite extends AbstractCommonsApp {
 	@FXML
 	private ListView<DefaultLabel> lvResult;
 	@FXML
-	private Button btnMic;
+	private Button btnMic, btnMicStop;
+	private ObjectProperty<DefaultLabel> playingObject = new SimpleObjectProperty<>();
+	// 오디오 플레이어
+	AudioHelper audioHelper;
+	// 마이크 세팅
+	MixerSettings mixerSettings;
+	// AI 리스트뷰 컨텍스트
+	ContextMenu speechCtx = new ContextMenu();
 
 	public AiComposite() throws Exception {
 		FxUtil.loadRoot(AiComposite.class, this);
@@ -73,16 +92,24 @@ public class AiComposite extends AbstractCommonsApp {
 		}
 	};
 
-	
-
 	@FXML
 	public void initialize() {
 		MenuItem miPlayMyVoice = new MenuItem("Play my voice");
+		miPlayMyVoice.setOnAction(ac -> {
+			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
+			playingObject.set(null);
+			playingObject.set(lbl);
+		});
 		speechCtx.getItems().add(miPlayMyVoice);
 
 		MenuItem miPlaySound = new MenuItem("Play sound");
+		miPlaySound.setOnAction(ac -> {
+			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
+			playingObject.set(null);
+			playingObject.set(lbl);
+		});
 		speechCtx.getItems().add(miPlaySound);
-		
+
 		this.lvResult.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.lvResult.setCellFactory(new Callback<ListView<DefaultLabel>, ListCell<DefaultLabel>>() {
 
@@ -113,9 +140,8 @@ public class AiComposite extends AbstractCommonsApp {
 								DefaultLabel lbl = (DefaultLabel) item;
 								// Node graphic = lbl.getGraphic();
 
-								if ("me".equals(lbl.getTip()))
-								{
-									if(getStyleClass().indexOf("me") == -1)
+								if ("me".equals(lbl.getTip())) {
+									if (getStyleClass().indexOf("me") == -1)
 										getStyleClass().add("me");
 								}
 
@@ -131,65 +157,45 @@ public class AiComposite extends AbstractCommonsApp {
 					Object item = listCell.getItem();
 					boolean speechMenuVisible = item instanceof SpechLabel;
 					miPlayMyVoice.setVisible(speechMenuVisible);
-					miPlayMyVoice.setOnAction(ac -> {
-						SpechLabel lbl = (SpechLabel) item;
-						lbl.playMyVoid();
-					});
-					
 					miPlaySound.setVisible(!speechMenuVisible);
-					miPlaySound.setOnAction(ac->{
-						DefaultLabel lbl = (DefaultLabel) item;
-						lbl.readAndPlay();
-					});
 				});
 				return listCell;
 			}
 		});
 		FxUtil.installClipboardKeyEvent(lvResult, stringConverter);
 
-//		this.lvResult.getItems().addListener(new ListChangeListener<DefaultLabel>() {
-//
-//			@Override
-//			public void onChanged(Change<? extends DefaultLabel> c) {
-//				while(c.next())
-//				{
-//					if(c.wasAdded())
-//					{
-//						List<? extends DefaultLabel> addedSubList = c.getAddedSubList();
-//						addedSubList.forEach(DefaultLabel::playSound);
-//					}
-//				}
-//			}
-//		});
-//		this.lvResult.addEventFilter(EventType., null);
-//		this.lvResult.itemsProperty().addListener(new ChangeListener<DefaultLabel>() {
-//
-//			@Override
-//			public void changed(ObservableValue<? extends DefaultLabel> observable, DefaultLabel oldValue, DefaultLabel newValue) {
-//				newValue.playSound();
-//			}
-//		});
-		
-		// this.lvResult.setContextMenu(speechCtx);
-		// this.lvResult.setOnContextMenuRequested(ev->{
-		// Object source = ev.getSource();
-		// Node intersectedNode = ev.getPickResult().getIntersectedNode();
-		// boolean value = intersectedNode instanceof SpechLabel;
-		// miPlayMyVoice.setVisible(value);
-		// miPlayMyVoice.setOnAction(ac->{
-		// SpechLabel lbl = (SpechLabel) intersectedNode;
-		// lbl.playMyVoid();
-		// });
-		// });
-	}
-	
-	
-	@FxPostInitialize
-	public void after() {
-		
+		playingObject.addListener(new ChangeListener<DefaultLabel>() {
+
+			@Override
+			public void changed(ObservableValue<? extends DefaultLabel> observable, DefaultLabel oldValue, DefaultLabel newValue) {
+				if (oldValue != null)
+				{
+					oldValue.setOnPlayEnd(null);
+					oldValue.setOnPlayStart(null);
+					oldValue.stop();
+				}
+					
+				if (newValue != null) {
+					newValue.setOnPlayStart(v ->{
+						btnMicStop.setDisable(false);
+					});
+					newValue.setOnPlayEnd(v ->{
+						btnMicStop.setDisable(true);
+					});
+					
+					newValue.playSound();
+				}
+			}
+		});
 	}
 
-	ContextMenu speechCtx = new ContextMenu();
+	@FxPostInitialize
+	public void after() {
+		if (mixerSettings == null) {
+			mixerSettings = new MixerSettings();
+			mixerSettings.load();
+		}
+	}
 
 	@FXML
 	public void btnEnterOnAction() {
@@ -200,7 +206,7 @@ public class AiComposite extends AbstractCommonsApp {
 		lvResult.getItems().add(lblMe);
 		search(prompt);
 	}
-	
+
 	void search(String msg) {
 		VirtualPool.newInstance().execute(() -> {
 			try {
@@ -214,15 +220,14 @@ public class AiComposite extends AbstractCommonsApp {
 					List<Choice> choices = fromGtpResultMessage.getChoices();
 					choices.forEach(c -> {
 						try {
-							
-							
+
 							String content2 = c.getMessage().getContent();
-							
-							if("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_AUTO_PLAY_SOUND_YN, "N"))) {
+
+							if ("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_AUTO_PLAY_SOUND_YN, "N"))) {
 								var allData = new DefaultLabel(content2);
-								allData.readAndPlay();	
+								playingObject.set(allData);
 							}
-							
+
 							LOGGER.debug(content2);
 							LineNumberReader br = new LineNumberReader(new StringReader(content2));
 							String temp = null;
@@ -259,7 +264,6 @@ public class AiComposite extends AbstractCommonsApp {
 									lvResult.getItems().add(content);
 								}
 							}
-							
 
 						} catch (Exception e) {
 							LOGGER.error(ValueUtil.toString(e));
@@ -281,17 +285,9 @@ public class AiComposite extends AbstractCommonsApp {
 		}
 	}
 
-	AudioHelper audioHelper;
-	// 마이크 세팅
-	MixerSettings mixerSettings;
-
 	@FXML
 	public void btnMicOnAction() {
 
-		if (mixerSettings == null) {
-			mixerSettings = new MixerSettings();
-			mixerSettings.load();
-		}
 		if (audioHelper == null)
 			audioHelper = new AudioHelper();
 
@@ -320,7 +316,7 @@ public class AiComposite extends AbstractCommonsApp {
 					content = new SpechLabel(send, new Label(" 나 "), data);
 				}
 				content.setTip("me");
-				
+
 				txtPrompt.setText(tmpdir);
 				lvResult.getItems().add(content);
 				search(send);
@@ -341,4 +337,55 @@ public class AiComposite extends AbstractCommonsApp {
 		}
 	}
 
+	@FXML
+	public void miMicrophoneOnAction() {
+		Info[] mixerInfos = mixerSettings.getMixers();
+
+		List<InfoDVO> collect = Stream.of(mixerInfos).map(InfoDVO::new).collect(Collectors.toList());
+		try {
+			BorderPane root = new BorderPane();
+			TableView<InfoDVO> tableView = FxUtil.createTableView(collect);
+
+			root.setCenter(tableView);
+			Button btn = new Button("선택");
+			btn.setOnAction(ae -> {
+
+				DialogUtil.showYesOrNoDialog("마이크 선택", "기본 마이크로 선택하시겠습니까?").ifPresent(v -> {
+					if ("Y".equals(v.getValue())) {
+						InfoDVO selectedItem = tableView.getSelectionModel().getSelectedItem();
+						// String name = selectedItem.getName();
+						Info info = selectedItem.getInfo();
+
+						mixerSettings.load();
+						mixerSettings.createSettings(info);
+
+						// SaveComplete=저장되었습니다.
+						DialogUtil.showMessageDialog(Message.getInstance().getMessage("SaveComplete"));
+					}
+				});
+
+			});
+			root.setBottom(btn);
+			FxUtil.createStageAndShow(root, stage -> {
+				stage.setWidth(800d);
+				stage.initOwner(StageStore.getPrimaryStage());
+			});
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// StringBuilder sb = new StringBuilder();
+		// for (int i = 0; i < mixerInfos.length; i++) {
+		// Info info = mixerInfos[i];
+		// sb.append(info.getName()).append("\t").append(info.getDescription()).append("\n");
+		// }
+		// DialogUtil.showMessageDialog(sb.toString());
+	}
+
+	@FXML
+	public void btnMicStopOnAction() {
+		if (playingObject.get() != null) {
+			playingObject.get().stop();
+		}
+	}
 }

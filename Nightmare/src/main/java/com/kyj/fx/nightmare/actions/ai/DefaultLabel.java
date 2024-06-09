@@ -5,12 +5,12 @@ package com.kyj.fx.nightmare.actions.ai;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -21,10 +21,14 @@ import javafx.scene.Node;
 /**
  * 
  */
-public class DefaultLabel implements PlaySoundAble{
+public class DefaultLabel implements PlaySoundAble {
 	String text;
 	Node graphic;
 	String tip;
+	private byte[] audioData;
+	PlayObject playObject;
+	private Consumer<DefaultLabel> onPlayStart;
+	private Consumer<DefaultLabel> onPlayEnd;
 
 	public DefaultLabel() {
 		super();
@@ -65,9 +69,23 @@ public class DefaultLabel implements PlaySoundAble{
 		this.graphic = graphic;
 	}
 
-	private byte[] audioData;
+	public Consumer<DefaultLabel> getOnPlayStart() {
+		return onPlayStart;
+	}
 
-	public void readAndPlay() {
+	public void setOnPlayStart(Consumer<DefaultLabel> onPlayStart) {
+		this.onPlayStart = onPlayStart;
+	}
+
+	public Consumer<DefaultLabel> getOnPlayEnd() {
+		return onPlayEnd;
+	}
+
+	public void setOnPlayEnd(Consumer<DefaultLabel> onPlayEnd) {
+		this.onPlayEnd = onPlayEnd;
+	}
+
+	void readAndPlay() {
 		if (getText() == null || getText().isBlank())
 			return;
 
@@ -75,22 +93,55 @@ public class DefaultLabel implements PlaySoundAble{
 
 		TextToSpeechGptServiceImpl serviceImpl;
 		try {
-			if(audioData == null) {
+			if (audioData == null) {
 				serviceImpl = new TextToSpeechGptServiceImpl();
-				audioData = serviceImpl.getData(text);	
+				audioData = serviceImpl.getData(text);
 			}
-			
-			ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> playAsynch(audioData));
+			playObject = new PlayObject(audioData);
+
+			ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> playObject.run());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
-	protected void playAsynch(byte[] audioData) {
-		try {
+	@Override
+	public void stop() {
+		if (playObject != null)
+			playObject.shutdown();
+	}
 
+	protected class PlayObject extends Thread {
+		byte[] audioData;
+		SourceDataLine line;
+
+		public PlayObject(byte[] audioData) {
+			this.audioData = audioData;
+		}
+
+		public boolean isPlaying() {
+			return this.line.isRunning();
+		}
+
+		public void shutdown() {
+			line.stop();
+			line.close();
+			onPlayEnd();
+		}
+
+		public void onPlayStart() {
+			if (onPlayStart != null)
+				onPlayStart.accept(DefaultLabel.this);
+		}
+
+		public void onPlayEnd() {
+			if (onPlayEnd != null)
+				onPlayEnd.accept(DefaultLabel.this);
+		}
+
+		@Override
+		public void run() {
 			// 예제용 바이트 배열 (WAV 파일 데이터가 있어야 합니다)
 			// byte[] audioData = getAudioData(); // 실제 오디오 데이터를 가져오는
 			// 방법은 별도
@@ -104,9 +155,11 @@ public class DefaultLabel implements PlaySoundAble{
 				DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
 
 				// 소스 데이터 라인 열기 및 오디오 데이터 재생
-				try (SourceDataLine line = (SourceDataLine) AudioSystem.getLine(info)) {
+				try {
+					line = (SourceDataLine) AudioSystem.getLine(info);
 					line.open(format);
 					line.start();
+					onPlayStart();
 
 					byte[] buffer = new byte[4096];
 					int bytesRead;
@@ -117,15 +170,17 @@ public class DefaultLabel implements PlaySoundAble{
 					// 데이터 전송이 완료되면 라인 종료
 					line.drain();
 					line.stop();
+					onPlayEnd();
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					line.close();
 				}
-			} catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
-				e.printStackTrace();
+			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+
 	}
 
 	protected AudioInputStream getAudioInputStreamFromByteArray(byte[] audioData) throws IOException, UnsupportedAudioFileException {
@@ -136,6 +191,6 @@ public class DefaultLabel implements PlaySoundAble{
 	@Override
 	public void playSound() {
 		readAndPlay();
-	}
 
+	}
 }
