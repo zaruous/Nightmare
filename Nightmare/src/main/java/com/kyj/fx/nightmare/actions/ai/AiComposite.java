@@ -170,6 +170,9 @@ public class AiComposite extends AbstractCommonsApp {
 									if (getStyleClass().indexOf("me") == -1)
 										getStyleClass().add("me");
 								}
+								else {
+									getStyleClass().remove("me");
+								}
 
 								setGraphic(item.getGraphic());
 							}
