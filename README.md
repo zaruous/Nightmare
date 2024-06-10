@@ -5,6 +5,8 @@
 1. java21 javafx
 2. Mariadb
 
+## 실행명령어
+%JAVA21_HOME%\java -jar Nightmare.jar
 
 
 ## 기본 테이블은 아래 스크립트를 참조
