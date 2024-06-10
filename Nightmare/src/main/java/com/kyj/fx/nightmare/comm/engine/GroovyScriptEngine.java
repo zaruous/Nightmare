@@ -7,7 +7,6 @@
 package com.kyj.fx.nightmare.comm.engine;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.FileVisitResult;
@@ -29,6 +28,8 @@ import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 
 import com.kyj.fx.nightmare.comm.FileUtil;
+
+import groovy.lang.GroovyClassLoader;
 
 /**
  * @author (zaruous@naver.com)

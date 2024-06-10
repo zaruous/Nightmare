@@ -500,6 +500,12 @@
 			<version>3.0.17</version>
 		</dependency>
 
+<!--		<dependency>-->
+<!--		    <groupId>org.codehaus.groovy</groupId>-->
+<!--		    <artifactId>groovy-all</artifactId>-->
+<!--		    <version>3.0.17</version>-->
+<!--		</dependency>-->
+
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-jsr223</artifactId>

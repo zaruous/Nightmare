@@ -1,8 +1,4 @@
-import groovy.grape.Grape;
-import groovy.lang.GroovyClassLoader;
 
-GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
-Thread.currentThread().setContextClassLoader(groovyClassLoader);
 
 println "commons.groovy loaded.";
 def hello(){
@@ -20,3 +16,7 @@ def browse(def url){
   }
 }
 */
+
+import groovy.lang.GroovyClassLoader;
+GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+Thread.currentThread().setContextClassLoader(groovyClassLoader);

@@ -9,19 +9,22 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.script.ScriptException;
 import javax.sound.sampled.Mixer.Info;
 
+import org.fxmisc.richtext.CodeArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.fxloader.FXMLController;
 import com.kyj.fx.fxloader.FxPostInitialize;
+import com.kyj.fx.groovy.DefaultScriptEngine;
 import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO.Choice;
 import com.kyj.fx.nightmare.comm.DialogUtil;
+import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxClipboardUtil;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.Message;
@@ -79,11 +82,13 @@ public class AiComposite extends AbstractCommonsApp {
 	MixerSettings mixerSettings;
 	// AI 리스트뷰 컨텍스트
 	ContextMenu speechCtx = new ContextMenu();
-//	boolean useMicrophoneFlag;
+	// boolean useMicrophoneFlag;
 	BooleanProperty useMicrophoneFlag = new SimpleBooleanProperty();
+	OpenAIService openAIService;
+	AIDataDAO dao;
 	
 	public AiComposite() throws Exception {
-		
+
 		FxUtil.loadRoot(AiComposite.class, this);
 	}
 
@@ -102,7 +107,7 @@ public class AiComposite extends AbstractCommonsApp {
 
 	@FXML
 	public void initialize() {
-		useMicrophoneFlag.set( "Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_AUTO_PLAY_SOUND_YN, "N")));
+		useMicrophoneFlag.set("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_AUTO_PLAY_SOUND_YN, "N")));
 		MenuItem miPlayMyVoice = new MenuItem("Play my voice");
 		miPlayMyVoice.setOnAction(ac -> {
 			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
@@ -118,20 +123,36 @@ public class AiComposite extends AbstractCommonsApp {
 			playingObject.set(lbl);
 		});
 		speechCtx.getItems().add(miPlaySound);
-		
+
 		MenuItem miRunCode = new MenuItem("Run Code");
 		miRunCode.setOnAction(ac -> {
 			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
 			if (lbl instanceof CodeLabel) {
 				CodeLabel cl = (CodeLabel) lbl;
-				GroovyScriptEngine engine = new GroovyScriptEngine();
-				try {
-					engine.eval(cl.getText());
-				} catch (ScriptException e) {
-					e.printStackTrace();
-				}
-			}
+				String script = cl.getText();
 
+				if (script.isBlank())
+					return;
+				if ("groovy".equals(cl.getCodeType())) {
+					ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
+
+						// FxUtil.createStageAndShow(new CodeArea(script),
+						// stage->{
+						//
+						// });
+
+						try {
+							 DefaultScriptEngine engine = new DefaultScriptEngine();
+							 engine.execute(script);
+//							GroovyScriptEngine engine = new GroovyScriptEngine();
+//							engine.eval(script);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					});
+				}
+
+			}
 		});
 
 		speechCtx.getItems().add(miRunCode);
@@ -169,8 +190,7 @@ public class AiComposite extends AbstractCommonsApp {
 								if ("me".equals(lbl.getTip())) {
 									if (getStyleClass().indexOf("me") == -1)
 										getStyleClass().add("me");
-								}
-								else {
+								} else {
 									getStyleClass().remove("me");
 								}
 
@@ -219,14 +239,41 @@ public class AiComposite extends AbstractCommonsApp {
 				}
 			}
 		});
+		
+		try {
+			mixerSettings = new MixerSettings();
+			mixerSettings.load();
+			dao = AIDataDAO.getInstance();
+			openAIService = new OpenAIService();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+
+	
 
 	@FxPostInitialize
 	public void after() {
-		if (mixerSettings == null) {
-			mixerSettings = new MixerSettings();
-			mixerSettings.load();
-		}
+		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
+			List<Map<String, Object>> lastHistory = dao.getLastHistory();
+			lastHistory.stream().peek(System.out::println).filter(v -> v != null).filter(m -> !m.isEmpty()).forEach(m -> {
+
+				String prompt = m.get("QUESTION") == null ? "" : m.get("QUESTION").toString();
+				DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
+				lblMe.setTip("me");
+				Platform.runLater(() -> {
+					lvResult.getItems().add(lblMe);
+				});
+
+				if (m.get("ANSWER") != null) {
+					Platform.runLater(() -> {
+						updateChatList(m.get("ANSWER").toString(), false);
+					});
+				}
+
+			});
+		});
+
 	}
 
 	@FXML
@@ -242,68 +289,83 @@ public class AiComposite extends AbstractCommonsApp {
 	void search(String msg) {
 		VirtualPool.newInstance().execute(() -> {
 			try {
-				OpenAIService openAIService = new OpenAIService();
 				String send = openAIService.send(msg);
 				Platform.runLater(() -> {
-
 					lvResult.getItems().add(new DefaultLabel("", new Label(openAIService.getConfig().getModel())));
-					ResponseModelDVO fromGtpResultMessage = ResponseModelDVO.fromGtpResultMessage(send);
-					LOGGER.info("{}", fromGtpResultMessage);
-					List<Choice> choices = fromGtpResultMessage.getChoices();
-					choices.forEach(c -> {
-						try {
-
-							String content2 = c.getMessage().getContent();
-
-							
-							if (useMicrophoneFlag.get()) {
-								var allData = new DefaultLabel(content2);
-								playingObject.set(allData);
-							}
-
-							LOGGER.debug(content2);
-							LineNumberReader br = new LineNumberReader(new StringReader(content2));
-							String temp = null;
-							boolean isCodeBlock = false;
-							String codeType = "";
-							StringBuilder sb = new StringBuilder();
-							while ((temp = br.readLine()) != null) {
-								if (temp.startsWith("```") && !isCodeBlock) {
-									isCodeBlock = true;
-									codeType = temp.replace("```", "");
-									continue;
-								}
-
-								if (temp.startsWith("```") && isCodeBlock) {
-									isCodeBlock = false;
-									CodeLabel content = new CodeLabel(sb.toString());
-									Label graphic = new Label("Copy");
-									graphic.setOnMouseClicked(ev -> {
-										FxClipboardUtil.putString(content.getText());
-										DialogUtil.showMessageDialog("클립보드에 복사되었습니다.");
-									});
-									content.setGraphic(graphic);
-
-									content.setCodeType(codeType);
-									sb.setLength(0);
-									lvResult.getItems().add(content);
-									continue;
-								}
-
-								if (isCodeBlock) {
-									sb.append(temp).append(System.lineSeparator());
-								} else {
-									DefaultLabel content = new DefaultLabel(temp);
-									lvResult.getItems().add(content);
-								}
-							}
-
-						} catch (Exception e) {
-							LOGGER.error(ValueUtil.toString(e));
-						}
-					});
-
+					updateChatList(send);
 				});
+
+			} catch (Exception e) {
+				LOGGER.error(ValueUtil.toString(e));
+			}
+		});
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2024. 6. 10.
+	 * @param send
+	 */
+	private void updateChatList(String send) {
+		updateChatList(send, true);
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2024. 6. 10.
+	 * @param send
+	 * @param speack
+	 */
+	private void updateChatList(String send, boolean speack) {
+		ResponseModelDVO fromGtpResultMessage = ResponseModelDVO.fromGtpResultMessage(send);
+		LOGGER.info("{}", fromGtpResultMessage);
+		List<Choice> choices = fromGtpResultMessage.getChoices();
+		choices.forEach(c -> {
+			try {
+
+				String content2 = c.getMessage().getContent();
+
+				if (speack && useMicrophoneFlag.get()) {
+					var allData = new DefaultLabel(content2);
+					playingObject.set(allData);
+				}
+
+				LOGGER.debug(content2);
+				LineNumberReader br = new LineNumberReader(new StringReader(content2));
+				String temp = null;
+				boolean isCodeBlock = false;
+				String codeType = "";
+				StringBuilder sb = new StringBuilder();
+				while ((temp = br.readLine()) != null) {
+					if (temp.startsWith("```") && !isCodeBlock) {
+						isCodeBlock = true;
+						codeType = temp.replace("```", "");
+						continue;
+					}
+
+					if (temp.startsWith("```") && isCodeBlock) {
+						isCodeBlock = false;
+						CodeLabel content = new CodeLabel(sb.toString());
+						Label graphic = new Label("Copy");
+						graphic.setOnMouseClicked(ev -> {
+							FxClipboardUtil.putString(content.getText());
+							DialogUtil.showMessageDialog("클립보드에 복사되었습니다.");
+						});
+						content.setGraphic(graphic);
+
+						content.setCodeType(codeType);
+						sb.setLength(0);
+						lvResult.getItems().add(content);
+						continue;
+					}
+
+					if (isCodeBlock) {
+						sb.append(temp).append(System.lineSeparator());
+					} else {
+						DefaultLabel content = new DefaultLabel(temp);
+						lvResult.getItems().add(content);
+					}
+				}
 
 			} catch (Exception e) {
 				LOGGER.error(ValueUtil.toString(e));

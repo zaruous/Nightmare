@@ -10,7 +10,7 @@
   </appender>
 
 	<!-- 이 아래에 있는 애들 다 log로 찍겠다. -->
-	<logger name="com.kyj.fx.nightmare" level="INFO" additivity="false">
+	<logger name="com.kyj.fx.nightmare" level="DEBUG" additivity="false">
 		<appender-ref ref="SYSOUT" />
 	</logger>
 	
