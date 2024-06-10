@@ -74,7 +74,7 @@ public class AiComposite extends AbstractCommonsApp {
 	@FXML
 	private ListView<DefaultLabel> lvResult;
 	@FXML
-	private Button btnMic, btnMicStop;
+	private Button btnMic, btnMicStop, btnEnter;
 	private ObjectProperty<DefaultLabel> playingObject = new SimpleObjectProperty<>();
 	// 오디오 플레이어
 	AudioHelper audioHelper;
@@ -218,8 +218,7 @@ public class AiComposite extends AbstractCommonsApp {
 
 			@Override
 			public void changed(ObservableValue<? extends DefaultLabel> observable, DefaultLabel oldValue, DefaultLabel newValue) {
-				if (!useMicrophoneFlag.get())
-					return;
+				
 
 				if (oldValue != null) {
 					oldValue.setOnPlayEnd(null);
@@ -234,8 +233,10 @@ public class AiComposite extends AbstractCommonsApp {
 					newValue.setOnPlayEnd(v -> {
 						btnMicStop.setDisable(true);
 					});
-
-					newValue.playSound();
+					
+					//마이크 사용인 경우만 재생.
+					if (useMicrophoneFlag.get())
+						newValue.playSound();
 				}
 			}
 		});
@@ -278,7 +279,8 @@ public class AiComposite extends AbstractCommonsApp {
 
 	@FXML
 	public void btnEnterOnAction() {
-
+		if(btnEnter.isDisable())return;
+		
 		String prompt = txtPrompt.getText();
 		DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
 		lblMe.setTip("me");
@@ -287,6 +289,7 @@ public class AiComposite extends AbstractCommonsApp {
 	}
 
 	void search(String msg) {
+		btnEnter.setDisable(true);
 		VirtualPool.newInstance().execute(() -> {
 			try {
 				String send = openAIService.send(msg);
@@ -297,6 +300,10 @@ public class AiComposite extends AbstractCommonsApp {
 
 			} catch (Exception e) {
 				LOGGER.error(ValueUtil.toString(e));
+			}finally {
+				Platform.runLater(()->{
+					btnEnter.setDisable(false);	
+				});
 			}
 		});
 	}

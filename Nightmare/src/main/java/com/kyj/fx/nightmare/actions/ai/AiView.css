@@ -15,7 +15,7 @@
 	-fx-font-weight : bold;
 }
 
-.button {
+.ai-button {
 	-fx-background-color: transparent;
 	-fx-border-color : black;
 	-fx-border-radius: 5px;

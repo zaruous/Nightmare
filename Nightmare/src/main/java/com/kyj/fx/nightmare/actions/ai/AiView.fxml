@@ -45,12 +45,12 @@
                   <ListView fx:id="lvResult" prefHeight="525.0" prefWidth="632.0" styleClass="lvResult" VBox.vgrow="ALWAYS" />
                   <HBox alignment="CENTER_RIGHT" spacing="5.0">
                      <children>
-                         <Button fx:id="btnMic" onAction="#btnMicOnAction" prefWidth="120.0" text="마이크">
+                         <Button fx:id="btnMic" onAction="#btnMicOnAction" prefWidth="120.0" styleClass="ai-button" text="마이크">
 <!--       	                               <graphic> -->
 <!--       							            <SVGPath content="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z" fill="black" /> -->
 <!--       							        </graphic> -->
                               </Button>
-                        <Button fx:id="btnMicStop" disable="true" onAction="#btnMicStopOnAction" prefWidth="120.0" text="마이크 재생종료" />
+                        <Button fx:id="btnMicStop" disable="true" onAction="#btnMicStopOnAction" prefWidth="120.0" styleClass="ai-button" text="마이크 재생종료" />
                      </children>
                      <padding>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
@@ -59,7 +59,7 @@
                   <HBox alignment="CENTER">
                      <children>
                         <TextArea fx:id="txtPrompt" maxWidth="1.7976931348623157E308" onKeyPressed="#txtPromptOnKeyPressed" HBox.hgrow="ALWAYS" />
-                        <Button maxWidth="120.0" mnemonicParsing="false" onAction="#btnEnterOnAction" prefWidth="80.0" text="Enter" />
+                        <Button fx:id="btnEnter" maxWidth="120.0" mnemonicParsing="false" onAction="#btnEnterOnAction" prefWidth="80.0" styleClass="ai-button" text="Enter" />
                      </children>
                   </HBox>
                </children>
