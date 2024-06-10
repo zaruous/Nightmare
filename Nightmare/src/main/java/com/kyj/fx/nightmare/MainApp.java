@@ -99,7 +99,8 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 
 		MainFormComposite form = new MainFormComposite();
 		Scene scene = new Scene(form);
-		scene.getStylesheets().add("/styles/styles.css");
+		
+		scene.getStylesheets().add(MainApp.class.getResource("styles.css").toExternalForm());
 		scene.getStylesheets().add(MainFormComposite.class.getResource("MainForm.css").toExternalForm());
 
 		primaryStage.setScene(scene);
