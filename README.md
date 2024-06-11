@@ -29,3 +29,8 @@ INSERT INTO `tbm_sm_cnf` (`ID`, `GROUP`, `KEY`, `VALUE`, `FST_REG_DT`, `FNL_UPD_
 INSERT INTO `tbm_sm_cnf` (`ID`, `GROUP`, `KEY`, `VALUE`, `FST_REG_DT`, `FNL_UPD_DT`, `CNF_CMF_1`, `CNF_CMF_2`, `CNF_CMF_3`, `CNF_CMF_4`, `CNF_CMF_5`, `CNF_CMF_6`, `CNF_CMF_7`, `CNF_CMF_8`, `CNF_CMF_9`, `CNF_CMF_10`) VALUES (5, 'OPEN_AI', 'TRANSCRIPTIONS', 'https://api.openai.com/v1/audio/transcriptions', '2024-06-07 00:28:21', NULL, 'whisper-1', 'OPEN_AI_API_KEY', NULL, 'write to english', 'text', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `tbm_sm_cnf` (`ID`, `GROUP`, `KEY`, `VALUE`, `FST_REG_DT`, `FNL_UPD_DT`, `CNF_CMF_1`, `CNF_CMF_2`, `CNF_CMF_3`, `CNF_CMF_4`, `CNF_CMF_5`, `CNF_CMF_6`, `CNF_CMF_7`, `CNF_CMF_8`, `CNF_CMF_9`, `CNF_CMF_10`) VALUES (6, 'OPEN_AI', 'TRANSLATE', 'https://api.openai.com/v1/audio/translations', '2024-06-07 00:28:21', NULL, 'whisper-1', 'OPEN_AI_API_KEY', NULL, 'write to english', 'text', NULL, NULL, NULL, NULL, NULL);
 ```
+
+
+
+사용법
+https://www.youtube.com/watch?v=EOwagn5o-Ks
