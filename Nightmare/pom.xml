@@ -161,7 +161,11 @@
 
 
 	<dependencies>
-
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.5.13</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -511,12 +515,6 @@
 			<artifactId>groovy-jsr223</artifactId>
 			<version>3.0.19</version>
 		</dependency>
-
-<!--		<dependency>-->
-<!--			<groupId>org.kyj.fx</groupId>-->
-<!--			<artifactId>gargoyle-groovy</artifactId>-->
-<!--			<version>0.0.1</version>-->
-<!--		</dependency>-->
 
 		<dependency>
 			<groupId>org.fxmisc.richtext</groupId>

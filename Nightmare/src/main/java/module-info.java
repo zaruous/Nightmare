@@ -61,8 +61,9 @@ open module ETHelper {
 	requires org.apache.pdfbox;
 	
 	requires com.fasterxml.jackson.databind;
-	requires chat.rest.api;
+	//requires chat.rest.api;
 	requires org.codehaus.groovy.jsr223;
+	requires org.apache.httpcomponents.httpmime;
 	/*PDF ITEXT*/
 
 	

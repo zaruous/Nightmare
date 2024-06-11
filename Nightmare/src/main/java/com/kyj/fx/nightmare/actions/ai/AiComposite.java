@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 
 import javax.sound.sampled.Mixer.Info;
 
-import org.fxmisc.richtext.CodeArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,6 @@ import com.kyj.fx.nightmare.comm.Message;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
-import com.kyj.fx.nightmare.comm.engine.GroovyScriptEngine;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 
 import chat.rest.api.service.core.VirtualPool;
