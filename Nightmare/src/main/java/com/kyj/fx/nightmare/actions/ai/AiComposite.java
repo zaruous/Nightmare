@@ -84,7 +84,7 @@ public class AiComposite extends AbstractCommonsApp {
 	BooleanProperty useMicrophoneFlag = new SimpleBooleanProperty();
 	OpenAIService openAIService;
 	AIDataDAO dao;
-	
+
 	public AiComposite() throws Exception {
 
 		FxUtil.loadRoot(AiComposite.class, this);
@@ -140,8 +140,8 @@ public class AiComposite extends AbstractCommonsApp {
 						// });
 
 						try {
-							 DefaultScriptEngine engine = new DefaultScriptEngine();
-							 engine.execute(script);
+							DefaultScriptEngine engine = new DefaultScriptEngine();
+							engine.execute(script);
 //							GroovyScriptEngine engine = new GroovyScriptEngine();
 //							engine.eval(script);
 						} catch (Exception e) {
@@ -207,6 +207,7 @@ public class AiComposite extends AbstractCommonsApp {
 					miPlaySound.setVisible(!speechMenuVisible);
 					miRunCode.setVisible(item instanceof CodeLabel);
 				});
+
 				return listCell;
 			}
 		});
@@ -215,8 +216,8 @@ public class AiComposite extends AbstractCommonsApp {
 		playingObject.addListener(new ChangeListener<DefaultLabel>() {
 
 			@Override
-			public void changed(ObservableValue<? extends DefaultLabel> observable, DefaultLabel oldValue, DefaultLabel newValue) {
-				
+			public void changed(ObservableValue<? extends DefaultLabel> observable, DefaultLabel oldValue,
+					DefaultLabel newValue) {
 
 				if (oldValue != null) {
 					oldValue.setOnPlayEnd(null);
@@ -231,54 +232,87 @@ public class AiComposite extends AbstractCommonsApp {
 					newValue.setOnPlayEnd(v -> {
 						btnMicStop.setDisable(true);
 					});
-					
-					//마이크 사용인 경우만 재생.
+
+					// 마이크 사용인 경우만 재생.
 					if (useMicrophoneFlag.get())
 						newValue.playSound();
 				}
 			}
 		});
-		
+
 		try {
 			mixerSettings = new MixerSettings();
 			mixerSettings.load();
 			dao = AIDataDAO.getInstance();
 			openAIService = new OpenAIService();
+
+			List<TbmSmPrompts> customContext = dao.getCustomContext();
+			customContext.forEach(v -> {
+				DefaultCustomContextMenuItem e = new DefaultCustomContextMenuItem(v);
+				e.setOnAction(ev -> {
+
+					DefaultCustomContextMenuItem mi = (DefaultCustomContextMenuItem) ev.getSource();
+					DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
+					String content = lbl.getText();
+					TbmSmPrompts item = mi.getItem();
+					String prompt = item.getPrompt();
+					String request = ValueUtil.getVelocityToText(prompt, "content", content);
+
+					ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
+						try {
+							String send = openAIService.send(request, false);
+							ResponseModelDVO ret = ResponseModelDVO.fromGtpResultMessage(send);
+							Choice first = ret.getChoices().getFirst();
+							String content2 = first.getMessage().getContent();
+							Platform.runLater(()->{
+								FxUtil.createStageAndShow(new TextArea(content2), stage->{
+									stage.setTitle("문장 정리");
+								});
+							});
+							
+						} catch (Exception e1) {
+							LOGGER.error(ValueUtil.toString(e1));
+						}
+					});
+				});
+				speechCtx.getItems().add(e);
+			});
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	
-
 	@FxPostInitialize
 	public void after() {
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
-			List<Map<String, Object>> lastHistory = dao.getLastHistory();
-			lastHistory.stream().peek(System.out::println).filter(v -> v != null).filter(m -> !m.isEmpty()).forEach(m -> {
+			List<Map<String, Object>> lastHistory = dao.getLatestHistory();
+			lastHistory.stream().peek(System.out::println).filter(v -> v != null).filter(m -> !m.isEmpty())
+					.forEach(m -> {
 
-				String prompt = m.get("QUESTION") == null ? "" : m.get("QUESTION").toString();
-				DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
-				lblMe.setTip("me");
-				Platform.runLater(() -> {
-					lvResult.getItems().add(lblMe);
-				});
+						String prompt = m.get("QUESTION") == null ? "" : m.get("QUESTION").toString();
+						DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
+						lblMe.setTip("me");
+						Platform.runLater(() -> {
+							lvResult.getItems().add(lblMe);
+						});
 
-				if (m.get("ANSWER") != null) {
-					Platform.runLater(() -> {
-						updateChatList(m.get("ANSWER").toString(), false);
+						if (m.get("ANSWER") != null) {
+							Platform.runLater(() -> {
+								updateChatList(m.get("ANSWER").toString(), false);
+							});
+						}
+
 					});
-				}
-
-			});
 		});
 
 	}
 
 	@FXML
 	public void btnEnterOnAction() {
-		if(btnEnter.isDisable())return;
-		
+		if (btnEnter.isDisable())
+			return;
+
 		String prompt = txtPrompt.getText();
 		DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
 		lblMe.setTip("me");
@@ -298,9 +332,9 @@ public class AiComposite extends AbstractCommonsApp {
 
 			} catch (Exception e) {
 				LOGGER.error(ValueUtil.toString(e));
-			}finally {
-				Platform.runLater(()->{
-					btnEnter.setDisable(false);	
+			} finally {
+				Platform.runLater(() -> {
+					btnEnter.setDisable(false);
 				});
 			}
 		});
@@ -389,7 +423,8 @@ public class AiComposite extends AbstractCommonsApp {
 	public void btnMicOnAction() {
 
 		if (!useMicrophoneFlag.get()) {
-			Pair<String, String> pair = DialogUtil.showYesOrNoDialog("마이크 선택", "마이크 설정이 비활성화되어 있습니다. 활성화 하시겠습니까?").get();
+			Pair<String, String> pair = DialogUtil.showYesOrNoDialog("마이크 선택", "마이크 설정이 비활성화되어 있습니다. 활성화 하시겠습니까?")
+					.get();
 			if ("Y".equals(pair.getValue())) {
 				miMicrophoneOnAction();
 				useMicrophoneFlag.set(true);
@@ -401,7 +436,8 @@ public class AiComposite extends AbstractCommonsApp {
 			audioHelper = new AudioHelper();
 
 		if (audioHelper.isRecording()) {
-			boolean createTempFlag = "Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_CREATE_WAVE_FILE_YN, "Y"));
+			boolean createTempFlag = "Y"
+					.equals(ResourceLoader.getInstance().get(ResourceLoader.AI_CREATE_WAVE_FILE_YN, "Y"));
 			String tmpdir = ResourceLoader.getInstance().get(ResourceLoader.AI_CREATE_WAVE_FILE_DIR, "tmp");
 
 			try {

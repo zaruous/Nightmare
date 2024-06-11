@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jdbc.core.DataClassRowMapper;
+
 import com.kyj.fx.nightmare.comm.AbstractDAO;
 
 /**
@@ -71,7 +73,7 @@ public class AIDataDAO extends AbstractDAO {
 	 * @작성일 : 2024. 6. 10.
 	 * @return
 	 */
-	public List<Map<String, Object>> getLastHistory() {
+	public List<Map<String, Object>> getLatestHistory() {
 		String state = """
 					SELECT * 
 						FROM (
@@ -84,7 +86,23 @@ public class AIDataDAO extends AbstractDAO {
 			
 				""";
 		List<Map<String, Object>> query = query(state, Collections.emptyMap());
-//		System.out.println(query.size());
+		return query;
+	}
+
+	/**
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2024. 6. 10.
+	 * @return
+	 */
+	public List<TbmSmPrompts> getCustomContext() {
+		String state = """
+					SELECT `GROUP`, `ID`, DISPLAY_TEXT, PROMPT
+					FROM TBM_SM_PROMPTS
+					WHERE 1=1	
+					AND `GROUP` = 'CONTEXT'
+					AND USE_YN = 'Y'
+				""";
+		List<TbmSmPrompts> query = query(state, Collections.emptyMap(), new DataClassRowMapper<TbmSmPrompts>(TbmSmPrompts.class));
 		return query;
 	}
 }

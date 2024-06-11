@@ -40,11 +40,14 @@ public class OpenAIService extends ChatGpt4oService {
 		return chatBotConfig;
 	}
 
+	@Deprecated
 	@Override
 	public String send(GTPRequest arg0) throws Exception {
-		return super.send(arg0);
+		String content = arg0.getSystemMessage().getContent();
+		return this.send(content);
 	}
-
+	
+	@Deprecated
 	@Override
 	public void send(String message, ResponseHandler handler) throws Exception {
 		super.send(message, handler);
@@ -52,11 +55,26 @@ public class OpenAIService extends ChatGpt4oService {
 
 	@Override
 	public String send(String message) throws Exception {
-		Object aiId = getConfig().getConfig().get("id");
-		long chatId = aiDataDAO.insertHistory(aiId.toString(), AIDataDAO.USER.USER, message);
-		String send = super.send(message);
-		aiDataDAO.updateAnswer(chatId, send);
-		return send;
+		return send(message, true);
 	}
 
+	/**
+	 * @param message
+	 * @param writeHistory
+	 * @return
+	 * @throws Exception
+	 */
+	public String send(String message, boolean writeHistory) throws Exception {
+		long chatId = -1;
+		if (writeHistory) {
+			Object aiId = getConfig().getConfig().get("id");
+			chatId = aiDataDAO.insertHistory(aiId.toString(), AIDataDAO.USER.USER, message);
+		}
+		String send = super.send(message);
+		
+		if (writeHistory)
+			aiDataDAO.updateAnswer(chatId, send);
+		
+		return send;
+	}
 }

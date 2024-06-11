@@ -57,8 +57,10 @@ CREATE TABLE IF NOT EXISTS `tbm_sm_cnf` (
 -- 테이블 nightmare.tbm_sm_prompts 구조 내보내기
 CREATE TABLE IF NOT EXISTS `tbm_sm_prompts` (
   `GROUP` varchar(50) NOT NULL,
-  `ID` varchar(50) NOT NULL,
+  `ID` varchar(50) NOT NULL DEFAULT '(cast(unix_timestamp(sysdate()) as unsigned))',
+  `DISPLAY_TEXT` varchar(50) DEFAULT NULL,
   `PROMPT` text DEFAULT NULL,
+  `USE_YN` varchar(1) DEFAULT 'Y',
   PRIMARY KEY (`GROUP`,`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 

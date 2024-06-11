@@ -191,6 +191,5 @@ public class DefaultLabel implements PlaySoundAble {
 	@Override
 	public void playSound() {
 		readAndPlay();
-
 	}
 }
