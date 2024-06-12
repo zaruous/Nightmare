@@ -27,6 +27,7 @@
           <Menu mnemonicParsing="false" text="Window">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#miHomeOnAction" text="Home" />
+                  <MenuItem mnemonicParsing="false" onAction="#miAiWebViewOnAction" text="AI WebView(실험용)" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Options">

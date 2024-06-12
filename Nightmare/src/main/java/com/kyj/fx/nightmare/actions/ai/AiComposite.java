@@ -22,6 +22,7 @@ import com.kyj.fx.fxloader.FXMLController;
 import com.kyj.fx.fxloader.FxPostInitialize;
 import com.kyj.fx.groovy.DefaultScriptEngine;
 import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO.Choice;
+import com.kyj.fx.nightmare.actions.ai_webview.AIWebViewComposite;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxClipboardUtil;
@@ -548,5 +549,10 @@ public class AiComposite extends AbstractCommonsApp {
 		if (playingObject.get() != null) {
 			playingObject.get().stop();
 		}
+	}
+	
+	@FXML
+	public void miAiWebViewOnAction() {
+		FxUtil.createStageAndShow(new AIWebViewComposite(), stage->{});
 	}
 }
