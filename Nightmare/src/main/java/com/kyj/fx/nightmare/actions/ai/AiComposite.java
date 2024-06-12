@@ -471,7 +471,7 @@ public class AiComposite extends AbstractCommonsApp {
 				}
 				content.setTip("me");
 
-				txtPrompt.setText(tmpdir);
+//				txtPrompt.setText(tmpdir);
 				lvResult.getItems().add(content);
 				search(send);
 				// Desktop.getDesktop().browse(of.toUri());
