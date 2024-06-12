@@ -98,8 +98,20 @@ public class AIDataDAO extends AbstractDAO {
 		String state = """
 					SELECT `GROUP`, `ID`, DISPLAY_TEXT, PROMPT
 					FROM TBM_SM_PROMPTS
-					WHERE 1=1	
-					AND `GROUP` = 'CONTEXT'
+					WHERE 1=1
+					AND `GROUP` = 'CONTEXT'	
+					AND USE_YN = 'Y'
+				""";
+		List<TbmSmPrompts> query = query(state, Collections.emptyMap(), new DataClassRowMapper<TbmSmPrompts>(TbmSmPrompts.class));
+		return query;
+	}
+	
+	public List<TbmSmPrompts> getSupports() {
+		String state = """
+					SELECT `GROUP`, `ID`, DISPLAY_TEXT, PROMPT
+					FROM TBM_SM_PROMPTS
+					WHERE 1=1
+					AND `GROUP` = 'SUPPORT'	
 					AND USE_YN = 'Y'
 				""";
 		List<TbmSmPrompts> query = query(state, Collections.emptyMap(), new DataClassRowMapper<TbmSmPrompts>(TbmSmPrompts.class));

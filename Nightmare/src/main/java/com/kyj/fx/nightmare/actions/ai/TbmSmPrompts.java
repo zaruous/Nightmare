@@ -14,6 +14,13 @@ public class TbmSmPrompts extends AbstractDVO {
 	private String displayText;
 	private String prompt;
 	private String useYn;
+	
+	/* SUPPORT의 경우 대화 내용이 기록되고, 대화창에 정보가 남는다.
+	 * CONTEXT의 경우 기능 결과가 팝업으로 나오고 대화 정보가 파라미터로 처리된다. 
+	 **/
+	public enum GROUPS {
+		SUPPORT, CONTEXT
+	}
 
 	public String getGroup() {
 		return group;

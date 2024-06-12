@@ -32,7 +32,6 @@ import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 
-import chat.rest.api.service.core.VirtualPool;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -66,11 +65,11 @@ public class AiComposite extends AbstractCommonsApp {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AiComposite.class);
 
 	@FXML
-	private ListView lvChats;
+	ListView<TbmSmPrompts> lvChats;
 	@FXML
 	private TextArea txtPrompt;
 	@FXML
-	private ListView<DefaultLabel> lvResult;
+	ListView<DefaultLabel> lvResult;
 	@FXML
 	private Button btnMic, btnMicStop, btnEnter;
 	private ObjectProperty<DefaultLabel> playingObject = new SimpleObjectProperty<>();
@@ -111,6 +110,7 @@ public class AiComposite extends AbstractCommonsApp {
 			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
 			playingObject.set(null);
 			playingObject.set(lbl);
+
 		});
 		speechCtx.getItems().add(miPlayMyVoice);
 
@@ -202,7 +202,7 @@ public class AiComposite extends AbstractCommonsApp {
 				listCell.setContextMenu(speechCtx);
 				listCell.setOnContextMenuRequested(ev -> {
 					Object item = listCell.getItem();
-					boolean speechMenuVisible = item instanceof SpechLabel;
+					boolean speechMenuVisible = item instanceof SpeechLabel;
 					miPlayMyVoice.setVisible(speechMenuVisible);
 					miPlaySound.setVisible(!speechMenuVisible);
 					miRunCode.setVisible(item instanceof CodeLabel);
@@ -251,6 +251,9 @@ public class AiComposite extends AbstractCommonsApp {
 				DefaultCustomContextMenuItem e = new DefaultCustomContextMenuItem(v);
 				e.setOnAction(ev -> {
 
+					if (btnEnter.isDisable())
+						return;
+
 					DefaultCustomContextMenuItem mi = (DefaultCustomContextMenuItem) ev.getSource();
 					DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
 					String content = lbl.getText();
@@ -264,12 +267,11 @@ public class AiComposite extends AbstractCommonsApp {
 							ResponseModelDVO ret = ResponseModelDVO.fromGtpResultMessage(send);
 							Choice first = ret.getChoices().getFirst();
 							String content2 = first.getMessage().getContent();
-							Platform.runLater(()->{
-								FxUtil.createStageAndShow(new TextArea(content2), stage->{
-									stage.setTitle("문장 정리");
+							Platform.runLater(() -> {
+								FxUtil.createStageAndShow(new TextArea(content2), stage -> {
+									stage.setTitle(item.getDisplayText());
 								});
 							});
-							
 						} catch (Exception e1) {
 							LOGGER.error(ValueUtil.toString(e1));
 						}
@@ -281,6 +283,9 @@ public class AiComposite extends AbstractCommonsApp {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		// Context에 대한 기능을 넣는다.
+		SupportListViewInstaller.install(lvChats, this);
 	}
 
 	@FxPostInitialize
@@ -308,6 +313,10 @@ public class AiComposite extends AbstractCommonsApp {
 
 	}
 
+	public boolean isDisabledEnterButton() {
+		return btnEnter.isDisable();
+	}
+	
 	@FXML
 	public void btnEnterOnAction() {
 		if (btnEnter.isDisable())
@@ -322,7 +331,7 @@ public class AiComposite extends AbstractCommonsApp {
 
 	void search(String msg) {
 		btnEnter.setDisable(true);
-		VirtualPool.newInstance().execute(() -> {
+		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			try {
 				String send = openAIService.send(msg);
 				Platform.runLater(() -> {
@@ -452,13 +461,13 @@ public class AiComposite extends AbstractCommonsApp {
 
 				SpeechToTextGptServiceImpl service = new SpeechToTextGptServiceImpl();
 				String send = "";
-				SpechLabel content;
+				SpeechLabel content;
 				if (createTempFlag) {
 					send = service.send(tempFilePath);
-					content = new SpechLabel(send, new Label(" 나 "), tempFilePath);
+					content = new SpeechLabel(send, new Label(" 나 "), tempFilePath);
 				} else {
 					send = service.send(tempFilePath.getFileName().toString(), data);
-					content = new SpechLabel(send, new Label(" 나 "), data);
+					content = new SpeechLabel(send, new Label(" 나 "), data);
 				}
 				content.setTip("me");
 

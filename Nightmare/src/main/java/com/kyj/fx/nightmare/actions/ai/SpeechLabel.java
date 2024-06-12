@@ -14,27 +14,27 @@ import javafx.scene.Node;
 /**
  * 
  */
-public class SpechLabel extends DefaultLabel implements PlaySoundAble {
+public class SpeechLabel extends DefaultLabel implements PlaySoundAble {
 
 	private byte[] record;
 	private Path tempFilePath;
 
-	public SpechLabel(String send, byte[] record) {
+	public SpeechLabel(String send, byte[] record) {
 		super(send);
 		this.record = record;
 	}
 
-	public SpechLabel(String send, Node graphic, byte[] record) {
+	public SpeechLabel(String send, Node graphic, byte[] record) {
 		super(send, graphic);
 		this.record = record;
 	}
 
-	public SpechLabel(String send, Node graphic, Path tempFilePath) {
+	public SpeechLabel(String send, Node graphic, Path tempFilePath) {
 		super(send, graphic);
 		this.tempFilePath = tempFilePath;
 	}
 
-	public SpechLabel(String send, Path tempFilePath) {
+	public SpeechLabel(String send, Path tempFilePath) {
 		super(send);
 		this.tempFilePath = tempFilePath;
 	}
