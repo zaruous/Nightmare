@@ -1,6 +1,7 @@
 package chat.rest.api.service.core;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractPromptService implements ChatBotService {
@@ -35,17 +36,23 @@ public abstract class AbstractPromptService implements ChatBotService {
 	 */
 	public abstract ChatBotConfig createConfig() throws Exception;
 
-
 	public Map<String, String> getSystemRule() {
 		return this.rule.getSystemRole();
 	}
-	
+
 	public void setSystemRole(Map<String, String> systemRole) {
-		this.rule.setSystemRole(systemRole);
+		if (systemRole.containsKey("role") && systemRole.get("role") != null) {
+			this.rule.setSystemRole(systemRole);
+		} else {
+			Map<String, String> copyOf = new HashMap<>(systemRole);
+			copyOf.put("role", "system");
+			this.rule.setSystemRole(copyOf);
+		}
+
 	}
 
 	public Map<String, String> assistant() {
-		return  this.rule.getAssistant();
+		return this.rule.getAssistant();
 	}
 
 }

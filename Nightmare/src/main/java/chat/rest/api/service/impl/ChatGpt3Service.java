@@ -68,7 +68,10 @@ public class ChatGpt3Service extends AbstractPromptService {
 
 		var param = new HashMap<>();
 		param.put("model", getConfig().getModel());
-		param.put("messages", List.of(getSystemRule(), Map.of("role", "user", "content", message)));
+		param.put("messages", List.of(
+				getSystemRule(), 
+				Map.of("role", "user", "content", message)
+				));
 
 		// API 요청 생성
 		Gson gson = new Gson();

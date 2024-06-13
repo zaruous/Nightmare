@@ -10,6 +10,9 @@ import com.kyj.fx.nightmare.comm.Message;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
+import com.kyj.fx.nightmare.comm.initializer.HostNameVertifierInitializer;
+import com.kyj.fx.nightmare.comm.initializer.HttpURLInitializer;
+import com.kyj.fx.nightmare.comm.initializer.SSLInitializable;
 import com.kyj.fx.nightmare.ui.frame.MainFormComposite;
 
 import javafx.application.Application;
@@ -40,6 +43,11 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 		LOGGER.debug("Default jnu encoding : {} " , jnu_encoding);
 		
 		
+		if("Y".equals(ResourceLoader.getInstance().get("ssl.verify", "N"))) {
+			new SSLInitializable().initialize();
+			new HttpURLInitializer().initialize();
+			new HostNameVertifierInitializer().initialize();	
+		}
 		
 		launch(args);
 	}

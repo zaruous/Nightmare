@@ -6,8 +6,11 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -33,6 +36,14 @@
             <Menu mnemonicParsing="false" text="Options">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#miMicrophoneOnAction" text="마이크 세팅" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <RadioMenuItem fx:id="rbSpeackingYes" mnemonicParsing="false" selected="true" text="Speacking Yes">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="speacking" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem fx:id="rbSpeackingNo" mnemonicParsing="false" text="Speacking No" toggleGroup="$speacking" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
               </items>
             </Menu>
         </menus>

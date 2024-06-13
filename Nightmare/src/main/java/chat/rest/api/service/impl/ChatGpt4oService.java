@@ -31,7 +31,6 @@ import chat.rest.api.service.core.ChatBotConfig;
 import chat.rest.api.service.core.GTPRequest;
 import chat.rest.api.service.core.ResponseHandler;
 import chat.rest.api.service.core.Rules;
-import chat.rest.api.service.core.TextGTPMessage;
 import chat.rest.api.service.core.VirtualPool;
 
 /**
@@ -126,7 +125,9 @@ public class ChatGpt4oService extends ChatGpt3Service {
 
 		var param = new HashMap<>();
 		param.put("model", getConfig().getModel());
-		param.put("messages", List.of(getSystemRule(), Map.of("role", "user", "content", message)));
+		param.put("messages", List.of(
+				getSystemRule(), 
+				Map.of("role", "user", "content", message)));
 
 		// API 요청 생성
 		Gson gson = new Gson();

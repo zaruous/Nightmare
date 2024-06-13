@@ -4,7 +4,7 @@
  *	작성일   : 2018. 5. 13.
  *	작성자   : KYJ
  *******************************/
-package com.kyj.fx.nightmare.comm;
+package com.kyj.fx.nightmare.comm.initializer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +21,8 @@ import javax.net.ssl.SSLSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.kyj.fx.nightmare.comm.ValueUtil;
 
 /**
  * @author KYJ

@@ -57,6 +57,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kyj.fx.nightmare.comm.initializer.GargoyleHostNameVertifier;
+import com.kyj.fx.nightmare.comm.initializer.GargoyleSSLVertifier;
+
 /**
  * @author KYJ
  *

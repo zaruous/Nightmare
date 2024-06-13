@@ -47,6 +47,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -84,7 +85,9 @@ public class AiComposite extends AbstractCommonsApp {
 	BooleanProperty useMicrophoneFlag = new SimpleBooleanProperty();
 	OpenAIService openAIService;
 	AIDataDAO dao;
-
+	@FXML
+	private RadioMenuItem rbSpeackingYes, rbSpeackingNo;
+	BooleanProperty useSpeakingFlag = new SimpleBooleanProperty();
 	public AiComposite() throws Exception {
 
 		FxUtil.loadRoot(AiComposite.class, this);
@@ -106,6 +109,18 @@ public class AiComposite extends AbstractCommonsApp {
 	@FXML
 	public void initialize() {
 		useMicrophoneFlag.set("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_AUTO_PLAY_SOUND_YN, "N")));
+		useSpeakingFlag.set(true);
+		
+		rbSpeackingYes.setOnAction(ev ->{
+			useSpeakingFlag.set(true);
+		});
+		rbSpeackingNo.setOnAction(ev ->{
+			useSpeakingFlag.set(false);
+		});
+//		rbNoAnswerMic.setOnAction(ev ->{
+//			rbNoAnswerMic.setSelected(!rbNoAnswerMic.isSelected());
+//		});
+		
 		MenuItem miPlayMyVoice = new MenuItem("Play my voice");
 		miPlayMyVoice.setOnAction(ac -> {
 			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
@@ -235,7 +250,11 @@ public class AiComposite extends AbstractCommonsApp {
 					});
 
 					// 마이크 사용인 경우만 재생.
-					if (useMicrophoneFlag.get())
+//					if (useMicrophoneFlag.get())
+//					{
+//						
+//					}
+					if(useSpeakingFlag.get())
 						newValue.playSound();
 				}
 			}
@@ -471,11 +490,14 @@ public class AiComposite extends AbstractCommonsApp {
 					content = new SpeechLabel(send, new Label(" 나 "), data);
 				}
 				content.setTip("me");
-
-//				txtPrompt.setText(tmpdir);
 				lvResult.getItems().add(content);
-				search(send);
-				// Desktop.getDesktop().browse(of.toUri());
+				
+//				if(!rbNoAnswerMic.isSelected())
+//				{
+					search(send);	
+//				}
+				
+
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -553,6 +575,9 @@ public class AiComposite extends AbstractCommonsApp {
 	
 	@FXML
 	public void miAiWebViewOnAction() {
-		FxUtil.createStageAndShow(new AIWebViewComposite(), stage->{});
+		AIWebViewComposite parent = new AIWebViewComposite();
+		FxUtil.createStageAndShow(parent, stage->{
+			stage.setTitle("웹페이지 처리");
+		});
 	}
 }

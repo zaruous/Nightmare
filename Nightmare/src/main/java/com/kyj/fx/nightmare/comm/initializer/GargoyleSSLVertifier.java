@@ -4,7 +4,7 @@
  *	작성일   : 2018. 5. 13.
  *	작성자   : KYJ
  *******************************/
-package com.kyj.fx.nightmare.comm;
+package com.kyj.fx.nightmare.comm.initializer;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
