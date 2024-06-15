@@ -36,17 +36,20 @@ public class GargoyleHostNameVertifier implements HostnameVerifier {
 
 	public static final String FILE_NAME = "gargoyle.hostname.vertifier.properties";
 
+	public final HostnameVerifier DEFAULT_HOST_NAME_VERIFER = new HostnameVerifier() {
+
+		@Override
+		public boolean verify(String arg0, SSLSession arg1) {
+			return GargoyleHostNameVertifier.this.verify(arg0, arg1);
+		}
+	};
+	
 	public void setup() {
 		load();
 		LOGGER.debug(getClass().getName() + "  initialize.");
 		// vanList.addAll(new HostVanDQM().listVan());
-		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-
-			@Override
-			public boolean verify(String arg0, SSLSession arg1) {
-				return GargoyleHostNameVertifier.this.verify(arg0, arg1);
-			}
-		});
+		
+		HttpsURLConnection.setDefaultHostnameVerifier(DEFAULT_HOST_NAME_VERIFER);
 	}
 
 	private void load() {
