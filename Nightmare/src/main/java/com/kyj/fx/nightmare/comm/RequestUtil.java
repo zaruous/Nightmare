@@ -68,7 +68,7 @@ public class RequestUtil {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestUtil.class);
 	private static HostnameVerifier hostnameVerifier = (arg0, arg1) -> {
-		return true;
+		return GargoyleHostNameVertifier.defaultVertifier().verify(arg0, arg1);
 	};
 
 	/**
