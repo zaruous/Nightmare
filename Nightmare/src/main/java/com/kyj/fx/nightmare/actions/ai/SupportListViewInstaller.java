@@ -60,12 +60,13 @@ public abstract class SupportListViewInstaller {
 							selectedItem.getDisplayText() + " 을 실행하시겠습니까?");
 					showYesOrNoDialog.ifPresent(v -> {
 						if ("Y".equals(v.getValue())) {
-							String request = selectedItem.getPrompt();
-							DefaultLabel lblMe = new DefaultLabel(request, new Label(" 나 "));
+							String prompt = selectedItem.getPrompt();
+							String text = "오늘의 표현 실행";
+							DefaultLabel lblMe = new DefaultLabel(text, new Label(" 나 "));
 							lblMe.setTip("me");
 
 							aiComposite.lvResult.getItems().add(lblMe);
-							aiComposite.search(request);
+							aiComposite.search(prompt, text);
 						}
 					});
 

@@ -5,8 +5,10 @@ package com.kyj.fx.nightmare.actions.ai_webview;
 
 import java.io.LineNumberReader;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +18,9 @@ import com.kyj.fx.nightmare.actions.ai.CodeLabel;
 import com.kyj.fx.nightmare.actions.ai.DefaultLabel;
 import com.kyj.fx.nightmare.actions.ai.OpenAIService;
 import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO;
-import com.kyj.fx.nightmare.actions.ai.SpeechLabel;
 import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO.Choice;
 import com.kyj.fx.nightmare.comm.DialogUtil;
+import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxClipboardUtil;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ValueUtil;
@@ -29,12 +31,15 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
@@ -42,8 +47,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.web.PromptData;
+import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
+import javafx.util.Pair;
 import javafx.util.StringConverter;
 
 /**
@@ -85,27 +93,120 @@ public class AIWebViewComposite extends BorderPane {
 		cbProtocol.getItems().addAll("https://", "http://");
 		cbProtocol.getSelectionModel().selectFirst();
 
+		wbDefault.setContextMenuEnabled(true);
+		wbDefault.getEngine().setJavaScriptEnabled(true);
+		// wbDefault.getEngine().setCreatePopupHandler(new
+		// Callback<PopupFeatures, WebEngine>() {
+		//
+		// @Override
+		// public WebEngine call(PopupFeatures param) {
+		// return new WebView();
+		// }
+		// });
+		wbDefault.getEngine().locationProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				
+				String newHost = getHost(newValue);
+				String urlHost = getHost(txtUrl.getText());
+				LOGGER.debug("newHost : {}", newHost);
+				LOGGER.debug("urlHost : {}", urlHost);
+//				if (!ValueUtil.equals(urlHost, newHost)) {
+//					// 동일한 호스트가 아니면 차단
+//					wbDefault.getEngine().getLoadWorker().cancel();
+//					LOGGER.debug("location blocked : {}", newValue);
+//				}
+//				else
+//					LOGGER.debug("location change : {}", newValue);
+			}
+			
+			private String getHost(String url) {
+		        try {
+		            URI uri = new URI(url);
+		            return uri.getHost();
+		        } catch (URISyntaxException e) {
+		            e.printStackTrace();
+		            return null;
+		        }
+		    }
+		});
+		wbDefault.getEngine().setPromptHandler(new Callback<PromptData, String>() {
+
+			@Override
+			public String call(PromptData param) {
+				LOGGER.debug("{}", param);
+				return param.getMessage();
+			}
+		});
+
 		wbDefault.getEngine().setOnError(ev -> {
 			LOGGER.error(ValueUtil.toString(ev.getException()));
 		});
+
 		wbDefault.getEngine().load("https://news.google.com/home?hl=ko&gl=KR&ceid=KR:ko");
 		wbDefault.getEngine().getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
 
 			@Override
 			public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue) {
+//				LOGGER.debug("{}", newValue);			
 				content.set(null);
-				if (State.SUCCEEDED == newValue) {
-					// JavaScript를 사용하여 <script> 태그를 제거한 body 콘텐츠를 가져오기
-					String bodyContentWithoutScripts = (String) wbDefault.getEngine()
-							.executeScript("document.body.innerText");
+				wbDefault.setOpacity(0.5d);
+				btnEnter.setDisable(true);
+				txtUrl.setText(wbDefault.getEngine().getLocation());
+				LOGGER.debug("engine state : {} ", newValue);
 
-					// HTML 출력
-					System.out.println(bodyContentWithoutScripts);
+				if (State.SUCCEEDED == newValue) {
+					wbDefault.setOpacity(1.0d);
+					// JavaScript를 사용하여 <script> 태그를 제거한 body 콘텐츠를 가져오기
+
+					String string = ValueUtil.toString(AIWebViewComposite.class.getResourceAsStream("content.js"), StandardCharsets.UTF_8);
+					String bodyContentWithoutScripts = (String) wbDefault.getEngine().executeScript(
+							string /* "document.body.innerText" */);
+					
+					if(ValueUtil.isEmpty(bodyContentWithoutScripts))
+					{
+						bodyContentWithoutScripts = (String) wbDefault.getEngine().executeScript("document.documentElement.outerHTML");
+					}
+					
+					LOGGER.debug(bodyContentWithoutScripts);					
 					content.set(bodyContentWithoutScripts);
+					btnEnter.setDisable(false);
 				}
 
 			}
 		});
+
+		wbDefault.getEngine().setConfirmHandler(new Callback<String, Boolean>() {
+
+			@Override
+			public Boolean call(String param) {
+				Pair<String, String> pair = DialogUtil.showYesOrNoDialog("confirm", param).get();
+				return "Y".equals(pair.getValue());
+			}
+		});
+		wbDefault.getEngine().setOnAlert(new EventHandler<WebEvent<String>>() {
+
+			@Override
+			public void handle(WebEvent<String> event) {
+				DialogUtil.showMessageDialog(event.getData());
+			}
+		});
+
+		MenuItem menuItem = new MenuItem("html");
+		menuItem.setOnAction(ev -> {
+			Object executeScript = wbDefault.getEngine().executeScript("document.documentElement.outerHTML");
+			System.out.println(executeScript);
+		});
+		ContextMenu contextMenu = new ContextMenu(menuItem);
+		wbDefault.setContextMenuEnabled(false);
+		wbDefault.setOnContextMenuRequested(ev -> {
+			contextMenu.show(wbDefault, ev.getScreenX(), ev.getScreenY());
+		});
+		
+		
+		
+		//
 
 		this.lvResult.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.lvResult.setCellFactory(new Callback<ListView<DefaultLabel>, ListCell<DefaultLabel>>() {
@@ -144,6 +245,9 @@ public class AIWebViewComposite extends BorderPane {
 									getStyleClass().remove("me");
 								}
 
+								setPrefWidth(lvResult.getWidth() - 20); // 패딩 고려
+								setStyle("-fx-wrap-text: true;");
+
 								setGraphic(item.getGraphic());
 							}
 						}
@@ -151,14 +255,14 @@ public class AIWebViewComposite extends BorderPane {
 
 				};
 
-//				listCell.setContextMenu(speechCtx);
-//				listCell.setOnContextMenuRequested(ev -> {
-//					Object item = listCell.getItem();
-//					boolean speechMenuVisible = item instanceof SpeechLabel;
-//					miPlayMyVoice.setVisible(speechMenuVisible);
-//					miPlaySound.setVisible(!speechMenuVisible);
-//					miRunCode.setVisible(item instanceof CodeLabel);
-//				});
+				// listCell.setContextMenu(speechCtx);
+				// listCell.setOnContextMenuRequested(ev -> {
+				// Object item = listCell.getItem();
+				// boolean speechMenuVisible = item instanceof SpeechLabel;
+				// miPlayMyVoice.setVisible(speechMenuVisible);
+				// miPlaySound.setVisible(!speechMenuVisible);
+				// miRunCode.setVisible(item instanceof CodeLabel);
+				// });
 
 				return listCell;
 			}
@@ -220,21 +324,40 @@ public class AIWebViewComposite extends BorderPane {
 
 	@FXML
 	private void btnEnterOnAction() {
+
+		if (btnEnter.isDisable())
+			return;
+
 		String text = txtPrompt.getText();
-		openAIService.setSystemRole(Map.of("type", "text", "content", content.get()));
-		try {
-
-			String prompt = txtPrompt.getText();
-			DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
-			lblMe.setTip("me");
-			lvResult.getItems().add(lblMe);
-
-			String send = openAIService.send(text);
-			updateChatList(send);
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		String systemContent = content.get();
+		if (systemContent == null) {
+			btnEnter.setDisable(true);
+			return;
 		}
+
+		openAIService.setSystemRole(openAIService.createDefault(systemContent));
+
+		String prompt = txtPrompt.getText();
+		DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
+		lblMe.setTip("me");
+		lvResult.getItems().add(lblMe);
+
+		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
+			try {
+				String send = openAIService.send(text);
+				Platform.runLater(() -> {
+					try {
+						updateChatList(send);
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						btnEnter.setDisable(false);
+					}
+				});
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 
 	}
 

@@ -3,6 +3,7 @@
  */
 package com.kyj.fx.nightmare.actions.ai;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -53,7 +54,7 @@ public class ResponseModelDVO {
 	}
 
 	public List<Choice> getChoices() {
-		return choices;
+		return choices == null ? Collections.emptyList() : choices;
 	}
 
 	public void setChoices(List<Choice> choices) {

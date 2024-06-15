@@ -30,7 +30,8 @@
           <Menu mnemonicParsing="false" text="Window">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#miHomeOnAction" text="Home" />
-                  <MenuItem mnemonicParsing="false" onAction="#miAiWebViewOnAction" text="AI WebView(실험용)" />
+              <MenuItem mnemonicParsing="false" onAction="#miAiWebViewOnAction" text="AI WebView(실험용)" />
+              <MenuItem mnemonicParsing="false" onAction="#miSpeechToTextAction" text="Speech to Text(File))" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Options">

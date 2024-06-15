@@ -15,26 +15,26 @@ import com.kyj.fx.nightmare.comm.AbstractDAO;
 /**
  * 
  */
-public class AIDataDAO extends AbstractDAO {
+public class AISpeechDAO extends AbstractDAO {
 
-	private static AIDataDAO dao;
+	private static AISpeechDAO dao;
 
-	public static synchronized AIDataDAO getInstance() {
+	public static synchronized AISpeechDAO getInstance() {
 		if (dao == null)
-			dao = new AIDataDAO();
+			dao = new AISpeechDAO();
 		return dao;
 	}
 
-	private AIDataDAO() {
+	private AISpeechDAO() {
 	}
 
-	public long insertHistory(String aiId, long speechId, String system, USER user, String question) throws Exception {
+	public long insertHistory(String aiId, String system, USER user, byte[] question, ContentType contentType) throws Exception {
 		long id = System.currentTimeMillis();
 		String state = """
-					INSERT INTO `chat_history` (`ID`, `SYSTEM`, `QUESTION`, `FIRST_REGER_ID`,`AI_ID`, `SPEECH_ID`)
-					VALUES (:id, :system, :question , :user, :aiId, :speechId);
+					INSERT INTO `speech_history` (`ID`, `SYSTEM`, `QUESTION`, `FIRST_REGER_ID`,`AI_ID`, `CONTENT_TYPE`)
+					VALUES (:id, :system, :question , :user, :aiId, :contentType);
 				""";
-		update(state, Map.of("id", id, "aiId", aiId, "user", user.name(), "question", question, "system", system, "speechId", speechId));
+		update(state, Map.of("id", id, "aiId", aiId, "user", user.name(), "question", question, "system", system, "contentType" , contentType.getMimeType()));
 
 		return id;
 	}
@@ -42,7 +42,7 @@ public class AIDataDAO extends AbstractDAO {
 	public void updateAnswer(long id, String answer) throws Exception {
 
 		String state = """
-					UPDATE `chat_history`
+					UPDATE `speech_history`
 					SET ANSWER = :answer
 					WHERE 1=1
 					AND id = :id
@@ -50,29 +50,14 @@ public class AIDataDAO extends AbstractDAO {
 		update(state, Map.of("id", id, "answer", answer));
 	}
 
-	/**
-	 * 설정정보 로드
-	 * 
-	 * @작성자 : KYJ (callakrsos@naver.com)
-	 * @작성일 : 2024. 6. 10.
-	 * @return
-	 */
 	public Map<String, Object> getAiConnectionConfig() {
-		String sql = """
-				select c.* from tbm_sm_cnf c where 1=1 and c.GROUP = 'OPEN_AI' AND c.KEY='GTP_4_O' AND USE_YN = 'Y' \n
-				""";
-		Map<String, Object> select = getNamedJdbcTemplate().queryForMap(sql, Collections.emptyMap());
-		return select;
-	}
-
-	public Map<String, Object> getAiSpeechConnectionConfig() {
 		String sql = """
 				select c.* from tbm_sm_cnf c where 1=1 and c.GROUP = 'OPEN_AI' AND c.KEY='TRANSLATE' AND USE_YN = 'Y' \n
 				""";
 		Map<String, Object> select = getNamedJdbcTemplate().queryForMap(sql, Collections.emptyMap());
 		return select;
 	}
-	
+
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)
 	 * @작성일 : 2024. 6. 10.
@@ -80,15 +65,15 @@ public class AIDataDAO extends AbstractDAO {
 	 */
 	public List<Map<String, Object>> getLatestHistory() {
 		String state = """
-					SELECT * 
+					SELECT *
 						FROM (
-						    SELECT * 
+						    SELECT *
 						    FROM CHAT_HISTORY
 						    ORDER BY ID DESC
-						    LIMIT 10 
+						    LIMIT 10
 						) subquery
 						ORDER BY ID ASC
-			
+
 				""";
 		List<Map<String, Object>> query = query(state, Collections.emptyMap());
 		return query;
@@ -104,27 +89,25 @@ public class AIDataDAO extends AbstractDAO {
 					SELECT `GROUP`, `ID`, DISPLAY_TEXT, PROMPT
 					FROM TBM_SM_PROMPTS
 					WHERE 1=1
-					AND `GROUP` = 'CONTEXT'	
-					AND USE_YN = 'Y'
-				""";
-		List<TbmSmPrompts> query = query(state, Collections.emptyMap(), new DataClassRowMapper<TbmSmPrompts>(TbmSmPrompts.class));
-		return query;
-	}
-	
-	public List<TbmSmPrompts> getSupports() {
-		String state = """
-					SELECT `GROUP`, `ID`, DISPLAY_TEXT, PROMPT
-					FROM TBM_SM_PROMPTS
-					WHERE 1=1
-					AND `GROUP` = 'SUPPORT'	
+					AND `GROUP` = 'CONTEXT'
 					AND USE_YN = 'Y'
 				""";
 		List<TbmSmPrompts> query = query(state, Collections.emptyMap(), new DataClassRowMapper<TbmSmPrompts>(TbmSmPrompts.class));
 		return query;
 	}
 
-	public long insertHistory(String string, String systemRole, USER user, byte[] audio, ContentType contentType) {
-		// TODO Auto-generated method stub
-		return 0;
+	public List<TbmSmPrompts> getSupports() {
+		String state = """
+					SELECT `GROUP`, `ID`, DISPLAY_TEXT, PROMPT
+					FROM TBM_SM_PROMPTS
+					WHERE 1=1
+					AND `GROUP` = 'SUPPORT'
+					AND USE_YN = 'Y'
+				""";
+		List<TbmSmPrompts> query = query(state, Collections.emptyMap(), new DataClassRowMapper<TbmSmPrompts>(TbmSmPrompts.class));
+		return query;
 	}
+
+	
+
 }

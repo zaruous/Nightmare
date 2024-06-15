@@ -23,6 +23,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
@@ -37,7 +39,7 @@ import chat.rest.api.service.core.VirtualPool;
  * 
  */
 public class ChatGpt4oService extends ChatGpt3Service {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChatGpt4oService.class);
 	public ChatGpt4oService() throws Exception {
 		super();
 	}
@@ -132,6 +134,7 @@ public class ChatGpt4oService extends ChatGpt3Service {
 		// API 요청 생성
 		Gson gson = new Gson();
 		String requestJson = gson.toJson(param);
+		LOGGER.debug("{}", requestJson);
 		StringEntity entity = new StringEntity(requestJson, StandardCharsets.UTF_8);
 		HttpPost httpPost = new HttpPost(getConfig().getRootUrl());
 		httpPost.setHeader("Content-Type", "application/json");
@@ -144,7 +147,9 @@ public class ChatGpt4oService extends ChatGpt3Service {
 				CloseableHttpResponse response = httpClient.execute(httpPost)) {
 			// API 응답 처리
 //			System.out.println(response.getStatusLine().getStatusCode());
-			Stream.of(response.getAllHeaders()).forEach(System.out::println);
+			Stream.of(response.getAllHeaders()).forEach(v ->{
+				LOGGER.debug("{}", v);
+			});
 			responseEntity = response.getEntity();
 			return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
 		}

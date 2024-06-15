@@ -19,17 +19,21 @@
 				<WebView fx:id="wbDefault" prefHeight="200.0" prefWidth="200.0" />
 				<SplitPane orientation="VERTICAL">
 					<items>
-      						<VBox>
-               <children>
-                  <ListView fx:id="lvResult" prefHeight="525.0" prefWidth="632.0" styleClass="lvResult" VBox.vgrow="ALWAYS" />
+                  <SplitPane dividerPositions="0.7692307692307693" orientation="VERTICAL">
+                     <items>
+            						<VBox>
+                     <children>
+                        <ListView fx:id="lvResult" styleClass="lvResult" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
                   <HBox alignment="CENTER">
                      <children>
                         <TextArea fx:id="txtPrompt" maxWidth="1.7976931348623157E308" onKeyPressed="#txtPromptOnKeyPressed" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnEnter" maxWidth="120.0" mnemonicParsing="false" onAction="#btnEnterOnAction" prefWidth="80.0" styleClass="ai-button" text="Enter" />
+                        <Button fx:id="btnEnter" disable="true" maxWidth="120.0" mnemonicParsing="false" onAction="#btnEnterOnAction" prefWidth="80.0" styleClass="ai-button" text="Enter" />
                      </children>
                   </HBox>
-               </children>
-            </VBox>
+                     </items>
+                  </SplitPane>
 					</items>
 				</SplitPane>
 			</items>
