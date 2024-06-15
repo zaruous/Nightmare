@@ -27,7 +27,7 @@ open module ETHelper {
 	//requires slf4j.api;
 	requires org.slf4j;
 	
-	requires logback.classic;
+	requires ch.qos.logback.classic;
 
 	requires org.controlsfx.controls;
 	requires transitive dom4j;
