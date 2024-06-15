@@ -27,4 +27,9 @@ public class SpeechResponseModelDVO {
 		this.text = text;
 	}
 
+	@Override
+	public String toString() {
+		return text;
+	}
+
 }
