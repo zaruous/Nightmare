@@ -46,8 +46,12 @@ public class ChatGpt3Service extends AbstractPromptService {
 		ChatBotConfig chatBotConfig = new ChatBotConfig();
 
 		Properties properties = new Properties();
-		try (InputStream in = new FileInputStream(new File("chat.gpt.properties"))) {
-			properties.load(in);
+		File file = new File("chat.gpt.properties");
+		if(file.exists())
+		{
+			try (InputStream in = new FileInputStream(file)) {
+				properties.load(in);
+			}	
 		}
 
 		chatBotConfig.setConfig(properties);

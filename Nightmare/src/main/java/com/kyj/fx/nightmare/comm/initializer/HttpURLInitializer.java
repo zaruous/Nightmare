@@ -24,7 +24,7 @@ public class HttpURLInitializer implements Initializable {
 	public void initialize() throws Exception {
 		LOGGER.debug(getClass().getName() + "  initialize.");
 
-		HttpURLConnection.setFollowRedirects(false);
+		HttpURLConnection.setFollowRedirects(true);
 
 //		HttpURLConnection.setContentHandlerFactory(new ContentHandlerFactory() {
 //

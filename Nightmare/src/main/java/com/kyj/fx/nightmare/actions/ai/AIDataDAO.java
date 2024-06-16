@@ -51,6 +51,26 @@ public class AIDataDAO extends AbstractDAO {
 	}
 
 	/**
+	 * @param group
+	 * @param key
+	 * @return
+	 */
+	public Map<String, Object> getAiConnectionConfig(String group, String key) {
+		String sql = """
+				select c.* from tbm_sm_cnf c where 1=1 and c.GROUP = :group AND c.KEY=:key AND USE_YN = 'Y' \n
+				""";
+		Map<String, Object> select = getNamedJdbcTemplate().queryForMap(sql, Map.of("group", group, "key" , key));
+		return select;
+	}
+	
+	public Map<String, Object> getAiConnectionConfig(String key) {
+		String sql = """
+				select c.* from tbm_sm_cnf c where 1=1 and c.KEY=:key AND USE_YN = 'Y' \n
+				""";
+		Map<String, Object> select = getNamedJdbcTemplate().queryForMap(sql, Map.of("key" , key));
+		return select;
+	}
+	/**
 	 * 설정정보 로드
 	 * 
 	 * @작성자 : KYJ (callakrsos@naver.com)
@@ -65,13 +85,13 @@ public class AIDataDAO extends AbstractDAO {
 		return select;
 	}
 
-	public Map<String, Object> getAiSpeechConnectionConfig() {
-		String sql = """
-				select c.* from tbm_sm_cnf c where 1=1 and c.GROUP = 'OPEN_AI' AND c.KEY='TRANSLATE' AND USE_YN = 'Y' \n
-				""";
-		Map<String, Object> select = getNamedJdbcTemplate().queryForMap(sql, Collections.emptyMap());
-		return select;
-	}
+//	public Map<String, Object> getAiSpeechConnectionConfig() {
+//		String sql = """
+//				select c.* from tbm_sm_cnf c where 1=1 and c.GROUP = 'OPEN_AI' AND c.KEY='TRANSLATE' AND USE_YN = 'Y' \n
+//				""";
+//		Map<String, Object> select = getNamedJdbcTemplate().queryForMap(sql, Collections.emptyMap());
+//		return select;
+//	}
 	
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)

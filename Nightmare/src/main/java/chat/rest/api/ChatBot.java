@@ -22,7 +22,7 @@ public final class ChatBot {
 		
 	}
 	public enum API {
-		GTP_3_5, GTP_4_O, OLLAMA_3, REKA, GTP_SPEECH_TO_TEST
+		GTP_3_5, GTP_4_O, LLAMA3, REKA, GTP_SPEECH_TO_TEST
 	}
 
 	/**
@@ -48,7 +48,7 @@ public final class ChatBot {
 		case GTP_4_O:
 			chatGpt3Service = new ChatGpt4oService(rules);
 			break;
-		case OLLAMA_3:
+		case LLAMA3:
 			chatGpt3Service = new Ollama3Service();
 			break;
 		case REKA:

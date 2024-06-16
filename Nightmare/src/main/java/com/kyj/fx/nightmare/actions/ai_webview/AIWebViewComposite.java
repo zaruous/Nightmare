@@ -3,13 +3,15 @@
  */
 package com.kyj.fx.nightmare.actions.ai_webview;
 
+import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +26,8 @@ import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxClipboardUtil;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ValueUtil;
+import com.kyj.fx.nightmare.comm.XmlW3cUtil;
+import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -58,7 +62,7 @@ import javafx.util.StringConverter;
  * 
  */
 @FXMLController(value = "AIWebView.fxml", isSelfController = true)
-public class AIWebViewComposite extends BorderPane {
+public class AIWebViewComposite extends AbstractCommonsApp {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AIWebViewComposite.class);
 	@FXML
 	private BorderPane borRoot;
@@ -103,15 +107,32 @@ public class AIWebViewComposite extends BorderPane {
 		// return new WebView();
 		// }
 		// });
+//		wbDefault.getEngine().documentProperty().addListener(new ChangeListener<Document>() {
+//
+//			@Override
+//			public void changed(ObservableValue<? extends Document> observable, Document oldValue, Document newValue) {
+//				if(newValue ==null)return;
+//				
+//						
+//					Document doc = (Document) newValue.cloneNode(true);
+//String text=					doc.getTextContent();
+////					XmlW3cUtil.removeScriptNodes(doc);
+////					
+////					String string = XmlW3cUtil.toString(doc);
+////					LOGGER.debug(string);
+//					content.set(text);
+//			}
+//		});
 		wbDefault.getEngine().locationProperty().addListener(new ChangeListener<String>() {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				
+
 				String newHost = getHost(newValue);
 				String urlHost = getHost(txtUrl.getText());
 				LOGGER.debug("newHost : {}", newHost);
 				LOGGER.debug("urlHost : {}", urlHost);
+
 //				if (!ValueUtil.equals(urlHost, newHost)) {
 //					// 동일한 호스트가 아니면 차단
 //					wbDefault.getEngine().getLoadWorker().cancel();
@@ -120,16 +141,16 @@ public class AIWebViewComposite extends BorderPane {
 //				else
 //					LOGGER.debug("location change : {}", newValue);
 			}
-			
+
 			private String getHost(String url) {
-		        try {
-		            URI uri = new URI(url);
-		            return uri.getHost();
-		        } catch (URISyntaxException e) {
-		            e.printStackTrace();
-		            return null;
-		        }
-		    }
+				try {
+					URI uri = new URI(url);
+					return uri.getHost();
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
 		});
 		wbDefault.getEngine().setPromptHandler(new Callback<PromptData, String>() {
 
@@ -148,29 +169,14 @@ public class AIWebViewComposite extends BorderPane {
 		wbDefault.getEngine().getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
 
 			@Override
-			public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue) {
-//				LOGGER.debug("{}", newValue);			
+			public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue) {	
 				content.set(null);
 				wbDefault.setOpacity(0.5d);
 				btnEnter.setDisable(true);
 				txtUrl.setText(wbDefault.getEngine().getLocation());
 				LOGGER.debug("engine state : {} ", newValue);
-
 				if (State.SUCCEEDED == newValue) {
 					wbDefault.setOpacity(1.0d);
-					// JavaScript를 사용하여 <script> 태그를 제거한 body 콘텐츠를 가져오기
-
-					String string = ValueUtil.toString(AIWebViewComposite.class.getResourceAsStream("content.js"), StandardCharsets.UTF_8);
-					String bodyContentWithoutScripts = (String) wbDefault.getEngine().executeScript(
-							string /* "document.body.innerText" */);
-					
-					if(ValueUtil.isEmpty(bodyContentWithoutScripts))
-					{
-						bodyContentWithoutScripts = (String) wbDefault.getEngine().executeScript("document.documentElement.outerHTML");
-					}
-					
-					LOGGER.debug(bodyContentWithoutScripts);					
-					content.set(bodyContentWithoutScripts);
 					btnEnter.setDisable(false);
 				}
 
@@ -193,19 +199,48 @@ public class AIWebViewComposite extends BorderPane {
 			}
 		});
 
-		MenuItem menuItem = new MenuItem("html");
+		MenuItem menuItem = new MenuItem("text");
 		menuItem.setOnAction(ev -> {
 			Object executeScript = wbDefault.getEngine().executeScript("document.documentElement.outerHTML");
-			System.out.println(executeScript);
+			String string = executeScript.toString();
+
+			ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
+				try {
+					Document document = Jsoup.parse(string);
+					String text = XmlW3cUtil.parseElement(document.body());
+					Platform.runLater(() -> {
+						TextArea parent = new TextArea(text);
+						parent.setWrapText(true);
+						FxUtil.createStageAndShow(parent, stage -> {
+						});
+
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			});
 		});
-		ContextMenu contextMenu = new ContextMenu(menuItem);
+
+		MenuItem miHtml = new MenuItem("html");
+		miHtml.setOnAction(ev -> {
+			Object executeScript = wbDefault.getEngine().executeScript("document.documentElement.outerHTML");
+			String string = executeScript.toString();
+
+			Platform.runLater(() -> {
+				TextArea parent = new TextArea(string);
+				parent.setWrapText(true);
+				FxUtil.createStageAndShow(parent, stage -> {
+				});
+
+			});
+		});
+		ContextMenu contextMenu = new ContextMenu(menuItem, miHtml);
 		wbDefault.setContextMenuEnabled(false);
 		wbDefault.setOnContextMenuRequested(ev -> {
 			contextMenu.show(wbDefault, ev.getScreenX(), ev.getScreenY());
 		});
-		
-		
-		
+
 		//
 
 		this.lvResult.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -329,7 +364,7 @@ public class AIWebViewComposite extends BorderPane {
 			return;
 
 		String text = txtPrompt.getText();
-		String systemContent = content.get();
+		String systemContent = getDocumentText();
 		if (systemContent == null) {
 			btnEnter.setDisable(true);
 			return;
@@ -417,5 +452,19 @@ public class AIWebViewComposite extends BorderPane {
 				LOGGER.error(ValueUtil.toString(e));
 			}
 		});
+	}
+	
+	public String getDocumentText()  {
+		Object executeScript = wbDefault.getEngine().executeScript("document.documentElement.outerHTML");
+		String string = executeScript.toString();
+		Document document = Jsoup.parse(string);
+		String text;
+		try {
+			text = XmlW3cUtil.parseElement(document.body());
+			return text;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 }

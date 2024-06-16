@@ -15,14 +15,12 @@ import java.util.stream.Stream;
 
 import javax.sound.sampled.Mixer.Info;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.fxloader.FXMLController;
 import com.kyj.fx.fxloader.FxPostInitialize;
 import com.kyj.fx.groovy.DefaultScriptEngine;
-import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO.Choice;
 import com.kyj.fx.nightmare.actions.ai_voice.SimpleAIVoiceConversionComposite;
 import com.kyj.fx.nightmare.actions.ai_webview.AIWebViewComposite;
 import com.kyj.fx.nightmare.comm.DialogUtil;
@@ -183,7 +181,7 @@ public class AiComposite extends AbstractCommonsApp {
 			@Override
 			public ListCell<DefaultLabel> call(ListView<DefaultLabel> param) {
 //new TextFieldListCell<DefaultLabel>();
-TextFieldListCell<DefaultLabel> listCell = new TextFieldListCell<DefaultLabel>() {
+				TextFieldListCell<DefaultLabel> listCell = new TextFieldListCell<DefaultLabel>() {
 
 					@Override
 					public void updateIndex(int i) {
@@ -241,7 +239,8 @@ TextFieldListCell<DefaultLabel> listCell = new TextFieldListCell<DefaultLabel>()
 		playingObject.addListener(new ChangeListener<DefaultLabel>() {
 
 			@Override
-			public void changed(ObservableValue<? extends DefaultLabel> observable, DefaultLabel oldValue, DefaultLabel newValue) {
+			public void changed(ObservableValue<? extends DefaultLabel> observable, DefaultLabel oldValue,
+					DefaultLabel newValue) {
 
 				if (oldValue != null) {
 					oldValue.setOnPlayEnd(null);
@@ -292,9 +291,7 @@ TextFieldListCell<DefaultLabel> listCell = new TextFieldListCell<DefaultLabel>()
 					ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 						try {
 							String send = openAIService.send(request, false);
-							ResponseModelDVO ret = ResponseModelDVO.fromGtpResultMessage(send);
-							Choice first = ret.getChoices().getFirst();
-							String content2 = first.getMessage().getContent();
+							String content2 = openAIService.toUserMessage(send);
 							Platform.runLater(() -> {
 								FxUtil.createStageAndShow(new TextArea(content2), stage -> {
 									stage.setTitle(item.getDisplayText());
@@ -320,22 +317,23 @@ TextFieldListCell<DefaultLabel> listCell = new TextFieldListCell<DefaultLabel>()
 	public void after() {
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			List<Map<String, Object>> lastHistory = dao.getLatestHistory();
-			lastHistory.stream().peek(System.out::println).filter(v -> v != null).filter(m -> !m.isEmpty()).forEach(m -> {
+			lastHistory.stream().peek(System.out::println).filter(v -> v != null).filter(m -> !m.isEmpty())
+					.forEach(m -> {
 
-				String prompt = m.get("QUESTION") == null ? "" : m.get("QUESTION").toString();
-				DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
-				lblMe.setTip("me");
-				Platform.runLater(() -> {
-					lvResult.getItems().add(lblMe);
-				});
+						String prompt = m.get("QUESTION") == null ? "" : m.get("QUESTION").toString();
+						DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
+						lblMe.setTip("me");
+						Platform.runLater(() -> {
+							lvResult.getItems().add(lblMe);
+						});
 
-				if (m.get("ANSWER") != null) {
-					Platform.runLater(() -> {
-						updateChatList(m.get("ANSWER").toString(), false);
+						if (m.get("ANSWER") != null) {
+							Platform.runLater(() -> {
+								updateChatList(m.get("ANSWER").toString(), false);
+							});
+						}
+
 					});
-				}
-
-			});
 		});
 
 	}
@@ -386,7 +384,7 @@ TextFieldListCell<DefaultLabel> listCell = new TextFieldListCell<DefaultLabel>()
 	void search(String systemMsg, String msg) {
 		search(-1, systemMsg, msg);
 	}
-	
+
 	void search(long speechId, String msg) {
 		search(speechId, "", msg);
 	}
@@ -407,60 +405,55 @@ TextFieldListCell<DefaultLabel> listCell = new TextFieldListCell<DefaultLabel>()
 	 * @param speack
 	 */
 	private void updateChatList(String send, boolean speack) {
-		ResponseModelDVO fromGtpResultMessage = ResponseModelDVO.fromGtpResultMessage(send);
-		LOGGER.info("{}", fromGtpResultMessage);
-		List<Choice> choices = fromGtpResultMessage.getChoices();
-		choices.forEach(c -> {
-			try {
+		try {
+			String content2 = openAIService.toUserMessage(send);
 
-				String content2 = c.getMessage().getContent();
-
-				if (speack && useMicrophoneFlag.get()) {
-					var allData = new DefaultLabel(content2);
-					playingObject.set(allData);
-				}
-
-				LOGGER.debug(content2);
-				LineNumberReader br = new LineNumberReader(new StringReader(content2));
-				String temp = null;
-				boolean isCodeBlock = false;
-				String codeType = "";
-				StringBuilder sb = new StringBuilder();
-				while ((temp = br.readLine()) != null) {
-					if (temp.trim().startsWith("```") && !isCodeBlock) {
-						isCodeBlock = true;
-						codeType = temp.replace("```", "");
-						continue;
-					}
-
-					if (temp.trim().startsWith("```") && isCodeBlock) {
-						isCodeBlock = false;
-						CodeLabel content = new CodeLabel(sb.toString());
-						Label graphic = new Label("Copy");
-						graphic.setOnMouseClicked(ev -> {
-							FxClipboardUtil.putString(content.getText());
-							DialogUtil.showMessageDialog("클립보드에 복사되었습니다.");
-						});
-						content.setGraphic(graphic);
-
-						content.setCodeType(codeType);
-						sb.setLength(0);
-						lvResult.getItems().add(content);
-						continue;
-					}
-
-					if (isCodeBlock) {
-						sb.append(temp).append(System.lineSeparator());
-					} else {
-						DefaultLabel content = new DefaultLabel(temp);
-						lvResult.getItems().add(content);
-					}
-				}
-				lvResult.scrollTo(lvResult.getItems().size() - 1);
-			} catch (Exception e) {
-				LOGGER.error(ValueUtil.toString(e));
+			if (speack && useMicrophoneFlag.get()) {
+				var allData = new DefaultLabel(content2);
+				playingObject.set(allData);
 			}
-		});
+
+			LOGGER.debug(content2);
+			LineNumberReader br = new LineNumberReader(new StringReader(content2));
+			String temp = null;
+			boolean isCodeBlock = false;
+			String codeType = "";
+			StringBuilder sb = new StringBuilder();
+			while ((temp = br.readLine()) != null) {
+				if (temp.trim().startsWith("```") && !isCodeBlock) {
+					isCodeBlock = true;
+					codeType = temp.replace("```", "");
+					continue;
+				}
+
+				if (temp.trim().startsWith("```") && isCodeBlock) {
+					isCodeBlock = false;
+					CodeLabel content = new CodeLabel(sb.toString());
+					Label graphic = new Label("Copy");
+					graphic.setOnMouseClicked(ev -> {
+						FxClipboardUtil.putString(content.getText());
+						DialogUtil.showMessageDialog("클립보드에 복사되었습니다.");
+					});
+					content.setGraphic(graphic);
+
+					content.setCodeType(codeType);
+					sb.setLength(0);
+					lvResult.getItems().add(content);
+					continue;
+				}
+
+				if (isCodeBlock) {
+					sb.append(temp).append(System.lineSeparator());
+				} else {
+					DefaultLabel content = new DefaultLabel(temp);
+					lvResult.getItems().add(content);
+				}
+			}
+			lvResult.scrollTo(lvResult.getItems().size() - 1);
+		} catch (Exception e) {
+			LOGGER.error(ValueUtil.toString(e));
+		}
+
 	}
 
 	@FXML
@@ -474,7 +467,8 @@ TextFieldListCell<DefaultLabel> listCell = new TextFieldListCell<DefaultLabel>()
 	public void btnMicOnAction() {
 
 		if (!useMicrophoneFlag.get()) {
-			Pair<String, String> pair = DialogUtil.showYesOrNoDialog("마이크 선택", "마이크 설정이 비활성화되어 있습니다. 활성화 하시겠습니까?").get();
+			Pair<String, String> pair = DialogUtil.showYesOrNoDialog("마이크 선택", "마이크 설정이 비활성화되어 있습니다. 활성화 하시겠습니까?")
+					.get();
 			if ("Y".equals(pair.getValue())) {
 				miMicrophoneOnAction();
 				useMicrophoneFlag.set(true);
@@ -486,7 +480,8 @@ TextFieldListCell<DefaultLabel> listCell = new TextFieldListCell<DefaultLabel>()
 			audioHelper = new AudioHelper();
 
 		if (audioHelper.isRecording()) {
-			boolean createTempFlag = "Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_CREATE_WAVE_FILE_YN, "Y"));
+			boolean createTempFlag = "Y"
+					.equals(ResourceLoader.getInstance().get(ResourceLoader.AI_CREATE_WAVE_FILE_YN, "Y"));
 			String tmpdir = ResourceLoader.getInstance().get(ResourceLoader.AI_CREATE_WAVE_FILE_DIR, "tmp");
 
 			try {

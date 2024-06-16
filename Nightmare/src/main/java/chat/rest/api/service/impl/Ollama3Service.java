@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -47,10 +46,13 @@ public class Ollama3Service extends AbstractPromptService {
 		ChatBotConfig chatBotConfig = new ChatBotConfig();
 
 		Properties properties = new Properties();
-		try (InputStream in = new FileInputStream(new File("ollama3.properties"))) {
-			properties.load(in);
+		File file = new File("ollama3.properties");
+		if(file.exists())
+		{
+			try (InputStream in = new FileInputStream(file)) {
+				properties.load(in);
+			}	
 		}
-
 		chatBotConfig.setConfig(properties);
 		return chatBotConfig;
 	}
@@ -70,7 +72,9 @@ public class Ollama3Service extends AbstractPromptService {
 		var param = new HashMap<>();
 		param.put("model", getConfig().getModel());
 		param.put("messages", List.of(getSystemRule(), Map.of("role", "user", "content", message)));
-
+		param.put("stream", false);
+//		param.put("raw", true);
+		
 		// API 요청 생성
 		Gson gson = new Gson();
 		String requestJson = gson.toJson(param);

@@ -75,27 +75,28 @@ public class GargoyleSSLVertifier {
 			// LOGGER.debug("checkServerTrusted");
 			// LOGGER.debug(arg1);
 
-			boolean present = Stream.of(arg0).filter(v -> {
-
-				switch (v.getSigAlgName()) {
-				case "SHA256withRSA":
-					return true;
-				case "SHA384withECDSA":
-					return true;
-				case "SHA384withRSA":
-					return true;
-				case "SHA1withRSA":
-					return true;
-				}
-
-				return false;
-			}).findFirst().isPresent();
-
-			if (!present) {
-				LOGGER.debug("Can't not found Truested Algorisms ");
-				Stream.of(arg0).forEach(v -> LOGGER.warn(v.getSigAlgName()));
-				throw new CertificateException();
-			}
+//			boolean present = Stream.of(arg0).filter(v -> {
+//
+//				switch (v.getSigAlgName()) {
+//				case "SHA256withRSA":
+//					return true;
+//				case "SHA384withECDSA":
+//					return true;
+//				case "SHA384withRSA":
+//					return true;
+//				case "SHA1withRSA":
+//					return true;
+//				}
+//
+//				return false;
+//			}).findFirst().isPresent();
+//
+//			if (!present) {
+//				LOGGER.debug("Can't not found Truested Algorisms ");
+//				Stream.of(arg0).forEach(v -> LOGGER.warn(v.getSigAlgName()));
+//				throw new CertificateException();
+//			}
+		
 
 			// LOGGER.debug("########################################################################################");
 		}

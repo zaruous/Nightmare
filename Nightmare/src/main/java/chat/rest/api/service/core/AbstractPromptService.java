@@ -18,6 +18,7 @@ public abstract class AbstractPromptService implements ChatBotService {
 		this.rule = rule;
 	}
 
+	@Override
 	public ChatBotConfig getConfig() {
 		return config;
 	}

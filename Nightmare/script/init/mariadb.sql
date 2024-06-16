@@ -67,7 +67,8 @@ CREATE TABLE IF NOT EXISTS `tbm_sm_cnf` (
   `CNF_CMF_10` varchar(100) DEFAULT NULL,
   `USE_YN` varchar(50) DEFAULT 'Y',
   PRIMARY KEY (`ID`,`GROUP`,`KEY`),
-  UNIQUE KEY `ID` (`ID`)
+  UNIQUE KEY `ID` (`ID`),
+  UNIQUE KEY `KEY` (`KEY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='시스템 설정 관련 테이블';
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
@@ -79,6 +80,7 @@ CREATE TABLE IF NOT EXISTS `tbm_sm_prompts` (
   `DISPLAY_TEXT` varchar(50) DEFAULT NULL COMMENT '메뉴에 보이는 텍스트',
   `PROMPT` text DEFAULT NULL COMMENT '수행 명령어',
   `USE_YN` varchar(1) DEFAULT 'Y' COMMENT '사용여부',
+  `DESCRIPTION` text DEFAULT NULL,
   PRIMARY KEY (`GROUP`,`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='시스템 옵션으로 추가될 프롬프트 정보 입력';
 

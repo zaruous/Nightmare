@@ -64,6 +64,7 @@ open module ETHelper {
 	//requires chat.rest.api;
 	requires org.codehaus.groovy.jsr223;
 	requires org.apache.httpcomponents.httpmime;
+	requires org.jsoup;
 	/*PDF ITEXT*/
 
 	

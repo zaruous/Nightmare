@@ -53,9 +53,14 @@ public class ChatGpt4oService extends ChatGpt3Service {
 		ChatBotConfig chatBotConfig = new ChatBotConfig();
 
 		Properties properties = new Properties();
-		try (InputStream in = new FileInputStream(new File("chat.gpt.properties"))) {
-			properties.load(in);
+		File file = new File("chat.gpt.properties");
+		if(file.exists())
+		{
+			try (InputStream in = new FileInputStream(file)) {
+				properties.load(in);
+			}	
 		}
+		
 		properties.setProperty("model", "gpt-4o");
 		chatBotConfig.setConfig(properties);
 		return chatBotConfig;
