@@ -14,9 +14,12 @@ public class TbmSmPrompts extends AbstractDVO {
 	private String displayText;
 	private String prompt;
 	private String useYn;
-	
-	/* SUPPORT의 경우 대화 내용이 기록되고, 대화창에 정보가 남는다.
-	 * CONTEXT의 경우 기능 결과가 팝업으로 나오고 대화 정보가 파라미터로 처리된다. 
+	private String description;
+	private String graphicClass;
+
+	/*
+	 * SUPPORT의 경우 대화 내용이 기록되고, 대화창에 정보가 남는다. CONTEXT의 경우 기능 결과가 팝업으로 나오고 대화 정보가
+	 * 파라미터로 처리된다.
 	 **/
 	public enum GROUPS {
 		SUPPORT, CONTEXT
@@ -60,6 +63,22 @@ public class TbmSmPrompts extends AbstractDVO {
 
 	public void setUseYn(String useYn) {
 		this.useYn = useYn;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getGraphicClass() {
+		return graphicClass;
+	}
+
+	public void setGraphicClass(String graphicClass) {
+		this.graphicClass = graphicClass;
 	}
 
 	@Override

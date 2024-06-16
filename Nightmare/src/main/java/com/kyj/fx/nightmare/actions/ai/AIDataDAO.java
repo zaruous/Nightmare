@@ -121,7 +121,7 @@ public class AIDataDAO extends AbstractDAO {
 	 */
 	public List<TbmSmPrompts> getCustomContext() {
 		String state = """
-					SELECT `GROUP`, `ID`, DISPLAY_TEXT, PROMPT
+					SELECT *
 					FROM TBM_SM_PROMPTS
 					WHERE 1=1
 					AND `GROUP` = 'CONTEXT'	
@@ -133,7 +133,7 @@ public class AIDataDAO extends AbstractDAO {
 	
 	public List<TbmSmPrompts> getSupports() {
 		String state = """
-					SELECT `GROUP`, `ID`, DISPLAY_TEXT, PROMPT
+					SELECT *
 					FROM TBM_SM_PROMPTS
 					WHERE 1=1
 					AND `GROUP` = 'SUPPORT'	

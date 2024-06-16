@@ -4,9 +4,10 @@
     -fx-border-radius: 10px;
     -fx-border-style: dotted ;
 }
-.list-cell:hover {
+.list-cell:filled:hover {
      -fx-background-color: #ECECEC; /* 테두리 색상을 검정으로 설정 */
      -fx-border-width: 1px; /* 테두리 두께를 1픽셀로 설정 */
+	-fx-border-color: black;
 }
 
 .list-cell {

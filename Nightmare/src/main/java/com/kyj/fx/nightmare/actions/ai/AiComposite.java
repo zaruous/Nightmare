@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -49,9 +50,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Skin;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -181,13 +182,18 @@ public class AiComposite extends AbstractCommonsApp {
 			@Override
 			public ListCell<DefaultLabel> call(ListView<DefaultLabel> param) {
 //new TextFieldListCell<DefaultLabel>();
-				TextFieldListCell<DefaultLabel> listCell = new TextFieldListCell<DefaultLabel>() {
+				ListCell<DefaultLabel> listCell = new ListCell<DefaultLabel>() {
+
+					@Override
+					protected Skin<?> createDefaultSkin() {
+						return super.createDefaultSkin();
+					}
 
 					@Override
 					public void updateIndex(int i) {
 						super.updateIndex(i);
 					}
-
+					
 					@Override
 					public void updateItem(DefaultLabel item, boolean empty) {
 						super.updateItem(item, empty);
@@ -202,10 +208,26 @@ public class AiComposite extends AbstractCommonsApp {
 							} else {
 								setText(stringConverter.toString(item));
 
-								DefaultLabel lbl = (DefaultLabel) item;
-								// Node graphic = lbl.getGraphic();
+								if (item instanceof QuestionLabel) {
+									QuestionComposite c = new QuestionComposite();
+									QuestionLabel questionLabel = (QuestionLabel)item;
+									c.setQuestionLabel(questionLabel);
+									c.setData(questionLabel.getData());
+									
+//									c.setUserAnswer(questionLabel.getUserAnswer());
+									setGraphic(c);
 
-								if ("me".equals(lbl.getTip())) {
+								} else if (item instanceof DefaultLabel) {
+//									if ("me".equals(item.getTip())) {
+//										if (getStyleClass().indexOf("me") == -1)
+//											getStyleClass().add("me");
+//									} else {
+//										getStyleClass().remove("me");
+//									}
+									setGraphic(item.getGraphic());
+								}
+
+								if ("me".equals(item.getTip())) {
 									if (getStyleClass().indexOf("me") == -1)
 										getStyleClass().add("me");
 								} else {
@@ -214,8 +236,6 @@ public class AiComposite extends AbstractCommonsApp {
 
 								setPrefWidth(lvResult.getWidth() - 20); // 패딩 고려
 								setStyle("-fx-wrap-text: true;");
-
-								setGraphic(item.getGraphic());
 							}
 						}
 					}
@@ -354,7 +374,23 @@ public class AiComposite extends AbstractCommonsApp {
 		search(prompt);
 	}
 
+	void search(String msg) {
+		search(-1, "", msg);
+	}
+
+	void search(String systemMsg, String msg) {
+		search(-1, systemMsg, msg);
+	}
+
+	void search(long speechId, String msg) {
+		search(speechId, "", msg);
+	}
+
 	void search(long speechId, String system, String msg) {
+		search(speechId, system, msg, null);
+	}
+
+	void search(long speechId, String system, String msg, Function<String, DefaultLabel> customResponseHandler) {
 
 		btnEnter.setDisable(true);
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
@@ -363,7 +399,14 @@ public class AiComposite extends AbstractCommonsApp {
 				String send = openAIService.send(speechId, msg);
 				Platform.runLater(() -> {
 					lvResult.getItems().add(new DefaultLabel("", new Label(openAIService.getConfig().getModel())));
-					updateChatList(send);
+					if (customResponseHandler != null) {
+						DefaultLabel apply = customResponseHandler.apply(openAIService.toUserMessage(send));
+						lvResult.getItems().add(apply);
+						
+					} else {
+						updateChatList(send);
+					}
+
 				});
 
 			} catch (Exception e) {
@@ -375,18 +418,6 @@ public class AiComposite extends AbstractCommonsApp {
 			}
 		});
 
-	}
-
-	void search(String msg) {
-		search(-1, "", msg);
-	}
-
-	void search(String systemMsg, String msg) {
-		search(-1, systemMsg, msg);
-	}
-
-	void search(long speechId, String msg) {
-		search(speechId, "", msg);
 	}
 
 	/**
@@ -402,13 +433,13 @@ public class AiComposite extends AbstractCommonsApp {
 	 * @작성자 : KYJ (callakrsos@naver.com)
 	 * @작성일 : 2024. 6. 10.
 	 * @param send
-	 * @param speack
+	 * @param speech
 	 */
-	private void updateChatList(String send, boolean speack) {
+	private void updateChatList(String send, boolean speech) {
 		try {
 			String content2 = openAIService.toUserMessage(send);
 
-			if (speack && useMicrophoneFlag.get()) {
+			if (speech && useMicrophoneFlag.get()) {
 				var allData = new DefaultLabel(content2);
 				playingObject.set(allData);
 			}

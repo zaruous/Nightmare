@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@AiView.css" type="BorderPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <VBox spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+            <RadioButton fx:id="lblQ1" mnemonicParsing="false" text="오늘 하루 기분이 좋지않았어.">
+               <toggleGroup>
+                  <ToggleGroup fx:id="question" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="lblQ2" mnemonicParsing="false" text="밥이 맜었어" toggleGroup="$question" />
+            <RadioButton fx:id="lblQ3" mnemonicParsing="false" text="날씨가 더워" toggleGroup="$question" />
+            <RadioButton fx:id="lblQ4" mnemonicParsing="false" text="그는 거짓말을 했다." toggleGroup="$question" />
+            <RadioButton fx:id="lblQ5" mnemonicParsing="false" text="모기가 많다." toggleGroup="$question" />
+         </children>
+      </VBox>
+   </center>
+   <top>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="lblQuestion" text="철수 오늘 하루 기분이 어떄?" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </top>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="lblReason" text="정답은 1번으로 철수의 하루에 기분이 어떤지 물어보는 질문이고, 기분에 대한 응답을 한 문장은 1번이다." HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </bottom>
+</fx:root>

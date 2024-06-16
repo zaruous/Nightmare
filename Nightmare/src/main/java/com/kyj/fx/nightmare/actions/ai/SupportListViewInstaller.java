@@ -3,14 +3,18 @@
  */
 package com.kyj.fx.nightmare.actions.ai;
 
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
+import com.kyj.fx.nightmare.comm.ValueUtil;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
@@ -58,15 +62,50 @@ public abstract class SupportListViewInstaller {
 
 					Optional<Pair<String, String>> showYesOrNoDialog = DialogUtil.showYesOrNoDialog("유용한 기능",
 							selectedItem.getDisplayText() + " 을 실행하시겠습니까?");
-					showYesOrNoDialog.ifPresent(v -> {
-						if ("Y".equals(v.getValue())) {
-							String prompt = selectedItem.getPrompt();
-							String text = "오늘의 표현 실행";
-							DefaultLabel lblMe = new DefaultLabel(text, new Label(" 나 "));
-							lblMe.setTip("me");
+					showYesOrNoDialog.ifPresent(new Consumer<Pair<String, String>>() {
+						@Override
+						public void accept(Pair<String, String> v) {
+							if ("Y".equals(v.getValue())) {
+								String systemMsg = selectedItem.getPrompt();
+								String text = selectedItem.getDisplayText();
+								String graphicClass = selectedItem.getGraphicClass();
 
-							aiComposite.lvResult.getItems().add(lblMe);
-							aiComposite.search(prompt, text);
+								Node graphic = new Label(" 나 ");
+								if (ValueUtil.isNotEmpty(graphicClass)) {
+									try {
+										Class<?> forName = Class.forName(graphicClass);
+										Constructor<?> declaredConstructor = forName.getDeclaredConstructor();
+										Object newInstance = declaredConstructor.newInstance();
+										if (newInstance instanceof ICustomSupportView) {
+
+											DefaultLabel lblMe = new DefaultLabel(text, graphic);
+											lblMe.setTip("me");
+											aiComposite.lvResult.getItems().add(lblMe);
+
+											aiComposite.search(-1, systemMsg, text, data -> {
+												//TODO 동적 타입으로 변경
+												QuestionLabel ret = new QuestionLabel("", (QuestionComposite) newInstance);
+												ret.setData(data);
+												return ret;
+											});
+										} else {
+											DefaultLabel lblMe = new DefaultLabel(text, graphic);
+											lblMe.setTip("me");
+											aiComposite.lvResult.getItems().add(lblMe);
+											aiComposite.search(systemMsg, text);
+										}
+
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								} else {
+									DefaultLabel lblMe = new DefaultLabel(text, graphic);
+									lblMe.setTip("me");
+									aiComposite.lvResult.getItems().add(lblMe);
+									aiComposite.search(systemMsg, text);
+								}
+
+							}
 						}
 					});
 
