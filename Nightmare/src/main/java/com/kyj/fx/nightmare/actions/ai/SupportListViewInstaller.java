@@ -69,7 +69,7 @@ public abstract class SupportListViewInstaller {
 								String systemMsg = selectedItem.getPrompt();
 								String text = selectedItem.getDisplayText();
 								String graphicClass = selectedItem.getGraphicClass();
-
+								String promptId = selectedItem.getId();
 								Node graphic = new Label(" 나 ");
 								if (ValueUtil.isNotEmpty(graphicClass)) {
 									try {
@@ -83,7 +83,7 @@ public abstract class SupportListViewInstaller {
 											aiComposite.lvResult.getItems().add(lblMe);
 											ICustomSupportView supportView = (ICustomSupportView) newInstance;
 											
-											aiComposite.search(-1, systemMsg, text, data -> {
+											aiComposite.search(promptId, systemMsg, text, data -> {
 												//TODO 동적 타입으로 변경
 												CustomLabel ret = new CustomLabel(supportView);
 												supportView.setData(data);

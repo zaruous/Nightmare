@@ -401,16 +401,20 @@ public class AiComposite extends AbstractCommonsApp {
 	}
 
 	void search(long speechId, String system, String msg) {
-		search(speechId, system, msg, null);
+		search("", speechId, system, msg, null);
 	}
 
-	void search(long speechId, String system, String msg, Function<String, DefaultLabel> customResponseHandler) {
+	void search(String promptId, String system, String msg, Function<String, DefaultLabel> customResponseHandler) {
+		search(promptId, -1, system, msg, customResponseHandler);
+	}
+	
+	void search(String promptId, long speechId, String system, String msg, Function<String, DefaultLabel> customResponseHandler) {
 
 		btnEnter.setDisable(true);	
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			try {
 				openAIService.setSystemRole(openAIService.createDefault(system));
-				String send = openAIService.send(speechId, msg);
+				String send = openAIService.send(promptId, speechId, msg);
 				Platform.runLater(() -> {
 					lvResult.getItems().add(new DefaultLabel("", new Label(openAIService.getConfig().getModel())));
 					if (customResponseHandler != null) {

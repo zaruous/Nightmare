@@ -28,13 +28,14 @@ public class AIDataDAO extends AbstractDAO {
 	private AIDataDAO() {
 	}
 
-	public long insertHistory(String aiId, long speechId, String system, USER user, String question) throws Exception {
+	public long insertHistory(String aiId, String promptId, long speechId, String system, USER user, String question) throws Exception {
 		long id = System.currentTimeMillis();
 		String state = """
-					INSERT INTO `chat_history` (`ID`, `SYSTEM`, `QUESTION`, `FIRST_REGER_ID`,`AI_ID`, `SPEECH_ID`)
-					VALUES (:id, :system, :question , :user, :aiId, :speechId);
+					INSERT INTO `chat_history` (`ID`, `SYSTEM`, `QUESTION`, `FIRST_REGER_ID`,`AI_ID`, `SPEECH_ID`, `PROMPT_ID`)
+					VALUES (:id, :system, :question , :user, :aiId, :speechId, :promptId);
 				""";
-		update(state, Map.of("id", id, "aiId", aiId, "user", user.name(), "question", question, "system", system, "speechId", speechId));
+		update(state, Map.of("id", id, "aiId", aiId, "user", user.name(), "question", question, "system", system, "speechId", speechId
+				, "promptId", promptId));
 
 		return id;
 	}

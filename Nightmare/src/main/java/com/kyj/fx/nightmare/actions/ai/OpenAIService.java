@@ -51,7 +51,7 @@ public class OpenAIService {
 	}
 
 	public String send(String message) throws Exception {
-		return send(-1, message, true);
+		return send(null, -1, message, true);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class OpenAIService {
 	 * @throws Exception
 	 */
 	public String send(String message, boolean writeHistory) throws Exception {
-		return send(-1, message, writeHistory);
+		return send(null, -1, message, writeHistory);
 	}
 
 	/**
@@ -71,9 +71,16 @@ public class OpenAIService {
 	 * @throws Exception
 	 */
 	public String send(long speechId, String message) throws Exception {
-		return send(speechId, message, true);
+		return send(null, speechId, message, true);
 	}
 
+	public String send(String promptId, String msg) throws Exception {
+		return send(promptId, -1, msg, true);
+	}
+	
+	public String send(String promptId, long speechId, String msg) throws Exception {
+		return send(promptId, speechId , msg, true);
+	}
 	/**
 	 * @작성자 : KYJ (callakrsos@naver.com)
 	 * @작성일 : 2024. 6. 15.
@@ -83,11 +90,11 @@ public class OpenAIService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String send(long speechId, String message, boolean writeHistory) throws Exception {
+	public String send(String promptId, long speechId, String message, boolean writeHistory) throws Exception {
 		long chatId = -1;
 		if (writeHistory) {
 			Object aiId = serivce.getConfig().getConfig().get("id");
-			chatId = aiDataDAO.insertHistory(aiId.toString(), speechId, this.getSystemRole(), USER.USER, message);
+			chatId = aiDataDAO.insertHistory(aiId.toString(),  promptId , speechId, this.getSystemRole(), USER.USER, message);
 		}
 		String send = serivce.send(message);
 
@@ -144,4 +151,6 @@ public class OpenAIService {
 		}
 
 	}
+
+
 }
