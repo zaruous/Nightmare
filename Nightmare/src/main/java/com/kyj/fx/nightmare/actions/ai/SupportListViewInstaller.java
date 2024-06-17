@@ -81,11 +81,13 @@ public abstract class SupportListViewInstaller {
 											DefaultLabel lblMe = new DefaultLabel(text, graphic);
 											lblMe.setTip("me");
 											aiComposite.lvResult.getItems().add(lblMe);
-
+											ICustomSupportView supportView = (ICustomSupportView) newInstance;
+											
 											aiComposite.search(-1, systemMsg, text, data -> {
 												//TODO 동적 타입으로 변경
-												QuestionLabel ret = new QuestionLabel("", (QuestionComposite) newInstance);
-												ret.setData(data);
+												CustomLabel ret = new CustomLabel(supportView);
+												supportView.setData(data);
+//												ret.setData(data);
 												return ret;
 											});
 										} else {

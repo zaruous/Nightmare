@@ -208,14 +208,16 @@ public class AiComposite extends AbstractCommonsApp {
 							} else {
 								setText(stringConverter.toString(item));
 
-								if (item instanceof QuestionLabel) {
-									QuestionComposite c = new QuestionComposite();
-									QuestionLabel questionLabel = (QuestionLabel)item;
-									c.setQuestionLabel(questionLabel);
-									c.setData(questionLabel.getData());
+								if (item instanceof CustomLabel) {
+									CustomLabel questionLabel = (CustomLabel)item;
+//									QuestionComposite c = new QuestionComposite();
+									
+									
+//									c.setQuestionLabel(questionLabel);
+//									c.setData(questionLabel.getData());
 									
 //									c.setUserAnswer(questionLabel.getUserAnswer());
-									setGraphic(c);
+									setGraphic(questionLabel.getGraphic());
 
 								} else if (item instanceof DefaultLabel) {
 //									if ("me".equals(item.getTip())) {
