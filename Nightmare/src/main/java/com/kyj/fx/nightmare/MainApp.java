@@ -43,7 +43,7 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 		LOGGER.debug("Default jnu encoding : {} " , jnu_encoding);
 		
 		
-		if("Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y"))) {
+		if(!"Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y"))) {
 			new SSLInitializable().initialize();
 			new HttpURLInitializer().initialize();
 			new HostNameVertifierInitializer().initialize();	
