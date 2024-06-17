@@ -287,9 +287,21 @@ public class AiComposite extends AbstractCommonsApp {
 			}
 		});
 
+		//버튼에 대한 활성화에 따라 챗리스트도 UI적으로 비슷한 효과를 준다.
+		btnEnter.disabledProperty().addListener((oba,o,n)->{
+			if(n)
+			{
+				txtPrompt.setOpacity(0.3d);
+			}
+			else
+				txtPrompt.setOpacity(1.0d);
+		});
 		try {
+			
+			
 			mixerSettings = new MixerSettings();
 			mixerSettings.load();
+			
 			dao = AIDataDAO.getInstance();
 			openAIService = new OpenAIService();
 			speechService = new SpeechToTextGptServiceImpl();
@@ -326,7 +338,7 @@ public class AiComposite extends AbstractCommonsApp {
 			});
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(ValueUtil.toString(e));
 		}
 
 		// Context에 대한 기능을 넣는다.
@@ -392,7 +404,7 @@ public class AiComposite extends AbstractCommonsApp {
 
 	void search(long speechId, String system, String msg, Function<String, DefaultLabel> customResponseHandler) {
 
-		btnEnter.setDisable(true);
+		btnEnter.setDisable(true);	
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			try {
 				openAIService.setSystemRole(openAIService.createDefault(system));
@@ -624,4 +636,11 @@ public class AiComposite extends AbstractCommonsApp {
 			stage.setTitle("Speech to Text");
 		});
 	}
+
+	@Override
+	public void miHomeOnAction() {
+		btnMicStopOnAction();
+		super.miHomeOnAction();
+	}
+	
 }
