@@ -3,8 +3,7 @@
 
 
 ## 환경세팅 
-docs/환경세팅.md
-(https://github.com/zaruous/Nightmare/blob/main/docs/%ED%99%98%EA%B2%BD%EC%84%A4%EC%A0%95.md)
+docs/환경세팅.md   [바로가기](https://github.com/zaruous/Nightmare/blob/main/docs/%ED%99%98%EA%B2%BD%EC%84%A4%EC%A0%95.md)
 
 ## 실행명령어
 %JAVA21_HOME%\java -jar Nightmare.jar
