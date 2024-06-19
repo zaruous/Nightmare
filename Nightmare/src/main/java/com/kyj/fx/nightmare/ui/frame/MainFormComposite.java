@@ -6,18 +6,21 @@
  *******************************/
 package com.kyj.fx.nightmare.ui.frame;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import com.kyj.fx.nightmare.actions.ai.AiComposite;
 import com.kyj.fx.nightmare.comm.FxUtil;
+import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.StageStore;
+import com.kyj.fx.nightmare.comm.ValueUtil;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
 /**
  * @author KYJ (zaruous@naver.com)
  *
@@ -79,6 +82,17 @@ public class MainFormComposite extends BorderPane {
 		Stage stage = StageStore.getPrimaryStage();
 		StageStore.setApp(compisite);
 		Scene scene = stage.getScene();
+		//Style.
+		try {
+			String skinFileName = ResourceLoader.getInstance().get(ResourceLoader.DEFAULT_SKIN, null);
+			if(ValueUtil.isNotEmpty(skinFileName))
+			{
+				File file = new File("styles/application_simple_wine.css");
+				if(file.exists())
+					scene.getStylesheets().add(file.toURI().toURL().toExternalForm());	
+			}
+		} catch (MalformedURLException e) {/*Nothing*/ }
+		
 		scene.setRoot(compisite);
 	}
 }

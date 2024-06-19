@@ -60,6 +60,8 @@ public class ResourceLoader {
 	//자동으로 음성을 플레이할것인지 여부
 	public static final String AI_AUTO_PLAY_SOUND_YN = "ai.auto.play.sound.yn";
 	
+	/*스킨 설정 프로젝트 루트 skins/디렉토리에 있는 파일명 설정*/
+	public static final String DEFAULT_SKIN = "default.skin";
 	
 	/**
 	 * 앱 버젼 <br/>
