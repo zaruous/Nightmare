@@ -12,9 +12,21 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- 테이블 데이터 nightmare.tbm_sm_prompts:~4 rows (대략적) 내보내기
+-- 테이블 데이터 nightmare.tbm_sm_cnf:~7 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `tbm_sm_cnf` DISABLE KEYS */;
+INSERT INTO `tbm_sm_cnf` (`ID`, `GROUP`, `KEY`, `VALUE`, `FST_REG_DT`, `FNL_UPD_DT`, `CNF_CMF_1`, `CNF_CMF_2`, `CNF_CMF_3`, `CNF_CMF_4`, `CNF_CMF_5`, `CNF_CMF_6`, `CNF_CMF_7`, `CNF_CMF_8`, `CNF_CMF_9`, `CNF_CMF_10`, `USE_YN`) VALUES
+	(1, 'AUDIO', 'MIC', '마이크(2- H710)', '2024-06-07 00:14:06', NULL, 'gpt-4o', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y'),
+	(2, 'OPEN_AI', 'GTP_3_5', 'https://api.openai.com/v1/chat/completions', '2024-05-26 17:10:39', '2024-05-26 17:14:19', 'gpt-3.5-turbo', 'OPEN_AI_API_KEY', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y'),
+	(3, 'OPEN_AI', 'GTP_4_O', 'https://api.openai.com/v1/chat/completions', '2024-05-26 17:17:30', NULL, 'gpt-4o', 'OPEN_AI_API_KEY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y'),
+	(4, 'OPEN_AI', 'TEXT_TO_SPEECH', 'https://api.openai.com/v1/audio/speech', '2024-06-07 17:19:56', NULL, 'tts-1', 'OPEN_AI_API_KEY', NULL, NULL, 'wav', 'alloy', '', '1', NULL, NULL, 'Y'),
+	(5, 'OPEN_AI', 'TRANSCRIPTIONS', 'https://api.openai.com/v1/audio/transcriptions', '2024-06-07 00:28:21', NULL, 'whisper-1', 'OPEN_AI_API_KEY', NULL, 'write to english', 'text', NULL, NULL, NULL, NULL, NULL, 'Y'),
+	(6, 'OPEN_AI', 'TRANSLATE', 'https://api.openai.com/v1/audio/translations', '2024-06-07 00:28:21', NULL, 'whisper-1', 'OPEN_AI_API_KEY', NULL, 'write to english', 'text', NULL, NULL, NULL, NULL, NULL, 'Y'),
+	(8, 'OLLAMA', 'LLAMA3', 'http://localhost:11434/api/chat', '2024-05-26 17:17:30', NULL, 'llama3', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y');
+/*!40000 ALTER TABLE `tbm_sm_cnf` ENABLE KEYS */;
+
+-- 테이블 데이터 nightmare.tbm_sm_prompts:~5 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `tbm_sm_prompts` DISABLE KEYS */;
-REPLACE INTO `tbm_sm_prompts` (`GROUP`, `ID`, `DISPLAY_TEXT`, `PROMPT`, `USE_YN`, `DESCRIPTION`, `GRAPHIC_CLASS`) VALUES
+INSERT INTO `tbm_sm_prompts` (`GROUP`, `ID`, `DISPLAY_TEXT`, `PROMPT`, `USE_YN`, `DESCRIPTION`, `GRAPHIC_CLASS`) VALUES
 	('CONTEXT', '영어 문장 분석', '영어 문장 분석', '아래 포멧에 맞춰 중요해보이는 영어 2개~5개 사이로 정리해줘\r\n\r\n## 정리해주는 포멧은 아래와 같아.\r\n[순번].[단어] [한글 뜻][품사]([발음기호])\r\n#examples)\r\n [단어 사용 영문 예제, 한글뜻풀이]\r\n\r\n## 물어보려는 문장은 아래 문장이야.\r\n$content', 'Y', NULL, NULL),
 	('SUPPORT', '대화 퀴즈', '영어 문제', '##영어문제\n\n영어 작문을 위한 문제를 제시해줘. 문제는 유행하는 내용을 기반으로해주고,  전체 문장은 영어로 번역해서 보여줘\n맞는 정답 1개, 정답 절대 될 수 없는 문장 4개로 구성되며, 1번~5번사이로 정답번호는 랜덤으로 처리.\n기로그 reason에는 정답에 대한 설명을 기술해줘.\n답변 구성은 example을 참고해서 json포멧으로 알려줘\nexample)\n{\n	"question" : "철수 오늘 하루 기분이 어떄?",\n	"questionList": [\n		{"no": 1, "text" : "모기가 많다.",  "correct" : false }\n		{"no": 2, "text" : "밥이 맜었어",  "correct" : false }\n		{"no": 3, "text" : "날씨가 더워"",  "correct" : false }\n		{"no": 4, "text" : "그는 거짓말을 했다.",  "correct" : false }\n		{"no": 5, "text" : "오늘 하루 기분이 좋지않았어.",  "correct" : true }\n	]\n	"reason" : "정답은 5번으로 철수의 하루에 기분이 어떤지 물어보는 질문이고, 기분에 대한 응답을 한 문장은 5번이다."\n}', 'Y', NULL, 'com.kyj.fx.nightmare.actions.ai.QuestionComposite'),
 	('SUPPORT', '문법 퀴즈', '영어 문법 문제', '##영어 문법 문제\r\n\r\n영어 문법을 위한 문제를 제시해줘. 문제는 최신뉴스를 기반으로해줘.\r\n맞는 정답 1개, 정답 절대 될 수 없는 문장 4개로 구성되며, 1번~5번사이로 정답번호는 랜덤으로 처리.\r\n그리고 reason에는 정답되는 이유와  정답 외에 나머지는 정답이 될 수 없는 이유에 대해 자세히 기술해줘.\r\n답변 구성은 example을 참고해서 json포멧으로 알려줘\r\nexample)\r\n{\r\n	"question" : "철수 오늘 하루 기분이 어떄?",\r\n	"questionList": [\r\n		{"no": 1, "text" : "모기가 많다.",  "correct" : false }\r\n		{"no": 2, "text" : "밥이 맜었어",  "correct" : false }\r\n		{"no": 3, "text" : "날씨가 더워"",  "correct" : false }\r\n		{"no": 4, "text" : "그는 거짓말을 했다.",  "correct" : false }\r\n		{"no": 5, "text" : "오늘 하루 기분이 좋지않았어.",  "correct" : true }\r\n	]\r\n	"reason" : "정답은 5번으로 철수의 하루에 기분이 어떤지 물어보는 질문이고, 기분에 대한 응답을 한 문장은 5번이다."\r\n}', 'Y', NULL, 'com.kyj.fx.nightmare.actions.ai.QuestionComposite'),

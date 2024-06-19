@@ -298,11 +298,25 @@ public class AiComposite extends AbstractCommonsApp {
 			else
 				txtPrompt.setOpacity(1.0d);
 		});
+		
+		//마이크 사용 여부에 따른 분기.
+		if(useMicrophoneFlag.get())
+		{
+			try {
+				mixerSettings = new MixerSettings();
+				mixerSettings.load();
+				useMicrophoneFlag.set(true);
+			}catch(MixerNotFound ex) {
+				LOGGER.error(ValueUtil.toString(ex));
+				miMicrophoneOnAction();
+			}	
+		}
+		
+		
 		try {
 			
 			
-			mixerSettings = new MixerSettings();
-			mixerSettings.load();
+			
 			
 			dao = AIDataDAO.getInstance();
 			openAIService = new OpenAIService();
@@ -603,6 +617,7 @@ public class AiComposite extends AbstractCommonsApp {
 
 						mixerSettings.createSettings(info);
 						mixerSettings.load();
+						
 
 						// SaveComplete=저장되었습니다.
 						DialogUtil.showMessageDialog(Message.getInstance().getMessage("SaveComplete"));
@@ -613,6 +628,7 @@ public class AiComposite extends AbstractCommonsApp {
 			root.setBottom(btn);
 			FxUtil.createStageAndShowAndWait(root, stage -> {
 				stage.setWidth(800d);
+				stage.setTitle("마이크 세팅");
 				stage.initOwner(StageStore.getPrimaryStage());
 			});
 		} catch (Exception e) {

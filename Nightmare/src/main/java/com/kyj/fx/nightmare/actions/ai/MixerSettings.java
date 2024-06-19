@@ -37,7 +37,7 @@ public class MixerSettings {
 		LOGGER.debug("사용 가능한 믹서 목록:");
 
 		if (mixerInfos.length == 0)
-			throw new RuntimeException("사용가능한 마이크가 존재하지않습니다.");
+			throw new MixerNotFound("사용가능한 마이크가 존재하지않습니다.");
 
 		Mixer.Info info = null;
 		for (int i = 0; i < mixerInfos.length; i++) {
@@ -48,6 +48,9 @@ public class MixerSettings {
 				break;
 			}
 		}
+		if(info == null)
+			throw new MixerNotFound("사용가능한 마이크가 존재하지않습니다.");
+		
 		createSettings(info);
 	}
 
