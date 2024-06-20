@@ -17,16 +17,24 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.kyj.fx.nightmare.comm.ResourceLoader;
+import com.kyj.fx.nightmare.comm.initializer.GargoyleHostNameVertifier;
+import com.kyj.fx.nightmare.comm.initializer.GargoyleSSLVertifier;
+import com.kyj.fx.nightmare.comm.initializer.ProxyInitializable;
 
 import chat.rest.api.service.core.AbstractGTPMessage;
 import chat.rest.api.service.core.ChatBotConfig;
@@ -40,6 +48,7 @@ import chat.rest.api.service.core.VirtualPool;
  */
 public class ChatGpt4oService extends ChatGpt3Service {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ChatGpt4oService.class);
+
 	public ChatGpt4oService() throws Exception {
 		super();
 	}
@@ -54,13 +63,12 @@ public class ChatGpt4oService extends ChatGpt3Service {
 
 		Properties properties = new Properties();
 		File file = new File("chat.gpt.properties");
-		if(file.exists())
-		{
+		if (file.exists()) {
 			try (InputStream in = new FileInputStream(file)) {
 				properties.load(in);
-			}	
+			}
 		}
-		
+
 		properties.setProperty("model", "gpt-4o");
 		chatBotConfig.setConfig(properties);
 		return chatBotConfig;
@@ -81,29 +89,25 @@ public class ChatGpt4oService extends ChatGpt3Service {
 		param.put("model", request.getModel());
 
 		List<AbstractGTPMessage> list = request.getList();
-		List<Map<String, Object>> userContents =  Collections.emptyList();
-		if(list ==null)
-		{
+		List<Map<String, Object>> userContents = Collections.emptyList();
+		if (list == null) {
 			throw new RuntimeException("message of list is empty.");
+		} else {
+			userContents = list.stream().filter(m -> "user".equals(m.getRole())).map(m -> m.getRequestFormat())
+					.collect(Collectors.toList());
 		}
-		else
-		{
-			userContents = list.stream().filter(m -> "user".equals(m.getRole()))
-					.map(m -> m.getRequestFormat()).collect(Collectors.toList());		
-		}
-		
 
 		Map<String, Object> c = Map.of("role", "user", "content", userContents);
 		Map<String, String> d = getSystemRule();
-		
+
 		List<Object> asList = Arrays.asList(c, d);
 		if (null != request.getSystemMessage())
 			asList = Arrays.asList(c, request.getSystemMessage());
 		param.put("messages", asList);
 
-		if(request.getResponseFormat()!=null && !request.getResponseFormat().isEmpty())
-			param.put("response_format", Map.of("type" , request.getResponseFormat()));
-		
+		if (request.getResponseFormat() != null && !request.getResponseFormat().isEmpty())
+			param.put("response_format", Map.of("type", request.getResponseFormat()));
+
 		// API 요청 생성
 		Gson gson = new Gson();
 		String requestJson = gson.toJson(param);
@@ -114,11 +118,24 @@ public class ChatGpt4oService extends ChatGpt3Service {
 		HttpPost httpPost = new HttpPost(getConfig().getRootUrl());
 		httpPost.setHeader("Content-Type", "application/json");
 		httpPost.setHeader("Authorization", "Bearer " + getConfig().getConfig().getProperty("apikey"));
+
+		Builder custom = RequestConfig.custom();
+		if (ProxyInitializable.isUseProxy()) {
+			custom.setProxy(
+					new HttpHost(ProxyInitializable.getHttpsProxyHost(), ProxyInitializable.getHttpProxyPort()));
+		}
+
+		httpPost.setConfig(custom.build());
 		httpPost.setEntity(entity);
 
 		// HttpClient를 사용하여 API 호출
 		HttpEntity responseEntity = null;
-		try (CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpClientBuilder httpClientBuilder = HttpClients.custom();
+		if ("Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y"))) {
+			httpClientBuilder.setSSLContext(GargoyleSSLVertifier.defaultContext());
+			httpClientBuilder.setSSLHostnameVerifier(GargoyleHostNameVertifier.defaultVertifier());
+		}
+		try (CloseableHttpClient httpClient = httpClientBuilder.build();
 				CloseableHttpResponse response = httpClient.execute(httpPost)) {
 			// API 응답 처리
 			System.out.println(response.getStatusLine().getStatusCode());
@@ -126,15 +143,14 @@ public class ChatGpt4oService extends ChatGpt3Service {
 			responseEntity = response.getEntity();
 			return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
 		}
+
 	}
 
 	public String send(String message) throws Exception {
 
 		var param = new HashMap<>();
 		param.put("model", getConfig().getModel());
-		param.put("messages", List.of(
-				getSystemRule(), 
-				Map.of("role", "user", "content", message)));
+		param.put("messages", List.of(getSystemRule(), Map.of("role", "user", "content", message)));
 
 		// API 요청 생성
 		Gson gson = new Gson();
@@ -144,6 +160,14 @@ public class ChatGpt4oService extends ChatGpt3Service {
 		HttpPost httpPost = new HttpPost(getConfig().getRootUrl());
 		httpPost.setHeader("Content-Type", "application/json");
 		httpPost.setHeader("Authorization", "Bearer " + getConfig().getConfig().getProperty("apikey"));
+
+		if (ProxyInitializable.isUseProxy()) {
+			httpPost.setConfig(RequestConfig.custom()
+					.setProxy(
+							new HttpHost(ProxyInitializable.getHttpsProxyHost(), ProxyInitializable.getHttpProxyPort()))
+					.build());
+		}
+
 		httpPost.setEntity(entity);
 
 		// HttpClient를 사용하여 API 호출
@@ -152,7 +176,7 @@ public class ChatGpt4oService extends ChatGpt3Service {
 				CloseableHttpResponse response = httpClient.execute(httpPost)) {
 			// API 응답 처리
 //			System.out.println(response.getStatusLine().getStatusCode());
-			Stream.of(response.getAllHeaders()).forEach(v ->{
+			Stream.of(response.getAllHeaders()).forEach(v -> {
 				LOGGER.debug("{}", v);
 			});
 			responseEntity = response.getEntity();

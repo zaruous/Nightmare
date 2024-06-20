@@ -9,7 +9,6 @@ package com.kyj.fx.nightmare.comm.initializer;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.stream.Stream;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -71,9 +70,9 @@ public class GargoyleSSLVertifier {
 
 		@Override
 		public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-			// LOGGER.debug("########################################################################################");
-			// LOGGER.debug("checkServerTrusted");
-			// LOGGER.debug(arg1);
+			 LOGGER.debug("########################################################################################");
+			 LOGGER.debug("checkServerTrusted");
+			 LOGGER.debug(arg1);
 
 //			boolean present = Stream.of(arg0).filter(v -> {
 //

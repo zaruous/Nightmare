@@ -12,14 +12,21 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
+import com.kyj.fx.nightmare.comm.ResourceLoader;
+import com.kyj.fx.nightmare.comm.initializer.GargoyleHostNameVertifier;
+import com.kyj.fx.nightmare.comm.initializer.GargoyleSSLVertifier;
+import com.kyj.fx.nightmare.comm.initializer.ProxyInitializable;
 
 import chat.rest.api.service.core.ChatBotConfig;
 import chat.rest.api.service.core.TTSGTPRequest;
@@ -34,7 +41,6 @@ public class TextToSpeechGptService extends ChatGpt3Service {
 		super();
 	}
 
-	
 	@Override
 	public ChatBotConfig createConfig() throws Exception {
 		ChatBotConfig chatBotConfig = new ChatBotConfig();
@@ -47,7 +53,6 @@ public class TextToSpeechGptService extends ChatGpt3Service {
 		chatBotConfig.setConfig(properties);
 		return chatBotConfig;
 	}
-
 
 	public byte[] send(TTSGTPRequest request) throws Exception {
 		var param = new HashMap<>();
@@ -72,7 +77,11 @@ public class TextToSpeechGptService extends ChatGpt3Service {
 
 		// HttpClient를 사용하여 API 호출
 		HttpEntity responseEntity = null;
-		try (CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpClientBuilder httpClientBuilder = HttpClients.custom();
+		if ("Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y")))
+			httpClientBuilder.setSSLContext(new GargoyleSSLVertifier().getSSLContext());
+
+		try (CloseableHttpClient httpClient = httpClientBuilder.build();
 				CloseableHttpResponse response = httpClient.execute(httpPost)) {
 			// API 응답 처리
 			System.out.println(response.getStatusLine().getStatusCode());
@@ -81,7 +90,7 @@ public class TextToSpeechGptService extends ChatGpt3Service {
 			return EntityUtils.toByteArray(responseEntity);
 		}
 	}
-	
+
 	/**
 	 * @param message
 	 * @return
@@ -104,11 +113,23 @@ public class TextToSpeechGptService extends ChatGpt3Service {
 		httpPost.setHeader("Content-Type", "application/json");
 		httpPost.setHeader("Accept-Type", "'application/octet-stream'");
 		httpPost.setHeader("Authorization", "Bearer " + getConfig().getConfig().getProperty("apikey"));
+		if (ProxyInitializable.isUseProxy()) {
+			httpPost.setConfig(RequestConfig.custom()
+					.setProxy(
+							new HttpHost(ProxyInitializable.getHttpsProxyHost(), ProxyInitializable.getHttpProxyPort()))
+					.build());
+		}
 		httpPost.setEntity(entity);
 
 		// HttpClient를 사용하여 API 호출
 		HttpEntity responseEntity = null;
-		try (CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpClientBuilder httpClientBuilder = HttpClients.custom();
+		if (!"Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y"))) {
+			httpClientBuilder.setSSLContext(GargoyleSSLVertifier.defaultContext());
+			httpClientBuilder.setSSLHostnameVerifier(GargoyleHostNameVertifier.defaultVertifier());
+		}
+
+		try (CloseableHttpClient httpClient = httpClientBuilder.build();
 				CloseableHttpResponse response = httpClient.execute(httpPost)) {
 			// API 응답 처리
 			System.out.println(response.getStatusLine().getStatusCode());
@@ -118,7 +139,6 @@ public class TextToSpeechGptService extends ChatGpt3Service {
 		}
 	}
 
-	
 	/**
 	 * 사용 x
 	 */

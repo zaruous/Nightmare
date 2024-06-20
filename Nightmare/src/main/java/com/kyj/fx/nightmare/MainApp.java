@@ -12,6 +12,7 @@ import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.comm.initializer.HostNameVertifierInitializer;
 import com.kyj.fx.nightmare.comm.initializer.HttpURLInitializer;
+import com.kyj.fx.nightmare.comm.initializer.ProxyInitializable;
 import com.kyj.fx.nightmare.comm.initializer.SSLInitializable;
 import com.kyj.fx.nightmare.ui.frame.MainFormComposite;
 
@@ -48,6 +49,7 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 			new HttpURLInitializer().initialize();
 			new HostNameVertifierInitializer().initialize();	
 		}
+		new ProxyInitializable().initialize();
 		
 		launch(args);
 	}

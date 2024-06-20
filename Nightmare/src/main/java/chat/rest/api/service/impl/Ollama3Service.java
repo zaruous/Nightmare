@@ -19,13 +19,20 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 
 import com.google.gson.Gson;
+import com.kyj.fx.nightmare.comm.ResourceLoader;
+import com.kyj.fx.nightmare.comm.initializer.GargoyleHostNameVertifier;
+import com.kyj.fx.nightmare.comm.initializer.GargoyleSSLVertifier;
+import com.kyj.fx.nightmare.comm.initializer.ProxyInitializable;
 
 import chat.rest.api.service.core.AbstractPromptService;
 import chat.rest.api.service.core.ChatBotConfig;
@@ -47,11 +54,10 @@ public class Ollama3Service extends AbstractPromptService {
 
 		Properties properties = new Properties();
 		File file = new File("ollama3.properties");
-		if(file.exists())
-		{
+		if (file.exists()) {
 			try (InputStream in = new FileInputStream(file)) {
 				properties.load(in);
-			}	
+			}
 		}
 		chatBotConfig.setConfig(properties);
 		return chatBotConfig;
@@ -74,7 +80,7 @@ public class Ollama3Service extends AbstractPromptService {
 		param.put("messages", List.of(getSystemRule(), Map.of("role", "user", "content", message)));
 		param.put("stream", false);
 //		param.put("raw", true);
-		
+
 		// API 요청 생성
 		Gson gson = new Gson();
 		String requestJson = gson.toJson(param);
@@ -82,14 +88,24 @@ public class Ollama3Service extends AbstractPromptService {
 		HttpPost httpPost = new HttpPost(getConfig().getRootUrl());
 		httpPost.setHeader("Content-Type", "application/json");
 		httpPost.setHeader("Authorization", "Bearer " + getConfig().getConfig().getProperty("apikey"));
+
+		if (ProxyInitializable.isUseProxy()) {
+			httpPost.setConfig(RequestConfig.custom()
+					.setProxy(
+							new HttpHost(ProxyInitializable.getHttpsProxyHost(), ProxyInitializable.getHttpProxyPort()))
+					.build());
+		}
 		httpPost.setEntity(entity);
 
-		
-		
 		// HttpClient를 사용하여 API 호출
 		HttpEntity responseEntity = null;
+		HttpClientBuilder httpClientBuilder = HttpClients.custom();
+		if ("Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y"))) {
+			httpClientBuilder.setSSLContext(GargoyleSSLVertifier.defaultContext());
+			httpClientBuilder.setSSLHostnameVerifier(GargoyleHostNameVertifier.defaultVertifier());
+		}
 
-		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+		try (CloseableHttpClient httpClient = httpClientBuilder.build()) {
 			try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
 //				System.out.println("!!");
 				// API 응답 처리

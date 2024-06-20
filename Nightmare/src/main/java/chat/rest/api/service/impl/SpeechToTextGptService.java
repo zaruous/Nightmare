@@ -13,13 +13,21 @@ import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+
+import com.kyj.fx.nightmare.comm.ResourceLoader;
+import com.kyj.fx.nightmare.comm.initializer.GargoyleHostNameVertifier;
+import com.kyj.fx.nightmare.comm.initializer.GargoyleSSLVertifier;
+import com.kyj.fx.nightmare.comm.initializer.ProxyInitializable;
 
 import chat.rest.api.service.core.ChatBotConfig;
 import chat.rest.api.service.core.SpeechToTextRequest;
@@ -112,11 +120,23 @@ public class SpeechToTextGptService extends ChatGpt3Service {
 
 		HttpPost httpPost = new HttpPost(request.getRootUrl());
 		httpPost.setHeader("Authorization", "Bearer " + request.getApiKey());
+		if (ProxyInitializable.isUseProxy()) {
+			httpPost.setConfig(RequestConfig.custom()
+					.setProxy(
+							new HttpHost(ProxyInitializable.getHttpsProxyHost(), ProxyInitializable.getHttpProxyPort()))
+					.build());
+		}
 		httpPost.setEntity(entity);
 
 		// HttpClient를 사용하여 API 호출
 		HttpEntity responseEntity = null;
-		try (CloseableHttpClient httpClient = HttpClients.createDefault();
+
+		HttpClientBuilder httpClientBuilder = HttpClients.custom();
+		if ("Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y"))) {
+			httpClientBuilder.setSSLContext(GargoyleSSLVertifier.defaultContext());
+			httpClientBuilder.setSSLHostnameVerifier(GargoyleHostNameVertifier.defaultVertifier());
+		}
+		try (CloseableHttpClient httpClient = httpClientBuilder.build();
 				CloseableHttpResponse response = httpClient.execute(httpPost)) {
 			responseEntity = response.getEntity();
 			return EntityUtils.toString(responseEntity);
