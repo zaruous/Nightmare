@@ -6,6 +6,7 @@ package com.kyj.fx.nightmare.actions.ai;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.http.entity.ContentType;
 import org.springframework.jdbc.core.DataClassRowMapper;
@@ -34,6 +35,13 @@ public class AIDataDAO extends AbstractDAO {
 					INSERT INTO `chat_history` (`ID`, `SYSTEM`, `QUESTION`, `FIRST_REGER_ID`,`AI_ID`, `SPEECH_ID`, `PROMPT_ID`)
 					VALUES (:id, :system, :question , :user, :aiId, :speechId, :promptId);
 				""";
+		Objects.requireNonNull(aiId, "aiId");
+//		Objects.requireNonNull(promptId, "promptId");
+		Objects.requireNonNull(speechId, "speechId");
+//		Objects.requireNonNull(system, "system");
+		Objects.requireNonNull(user, "user");
+		Objects.requireNonNull(question, "question");
+
 		update(state, Map.of("id", id, "aiId", aiId, "user", user.name(), "question", question, "system", system, "speechId", speechId
 				, "promptId", promptId));
 

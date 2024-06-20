@@ -51,7 +51,7 @@ public class OpenAIService {
 	}
 
 	public String send(String message) throws Exception {
-		return send(null, -1, message, true);
+		return send("", -1, message, true);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class OpenAIService {
 	 * @throws Exception
 	 */
 	public String send(String message, boolean writeHistory) throws Exception {
-		return send(null, -1, message, writeHistory);
+		return send("", -1, message, writeHistory);
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class OpenAIService {
 	 * @throws Exception
 	 */
 	public String send(long speechId, String message) throws Exception {
-		return send(null, speechId, message, true);
+		return send("", speechId, message, true);
 	}
 
 	public String send(String promptId, String msg) throws Exception {
@@ -81,9 +81,9 @@ public class OpenAIService {
 	public String send(String promptId, long speechId, String msg) throws Exception {
 		return send(promptId, speechId , msg, true);
 	}
+
 	/**
-	 * @작성자 : KYJ (callakrsos@naver.com)
-	 * @작성일 : 2024. 6. 15.
+	 * @param promptId
 	 * @param speechId
 	 * @param message
 	 * @param writeHistory
