@@ -10,6 +10,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.CodeArea;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -27,6 +29,7 @@ import com.kyj.fx.nightmare.comm.FxClipboardUtil;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.comm.XmlW3cUtil;
+import com.kyj.fx.nightmare.comm.codearea.CodeAreaHelper;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 
 import javafx.application.Platform;
@@ -37,6 +40,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
@@ -44,6 +48,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
@@ -235,7 +240,29 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 
 			});
 		});
-		ContextMenu contextMenu = new ContextMenu(menuItem, miHtml);
+		
+		MenuItem miParseText = new MenuItem("parseText");
+		miParseText.setOnAction(ev -> {
+			
+
+			Platform.runLater(() -> {
+				
+				CodeArea parent = new CodeArea(getDocumentText());
+				parent.setWrapText(true);
+				new CodeAreaHelper<CodeArea>(parent);
+				
+				BorderPane borRoot = new BorderPane(new VirtualizedScrollPane<>(parent));
+				borRoot.setPadding(new Insets(5));
+				
+				FxUtil.createStageAndShow(borRoot, stage -> {
+					stage.setWidth(1200d);
+					stage.setHeight(800d);
+				});
+
+			});
+		});
+		
+		ContextMenu contextMenu = new ContextMenu(menuItem, miHtml, miParseText);
 		wbDefault.setContextMenuEnabled(false);
 		wbDefault.setOnContextMenuRequested(ev -> {
 			contextMenu.show(wbDefault, ev.getScreenX(), ev.getScreenY());

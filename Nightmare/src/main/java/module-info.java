@@ -65,6 +65,7 @@ open module ETHelper {
 	requires org.codehaus.groovy.jsr223;
 	requires org.apache.httpcomponents.httpmime;
 	requires org.jsoup;
+	requires org.fxmisc.flowless;
 	/*PDF ITEXT*/
 
 	

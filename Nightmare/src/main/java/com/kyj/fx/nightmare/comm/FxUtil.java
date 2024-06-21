@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -538,6 +539,17 @@ public class FxUtil {
 	}
 
 	/**
+	 * @param tc
+	 * @param row
+	 * @param stringconverter
+	 * @return
+	 */
+	public static String getDisplayText(TableColumn<?, ?> tc, int row, BiFunction<TableColumn<?, ?>, Object, Object> stringconverter) {
+		Object displayText = FxTableViewUtil.getDisplayText(tc, row, stringconverter);
+		return displayText == null ? "" : displayText.toString();
+	}
+	
+	/**
 	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 11. 25.
 	 * @param tv
@@ -634,6 +646,26 @@ public class FxUtil {
 		FxListViewUtil.installClipboardKeyEvent(tv, null);
 	}
 
+	/**
+	 * @param <T>
+	 * @param <C>
+	 * @param controllerClass
+	 * @param instance
+	 * @param exHandler
+	 * @return
+	 */
+	public static <T, C> T loadRoot(Class<C> controllerClass, Object instance, ExceptionHandler exHandler) {
+		try {
+			return FxLoader.load(controllerClass, instance, null, null);
+		} catch (Exception e) {
+			if(exHandler!=null)
+				exHandler.handle(e);
+			else
+				LOGGER.error(ValueUtil.toString(e));
+		}
+		return null;
+	}
+	
 	/********************************
 	 * 작성일 : 2016. 5. 21. 작성자 : KYJ
 	 *

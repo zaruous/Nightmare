@@ -29,7 +29,7 @@ public class XmlW3cUtil {
 	}
 
 	private static void parseElement(Element element, Writer writer) throws IOException {
-		if (element.tagName().equals("table")) {
+		if (element.tagName().toLowerCase().equals("table")) {
 			// 테이블을 CSV 형태로 변환하여 작성
 			writeTableAsCSV(element, writer);
 		} else {
