@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application implements UncaughtExceptionHandler {
 
+	public static final String IMAGES_NIGHTMARE_PNG = "images/Nightmare.png";
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
 
 	public static void main(String[] args) throws Exception {
@@ -100,7 +101,7 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 		String appTitle = Message.getInstance().getMessage("%MainApp_000001",  appVersion);
 		LOGGER.debug("appTitle : {}  :  + appVersion : {} ", appTitle , appVersion);
 		stage.setTitle(appTitle);
-		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("images/Gargoyle.png")));
+		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream(IMAGES_NIGHTMARE_PNG)));
 		
 		stage.show();
 		
@@ -120,7 +121,6 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 		Scene scene = new Scene(form);
 		
 		scene.getStylesheets().add(MainApp.class.getResource("styles.css").toExternalForm());
-		scene.getStylesheets().add(MainFormComposite.class.getResource("MainForm.css").toExternalForm());
 
 		primaryStage.setScene(scene);
 		// primaryStage.setFullScreen(true);

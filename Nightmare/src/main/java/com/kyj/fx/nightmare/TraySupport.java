@@ -36,7 +36,7 @@ public class TraySupport {
 		try {
 			// 트레이 아이콘 이미지 로드
 			;
-			URL imageURL = TraySupport.class.getClassLoader().getResource("images/Gargoyle.png"); // 트레이 아이콘 이미지 경로 설정
+			URL imageURL = TraySupport.class.getClassLoader().getResource(MainApp.IMAGES_NIGHTMARE_PNG); // 트레이 아이콘 이미지 경로 설정
 			Image trayIconImage = ImageIO.read(imageURL);
 
 			// 트레이 아이콘 생성

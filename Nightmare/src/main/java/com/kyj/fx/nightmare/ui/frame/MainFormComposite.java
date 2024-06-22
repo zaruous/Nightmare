@@ -9,8 +9,11 @@ package com.kyj.fx.nightmare.ui.frame;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.kyj.fx.nightmare.actions.ai.AiComposite;
+import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.StageStore;
@@ -29,11 +32,25 @@ public class MainFormComposite extends BorderPane {
 
 	public MainFormComposite() {
 		FXMLLoader newLaoder = FxUtil.newLaoder();
-		newLaoder.setLocation(MainFormComposite.class.getResource("MainForm.fxml"));
+		newLaoder.setLocation(MainFormComposite.class.getResource("MainForm2.fxml"));
 		newLaoder.setRoot(this);
 		newLaoder.setController(this);
 		try {
 			newLaoder.load();
+			ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(()->{
+				
+				Timer timer = new Timer();
+				timer.schedule(new TimerTask() {
+					
+					@Override
+					public void run() {
+						AbstractCommonsApp app = StageStore.getApp();
+						if(app.getClass() == AiComposite.class)
+							return;
+						aiOnClick();
+					}
+				}, 2000);
+			});
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -75,6 +92,7 @@ public class MainFormComposite extends BorderPane {
 			e.printStackTrace();
 		}
 	}
+	
 	/**
 	 * @param compisite
 	 */
