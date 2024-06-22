@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 public class StageStore {
 
 	private static AbstractCommonsApp app;
+	private static Object lock = new Object();
 	private StageStore() {
 
 	}
@@ -27,8 +28,11 @@ public class StageStore {
 	 * @작성일 : 2021. 11. 23. 
 	 * @param composite
 	 */
-	public static void setApp(AbstractCommonsApp composite) {
-		app = composite;
+	public static void  setApp(AbstractCommonsApp composite) {
+		synchronized (lock) {
+			app = composite;	
+		}
+		
 	}
 	/**
 	 * @작성자 : KYJ (zaruous@naver.com)
@@ -36,7 +40,10 @@ public class StageStore {
 	 * @return
 	 */
 	public static AbstractCommonsApp getApp() {
-		return app;
+		synchronized(lock)
+		{
+			return app;
+		}
 	}
 	/**
 	 * 메인스테이지

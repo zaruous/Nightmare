@@ -45,7 +45,7 @@ public class MainFormComposite extends BorderPane {
 					@Override
 					public void run() {
 						AbstractCommonsApp app = StageStore.getApp();
-						if(app.getClass() == AiComposite.class)
+						if(app!=null && (app.getClass() == AiComposite.class))
 							return;
 						aiOnClick();
 					}
