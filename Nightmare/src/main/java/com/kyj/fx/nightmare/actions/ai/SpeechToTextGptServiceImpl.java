@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import org.apache.http.entity.ContentType;
 
+import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.db.DataConnection;
 
 import chat.rest.api.service.core.ChatBotConfig;
@@ -38,18 +39,19 @@ public class SpeechToTextGptServiceImpl {
 					// select c.* from tbm_sm_cnf c where 1=1 and c.GROUP =
 					// 'OPEN_AI' AND c.KEY='TRANSLATE' \n
 					// """;
-
-					Map<String, Object> select = aiDataDAO.getAiConnectionConfig();
+					String group = ResourceLoader.getInstance().get("ai.speech.to.text.group", "OPEN_AI");
+					Map<String, Object> select = aiDataDAO.getAiConnectionConfig(group);
 					if (!select.isEmpty()) {
-						config.setProperty("id", select.get("ID").toString());
-						config.setProperty("model", select.get("CNF_CMF_1").toString());
-						config.setProperty("rootUrl", select.get("VALUE").toString());
+						config.setProperty("id", select.get("ID") == null ? "" : select.get("ID").toString());
+						config.setProperty("model", select.get("CNF_CMF_1") == null ? "" :select.get("CNF_CMF_1").toString());
+						config.setProperty("rootUrl", select.get("VALUE") ==null ? "" : select.get("VALUE").toString());
 						config.setProperty("apikey", select.get("CNF_CMF_2") == null ? "" : select.get("CNF_CMF_2").toString());
 						config.setProperty("language", select.get("CNF_CMF_3") == null ? "" : select.get("CNF_CMF_3").toString());
 						config.setProperty("prompt", select.get("CNF_CMF_4") == null ? "" : select.get("CNF_CMF_4").toString());
 						config.setProperty("response_format", select.get("CNF_CMF_5") == null ? "" : select.get("CNF_CMF_5").toString());
 					}
 
+					
 					chatBotConfig.setConfig(config);
 				}
 

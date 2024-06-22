@@ -123,7 +123,10 @@ public class OpenAIService {
 	}
 
 	public String getSystemRole() {
-		return this.serivce.getSystemRule().get("content").substring(0, LIMIT_MAX_LENGTH);
+		String string = this.serivce.getSystemRule().get("content");
+		if(string.length() > LIMIT_MAX_LENGTH)
+			return string.substring(0, LIMIT_MAX_LENGTH);
+		return string;
 	}
 
 	/**

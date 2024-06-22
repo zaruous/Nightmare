@@ -8,11 +8,15 @@
   </appender>
 
 	<!-- 이 아래에 있는 애들 다 log로 찍겠다. -->
-	<logger name="com.kyj.fx.nightmare" level="DEBUG" additivity="false">
+	<logger name="com.kyj.fx.nightmare" level="DEBUG" additivity="true">
 		<appender-ref ref="SYSOUT" />
 	</logger>
 	
 	<logger name="com.kyj.fx.groovy" level="INFO" additivity="false">
+		<appender-ref ref="SYSOUT" />
+	</logger>
+	
+	<logger name="com.kyj.fx.websocket" level="DEBUG" additivity="false">
 		<appender-ref ref="SYSOUT" />
 	</logger>
 	
@@ -24,7 +28,7 @@
 		<appender-ref ref="SYSOUT" />
 	</logger>
 	
-	<root level="DEBUG" additivity="false">
+	<root level="INFO" additivity="false">
 		<appender-ref ref="SYSOUT" />
 	</root>
 

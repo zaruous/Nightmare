@@ -3,6 +3,9 @@
  */
 package com.kyj.fx.nightmare.actions.ai_webview;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.net.URI;
@@ -10,6 +13,9 @@ import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.IOUtils;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.jsoup.Jsoup;
@@ -41,9 +47,11 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
@@ -55,6 +63,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -65,7 +74,6 @@ import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
-import netscape.javascript.JSObject;
 
 /**
  * 
@@ -90,7 +98,10 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 	@FXML
 	private ListView<DefaultLabel> lvResult;
 	OpenAIService openAIService;
-
+	
+	@FXML
+	private TextArea txtcConsole;
+	
 	public AIWebViewComposite() {
 		try {
 			FxUtil.loadRoot(AIWebViewComposite.class, this);
@@ -100,7 +111,32 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 	}
 
 	private StringProperty content = new SimpleStringProperty();
-
+	
+	@FXML
+	public void miScreenshotOnAction() {
+		
+		WritableImage image = new WritableImage((int)
+				this.wbDefault.getWidth(), (int)this.wbDefault.getHeight());
+		
+		this.wbDefault.snapshot((result)->{
+			
+			WritableImage ret = result.getImage();
+			 // Save the WritableImage to a file
+	        File outputFile = new File("output.png");
+	        try {
+	            BufferedImage fromFXImage = SwingFXUtils.fromFXImage(ret, null);
+				ImageIO.write(fromFXImage, "png", outputFile);
+	            System.out.println("Image saved to " + outputFile.getAbsolutePath());
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	        
+			
+			return null;
+		}, new SnapshotParameters(), image);
+		
+		
+	}
 	@FXML
 	public void initialize() {
 		cbProtocol.getItems().addAll("https://", "http://");
@@ -238,9 +274,12 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 					Document document = Jsoup.parse(string);
 					String text = XmlW3cUtil.parseElement(document.body());
 					Platform.runLater(() -> {
-						TextArea parent = new TextArea(text);
+						CodeArea parent = new CodeArea(text);
+						new CodeAreaHelper<CodeArea>(parent);
 						parent.setWrapText(true);
 						FxUtil.createStageAndShow(parent, stage -> {
+							stage.setWidth(1200d);
+							stage.setHeight(800d);
 						});
 
 					});
@@ -281,9 +320,12 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 //	                    "}, 1000);"); // 1초 후에 HTML 콘텐츠를 가져옴
 			  
 			Platform.runLater(() -> {
-				TextArea parent = new TextArea(string);
+				CodeArea parent = new CodeArea(string);
+				new CodeAreaHelper<CodeArea>(parent);
 				parent.setWrapText(true);
 				FxUtil.createStageAndShow(parent, stage -> {
+					stage.setWidth(1200d);
+					stage.setHeight(800d);
 				});
 			});
 		});

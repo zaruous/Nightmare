@@ -50,11 +50,11 @@ public class AISpeechDAO extends AbstractDAO {
 		update(state, Map.of("id", id, "answer", answer));
 	}
 
-	public Map<String, Object> getAiConnectionConfig() {
+	public Map<String, Object> getAiConnectionConfig(String group) {
 		String sql = """
-				select c.* from tbm_sm_cnf c where 1=1 and c.GROUP = 'OPEN_AI' AND c.KEY='TRANSLATE' AND USE_YN = 'Y' \n
+				select c.* from tbm_sm_cnf c where 1=1 and c.GROUP = :group AND c.KEY='TRANSLATE' AND USE_YN = 'Y' \n
 				""";
-		Map<String, Object> select = getNamedJdbcTemplate().queryForMap(sql, Collections.emptyMap());
+		Map<String, Object> select = getNamedJdbcTemplate().queryForMap(sql, Map.of("group", group));
 		return select;
 	}
 

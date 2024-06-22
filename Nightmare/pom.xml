@@ -602,6 +602,14 @@
 			<artifactId>javafx-base</artifactId>
 			<version>${javafx.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>io.javalin</groupId>
+			<artifactId>javalin</artifactId>
+			<version>6.1.6</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<repositories>
@@ -624,11 +632,11 @@
 			<url>https://clojars.org/repo/</url>
 		</repository>
 
-		<repository>
-			<id>kyj</id>
-			<name>kyj</name>
-			<url>http://localhost:8081/repository/kyj/</url>
-		</repository>
+		<!--		<repository>-->
+		<!--			<id>kyj</id>-->
+		<!--			<name>kyj</name>-->
+		<!--			<url>http://localhost:8081/repository/kyj/</url>-->
+		<!--		</repository>-->
 
 	</repositories>
 

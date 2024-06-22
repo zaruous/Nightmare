@@ -26,6 +26,12 @@ public class MixerSettings {
 	protected Mixer mixer;
 	// "마이크(2- H710)"
 
+	/**
+	 * 설정에 저장된 마이크 설정명
+	 * @return
+	 */
+	public String getConfigedMixerName() {return loadSettings();}
+	
 	public void load() throws MixerNotFound{
 		String name = loadSettings();
 		if(ValueUtil.isEmpty(name))

@@ -42,6 +42,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -55,7 +57,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
@@ -599,17 +603,20 @@ public class AiComposite extends AbstractCommonsApp {
 	@FXML
 	public void miMicrophoneOnAction() {
 		Info[] mixerInfos = mixerSettings.getMixers();
-
+		
 		List<InfoDVO> collect = Stream.of(mixerInfos).map(InfoDVO::new).collect(Collectors.toList());
 		try {
+			
 			BorderPane root = new BorderPane();
+			root.setTop(new Label(mixerSettings.getConfigedMixerName()));
 			TableView<InfoDVO> tableView = FxUtil.createTableView(collect);
-
+			
 			root.setCenter(tableView);
 			Button btn = new Button("선택");
 			btn.setOnAction(ae -> {
 
-				DialogUtil.showYesOrNoDialog("마이크 선택", "기본 마이크로 선택하시겠습니까?").ifPresent(v -> {
+				
+				DialogUtil.showYesOrNoDialog("마이크 선택", Message.getInstance().getMessage("AiComposite_BaseMicSelectedQuestion" /*기본 마이크로 선택하시겠습니까?*/)).ifPresent(v -> {
 					if ("Y".equals(v.getValue())) {
 						InfoDVO selectedItem = tableView.getSelectionModel().getSelectedItem();
 						// String name = selectedItem.getName();
@@ -620,19 +627,26 @@ public class AiComposite extends AbstractCommonsApp {
 						
 
 						// SaveComplete=저장되었습니다.
-						DialogUtil.showMessageDialog(Message.getInstance().getMessage("SaveComplete"));
+						DialogUtil.showMessageDialog(Message.getInstance().getMessage("AiComposite_SaveComplete" /*저장되었습니다.*/));
 					}
 				});
 
 			});
-			root.setBottom(btn);
+			btn.setPrefWidth(80d);
+			HBox value = new HBox(btn);
+			value.setPadding(new Insets(5));
+			value.setAlignment(Pos.CENTER_RIGHT);
+			root.setBottom(value);
+			
+			tableView.setOnMouseClicked(ev ->{ if(ev.getClickCount() == 2 && ev.getButton() == MouseButton.PRIMARY) { btn.fire() ; } });
 			FxUtil.createStageAndShowAndWait(root, stage -> {
 				stage.setWidth(800d);
 				stage.setTitle("마이크 세팅");
 				stage.initOwner(StageStore.getPrimaryStage());
 			});
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(ValueUtil.toString(e));
+			DialogUtil.showExceptionDailog(e);
 		}
 	}
 

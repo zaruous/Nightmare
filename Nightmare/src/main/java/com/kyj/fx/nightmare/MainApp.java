@@ -15,6 +15,7 @@ import com.kyj.fx.nightmare.comm.initializer.HttpURLInitializer;
 import com.kyj.fx.nightmare.comm.initializer.ProxyInitializable;
 import com.kyj.fx.nightmare.comm.initializer.SSLInitializable;
 import com.kyj.fx.nightmare.ui.frame.MainFormComposite;
+import com.kyj.fx.websocket.JavalinStarter;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -28,6 +29,10 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
 
 	public static void main(String[] args) throws Exception {
+		
+		//socker port binding 으로 어플리케이션 실행여부 확인
+		new JavalinStarter().start();
+		
 		String strLocale = ResourceLoader.getInstance().get(ResourceLoader.DEFAULT_LOCALE);
 		Locale locale = Locale.KOREAN;
 		if (!ValueUtil.isEmpty(strLocale)) {
