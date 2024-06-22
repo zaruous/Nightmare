@@ -72,13 +72,13 @@ public class AIDataDAO extends AbstractDAO {
 		return select;
 	}
 	
-	public Map<String, Object> getAiConnectionConfig(String key) {
-		String sql = """
-				select c.* from tbm_sm_cnf c where 1=1 and c.KEY=:key AND USE_YN = 'Y' \n
-				""";
-		Map<String, Object> select = getNamedJdbcTemplate().queryForMap(sql, Map.of("key" , key));
-		return select;
-	}
+//	public Map<String, Object> getAiConnectionConfig(String group, String key) {
+//		String sql = """
+//				select c.* from tbm_sm_cnf c where 1=1 and c.KEY=:key AND USE_YN = 'Y' \n
+//				""";
+//		Map<String, Object> select = getNamedJdbcTemplate().queryForMap(sql, Map.of("group",group,  "key" , key));
+//		return select;
+//	}
 	/**
 	 * 설정정보 로드
 	 * 
