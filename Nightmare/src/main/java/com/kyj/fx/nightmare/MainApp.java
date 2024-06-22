@@ -18,6 +18,7 @@ import com.kyj.fx.nightmare.ui.frame.MainFormComposite;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -55,7 +56,7 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 	}
 
 	public void start(Stage stage) throws Exception {
-
+		TraySupport.addAppToTray(stage);
 		
 		StageStore.setPrimaryStage(stage);
 
@@ -94,10 +95,13 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 		String appTitle = Message.getInstance().getMessage("%MainApp_000001",  appVersion);
 		LOGGER.debug("appTitle : {}  :  + appVersion : {} ", appTitle , appVersion);
 		stage.setTitle(appTitle);
-		// stage.setScene(scene);
+		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("images/Gargoyle.png")));
+		
 		stage.show();
+		
 	}
 
+	
 	/**
 	 * @작성자 : KYJ (zaruous@naver.com)
 	 * @작성일 : 2021. 12. 3.

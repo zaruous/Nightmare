@@ -22,6 +22,7 @@ import chat.rest.api.service.core.ChatBotService;
  */
 public class OpenAIService {
 
+	private static final int LIMIT_MAX_LENGTH = 65535;
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpenAIService.class);
 	private long speechId = -1;
 	private AIDataDAO aiDataDAO;
@@ -122,7 +123,7 @@ public class OpenAIService {
 	}
 
 	public String getSystemRole() {
-		return this.serivce.getSystemRule().get("content");
+		return this.serivce.getSystemRule().get("content").substring(0, LIMIT_MAX_LENGTH);
 	}
 
 	/**

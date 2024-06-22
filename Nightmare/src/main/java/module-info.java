@@ -66,6 +66,7 @@ open module ETHelper {
 	requires org.apache.httpcomponents.httpmime;
 	requires org.jsoup;
 	requires org.fxmisc.flowless;
+	requires jdk.jsobject;
 	/*PDF ITEXT*/
 
 	

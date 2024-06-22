@@ -52,9 +52,10 @@ public class XmlW3cUtil {
 			Elements cells = row.select("th, td");
 			for (int i = 0; i < cells.size(); i++) {
 				writer.write(cells.get(i).text());
-				if (i < cells.size() - 1) {
-					writer.write(",");
-				}
+				writer.write(",");
+//				if (i < cells.size() - 1) {
+//					writer.write(",");
+//				}
 			}
 			writer.write("\n");
 		}

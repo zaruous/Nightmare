@@ -3,17 +3,20 @@
  */
 package com.kyj.fx.nightmare.actions.ai_webview;
 
-import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.LeafNode;
+import org.jsoup.nodes.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +51,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
@@ -57,11 +59,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.PromptData;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
+import netscape.javascript.JSObject;
 
 /**
  * 
@@ -102,8 +106,26 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 		cbProtocol.getItems().addAll("https://", "http://");
 		cbProtocol.getSelectionModel().selectFirst();
 
+
 		wbDefault.setContextMenuEnabled(true);
 		wbDefault.getEngine().setJavaScriptEnabled(true);
+		
+		
+		this.setOnKeyPressed(ev->{
+			
+			if((ev.getCode()  == KeyCode.LEFT|| ev.getCode() == KeyCode.BACK_SPACE) && ev.isAltDown())
+			{
+				wbDefault.getEngine().getHistory().go(-1);
+				
+			}
+			
+			else if((ev.getCode()  == KeyCode.RIGHT ) && ev.isControlDown())
+			{
+				wbDefault.getEngine().getHistory().go(1);
+			}
+		});
+		
+
 		// wbDefault.getEngine().setCreatePopupHandler(new
 		// Callback<PopupFeatures, WebEngine>() {
 		//
@@ -138,6 +160,8 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 				LOGGER.debug("newHost : {}", newHost);
 				LOGGER.debug("urlHost : {}", urlHost);
 
+				
+				
 //				if (!ValueUtil.equals(urlHost, newHost)) {
 //					// 동일한 호스트가 아니면 차단
 //					wbDefault.getEngine().getLoadWorker().cancel();
@@ -174,7 +198,7 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 		wbDefault.getEngine().getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
 
 			@Override
-			public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue) {	
+			public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue) {
 				content.set(null);
 				wbDefault.setOpacity(0.5d);
 				btnEnter.setDisable(true);
@@ -229,31 +253,53 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 
 		MenuItem miHtml = new MenuItem("html");
 		miHtml.setOnAction(ev -> {
-			Object executeScript = wbDefault.getEngine().executeScript("document.documentElement.outerHTML");
-			String string = executeScript.toString();
+			WebEngine engine = wbDefault.getEngine();
+//			engine.executeScript("document.documentElement.outerHTML");
+//			engine.executeScript("var iframeElements = document.getElementsByTagName('iframe');" +
+//                    "for (var i = 0; i < iframeElements.length; i++) {" +
+//                    "  var iframe = iframeElements[i];" +
+//                    "  var xhr = new XMLHttpRequest();" +
+//                    "  xhr.open('GET', iframe.src, false);" + // 동기식 요청
+//                    "  xhr.send();" +
+//                    "  iframe.outerHTML = xhr.responseText;" +
+//                    "}" +
+//                    "document.documentElement.outerHTML;");
+//			String string = (String) engine.executeScript("document.documentElement.outerHTML");
 
+            String string = (String) engine.executeScript("document.documentElement.outerHTML");
+//            
+//			org.w3c.dom.Document ownerDocument = wbDefault.getEngine().getDocument();
+//			org.w3c.dom.Element documentElement = ownerDocument.getDocumentElement();
+//			String textContent = documentElement.getTextContent();
+//			String textContent = ownerDocument.getTextContent();
+//			String string = executeScript.toString();
+////
+//			wbDefault.getEngine().executeScript(
+//	                    "setTimeout(function() {" +
+//	                    "    var htmlContent = document.documentElement.outerHTML;" +
+//	                    "    java.processHTML(htmlContent);" +
+//	                    "}, 1000);"); // 1초 후에 HTML 콘텐츠를 가져옴
+			  
 			Platform.runLater(() -> {
 				TextArea parent = new TextArea(string);
 				parent.setWrapText(true);
 				FxUtil.createStageAndShow(parent, stage -> {
 				});
-
 			});
 		});
-		
+
 		MenuItem miParseText = new MenuItem("parseText");
 		miParseText.setOnAction(ev -> {
-			
 
 			Platform.runLater(() -> {
-				
+
 				CodeArea parent = new CodeArea(getDocumentText());
 				parent.setWrapText(true);
 				new CodeAreaHelper<CodeArea>(parent);
-				
+
 				BorderPane borRoot = new BorderPane(new VirtualizedScrollPane<>(parent));
 				borRoot.setPadding(new Insets(5));
-				
+
 				FxUtil.createStageAndShow(borRoot, stage -> {
 					stage.setWidth(1200d);
 					stage.setHeight(800d);
@@ -261,7 +307,7 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 
 			});
 		});
-		
+
 		ContextMenu contextMenu = new ContextMenu(menuItem, miHtml, miParseText);
 		wbDefault.setContextMenuEnabled(false);
 		wbDefault.setOnContextMenuRequested(ev -> {
@@ -480,18 +526,64 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 			}
 		});
 	}
-	
-	public String getDocumentText()  {
+
+	public String getDocumentText() {
 		Object executeScript = wbDefault.getEngine().executeScript("document.documentElement.outerHTML");
 		String string = executeScript.toString();
 		Document document = Jsoup.parse(string);
-		String text;
-		try {
-			text = XmlW3cUtil.parseElement(document.body());
-			return text;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return "";
+		document.removeClass("script");
+		Element body = document.body();
+
+//		body.removeClass("span");
+//		StringUtil accum = StringUtil.borrowBuilder();
+//		body.nodeStream().forEach(node -> appendWholeText(node, accum));
+//		StringUtil.releaseBuilder(accum);
+
+//		StringBuilder accum = new StringBuilder();
+//		body.nodeStream().forEach(node -> {
+//			if (node instanceof TextNode) {
+//	            accum.append(((TextNode) node).getWholeText()).append(" ");
+//	        } else if (node.nameIs("br")) {
+//	            accum.append("\n");
+//	        }
+//		});
+//		return accum;
+
+		return body.wholeText();
+//		return body.wholeText();
+//		StringBuilder sb = new StringBuilder();
+//		wholeTest(body, sb);
+//		return sb.toString();
 	}
+
+	public void wholeTest(Node body, StringBuilder accum) {
+		LinkedList<Node> queue = new LinkedList<Node>();
+
+		for (Node n : body.childNodes()) {
+
+			if (n instanceof LeafNode) {
+				accum.append((n.toString())).append(" ");
+				continue;
+			}
+
+			List<Node> childNodes = n.childNodes();
+			if (childNodes.size() != 0) {
+				queue.addAll(childNodes);
+			}
+
+		}
+
+	}
+//		body.nodeStream().forEach(node -> {
+//			if (node instanceof TextNode) {
+//				wholeTest( node, accum );
+////	            accum.append((  ).append(" ");
+//	        } else if (node.nameIs("br")) {
+//	            accum.append("\n");
+//	        }
+//	        else {
+//	        	accum.append(" ");
+//	        }
+//		});
+
 }
