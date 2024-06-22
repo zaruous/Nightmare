@@ -40,7 +40,8 @@ public class SpeechToTextGptServiceImpl {
 					// 'OPEN_AI' AND c.KEY='TRANSLATE' \n
 					// """;
 					String group = ResourceLoader.getInstance().get("ai.speech.to.text.group", "OPEN_AI");
-					Map<String, Object> select = aiDataDAO.getAiConnectionConfig(group);
+					String key = ResourceLoader.getInstance().get("ai.speech.to.text.key", "TRANSLATE");
+					Map<String, Object> select = aiDataDAO.getAiConnectionConfig(group, key);
 					if (!select.isEmpty()) {
 						config.setProperty("id", select.get("ID") == null ? "" : select.get("ID").toString());
 						config.setProperty("model", select.get("CNF_CMF_1") == null ? "" :select.get("CNF_CMF_1").toString());

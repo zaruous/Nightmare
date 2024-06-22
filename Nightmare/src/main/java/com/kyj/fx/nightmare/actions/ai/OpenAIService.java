@@ -31,7 +31,7 @@ public class OpenAIService {
 
 	public OpenAIService() throws Exception {
 		
-		String apiName = ResourceLoader.getInstance().get("chat.ai.api.name", API.GTP_4_O.name());
+		String apiName = ResourceLoader.getInstance().get("chat.ai.api.key", API.GTP_4_O.name());
 		LOGGER.info("default apiname : {}", apiName);
 		model = API.valueOf(apiName);
 		
@@ -41,7 +41,8 @@ public class OpenAIService {
 
 		aiDataDAO = AIDataDAO.getInstance();
 		Properties config = new Properties();
-		Map<String, Object> select = aiDataDAO.getAiConnectionConfig(model.name());
+		String group = ResourceLoader.getInstance().get("chat.ai.api.group", "OPEN_AI");
+		Map<String, Object> select = aiDataDAO.getAiConnectionConfig(group, model.name());
 		if (!select.isEmpty()) {
 			config.setProperty("id", select.get("ID").toString());
 			config.setProperty("model", select.get("CNF_CMF_1").toString());
