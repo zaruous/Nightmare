@@ -35,6 +35,18 @@ public class MainFormComposite extends BorderPane {
 		newLaoder.setLocation(MainFormComposite.class.getResource("MainForm2.fxml"));
 		newLaoder.setRoot(this);
 		newLaoder.setController(this);
+		
+        this.setStyle(
+        	   """
+        		-fx-background-image: url("/images/Nightmare.png");
+        		-fx-background-size: stretch ; /* 이미지를 컨테이너 크기에 맞춥니다 */
+			    -fx-background-position: center; /* 이미지를 중앙에 위치시킵니다 */
+			    -fx-background-repeat: no-repeat; /* 이미지를 반복하지 않습니다 */ 
+			    -fx-background-radius: 5.0;
+			    -fx-opacity: 0.9;
+			    -fx-cursor: hand ;
+        		"""
+        	);
 		try {
 			newLaoder.load();
 			ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(()->{

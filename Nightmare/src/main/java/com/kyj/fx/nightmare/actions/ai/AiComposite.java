@@ -700,5 +700,9 @@ public class AiComposite extends AbstractCommonsApp {
 		btnMicStopOnAction();
 		super.miHomeOnAction();
 	}
-	
+	@FXML
+	public void miExitApplicationOnAction() {
+		Platform.exit();
+		System.exit(0);
+	}
 }

@@ -1,6 +1,10 @@
+
+/*fxml에서 디자인할떄는 이미지가 표시되나, jar파일 패킹시 제대로 표시되지않는 문제가 있다.
+ * MainFormComposite.java 파일에 이미지 경로만 다르게한 style 처리를 추가함.
+ * */
 .bor-root{
 	-fx-background-image: url("Nightmare.png");
-    -fx-background-size: stretch  ; /* 이미지를 컨테이너 크기에 맞춥니다 */
+    -fx-background-size: stretch ; /* 이미지를 컨테이너 크기에 맞춥니다 */
     -fx-background-position: center; /* 이미지를 중앙에 위치시킵니다 */
     -fx-background-repeat: no-repeat; /* 이미지를 반복하지 않습니다 */ 
     -fx-background-radius: 5.0;
