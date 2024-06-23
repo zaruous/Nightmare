@@ -6,6 +6,7 @@ package com.kyj.fx.nightmare.actions.ai;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -369,19 +370,40 @@ public class AiComposite extends AbstractCommonsApp {
 	public void after() {
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			List<Map<String, Object>> lastHistory = dao.getLatestHistory();
-			lastHistory.stream().peek(System.out::println).filter(v -> v != null).filter(m -> !m.isEmpty())
+			lastHistory.stream().filter(v -> v != null).filter(m -> !m.isEmpty())
 					.forEach(m -> {
-
+						LOGGER.debug("{}", m);
+						String apiName = m.get("API_NAME") == null ? "" : m.get("API_NAME").toString();
 						String prompt = m.get("QUESTION") == null ? "" : m.get("QUESTION").toString();
+//						String promptId = m.get("PROMPT_ID") == null ? "" : m.get("PROMPT_ID").toString();
+						String graphicClass = m.get("GRAPHIC_CLASS") == null ? "" : m.get("GRAPHIC_CLASS").toString();
+						
 						DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
 						lblMe.setTip("me");
 						Platform.runLater(() -> {
 							lvResult.getItems().add(lblMe);
 						});
 
+						if(ValueUtil.isNotEmpty(graphicClass))
+						{
+							try {
+								ICustomSupportView supportView = (ICustomSupportView)SupportListViewInstaller.newInstance(graphicClass);
+								CustomLabel ret = new CustomLabel(supportView);
+								String content2 = openAIService.toUserMessage(apiName, m.get("ANSWER").toString());
+								supportView.setData(content2);
+								Platform.runLater(() -> {
+									lvResult.getItems().add(ret);	
+								});
+								
+							} catch (Exception e) {
+								e.printStackTrace();
+							}	
+							return;
+						}
+						
 						if (m.get("ANSWER") != null) {
 							Platform.runLater(() -> {
-								updateChatList(m.get("ANSWER").toString(), false);
+								updateChatList(apiName, m.get("ANSWER").toString(), false);
 							});
 						}
 
@@ -462,7 +484,7 @@ public class AiComposite extends AbstractCommonsApp {
 	 * @param send
 	 */
 	private void updateChatList(String send) {
-		updateChatList(send, true);
+		updateChatList(null, send, true);
 	}
 
 	/**
@@ -471,9 +493,9 @@ public class AiComposite extends AbstractCommonsApp {
 	 * @param send
 	 * @param speech
 	 */
-	private void updateChatList(String send, boolean speech) {
+	private void updateChatList(String apiName, String send, boolean speech) {
 		try {
-			String content2 = openAIService.toUserMessage(send);
+			String content2 = openAIService.toUserMessage(apiName, send);
 
 			if (speech && useMicrophoneFlag.get()) {
 				var allData = new DefaultLabel(content2);

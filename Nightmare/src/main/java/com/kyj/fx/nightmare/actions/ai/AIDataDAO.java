@@ -12,6 +12,7 @@ import org.apache.http.entity.ContentType;
 import org.springframework.jdbc.core.DataClassRowMapper;
 
 import com.kyj.fx.nightmare.comm.AbstractDAO;
+import com.kyj.fx.nightmare.comm.ResourceLoader;
 
 /**
  * 
@@ -108,18 +109,22 @@ public class AIDataDAO extends AbstractDAO {
 	 * @return
 	 */
 	public List<Map<String, Object>> getLatestHistory() {
+		
+		String fetchCnt = ResourceLoader.getInstance().get(ResourceLoader.AI_HISTORY_FETCH_COUNT, "50");
 		String state = """
 					SELECT * 
 						FROM (
-						    SELECT * 
-						    FROM CHAT_HISTORY
-						    ORDER BY ID DESC
-						    LIMIT 10 
+						    SELECT h.*, cnf.`KEY` AS API_NAME , pt.GRAPHIC_CLASS
+						    FROM chat_history h LEFT JOIN tbm_sm_cnf cnf
+						    	ON h.AI_ID = cnf.ID
+						    LEFT JOIN tbm_sm_prompts pt
+						    	ON h.prompt_id = pt.ID
+						    ORDER BY h.ID DESC
+						    LIMIT $fetchCnt 
 						) subquery
 						ORDER BY ID ASC
-			
 				""";
-		List<Map<String, Object>> query = query(state, Collections.emptyMap());
+		List<Map<String, Object>> query = query(state, Map.of("fetchCnt", fetchCnt));
 		return query;
 	}
 

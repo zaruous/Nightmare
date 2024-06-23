@@ -62,6 +62,8 @@ public class ResourceLoader {
 	
 	/*스킨 설정 프로젝트 루트 skins/디렉토리에 있는 파일명 설정*/
 	public static final String DEFAULT_SKIN = "default.skin";
+	/*화면 로드시 히스토리 로드할 데이터수를 리턴*/
+	public static final String AI_HISTORY_FETCH_COUNT = "ai.history.fetch.count";
 	
 	/**
 	 * 앱 버젼 <br/>

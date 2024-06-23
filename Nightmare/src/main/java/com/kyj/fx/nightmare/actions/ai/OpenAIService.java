@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO.Choice;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
+import com.kyj.fx.nightmare.comm.ValueUtil;
 
 import chat.rest.api.ChatBot;
 import chat.rest.api.ChatBot.API;
@@ -146,7 +147,24 @@ public class OpenAIService {
 	}
 
 	public String toUserMessage(String message) {
-		if (API.LLAMA3 == model) {
+		return toUserMessage(model, message);
+	}
+	public String toUserMessage(String apiName, String message) {
+		if(ValueUtil.isEmpty(apiName))
+			return toUserMessage(model, message);
+		
+		try {
+		API valueOf = API.valueOf(apiName);
+		return toUserMessage(valueOf, message);
+		}catch(Exception ex) { 
+			LOGGER.error("error apiname : {}" , apiName);
+			ex.printStackTrace();
+			return toUserMessage(model, message);	
+		}
+	}
+	
+	public String toUserMessage(API api, String message) {
+		if (API.LLAMA3 == api) {
 			return message;
 		} else {
 			ResponseModelDVO ret = ResponseModelDVO.fromGtpResultMessage(message);
@@ -156,6 +174,5 @@ public class OpenAIService {
 		}
 
 	}
-
 
 }

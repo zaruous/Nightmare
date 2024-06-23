@@ -4,6 +4,7 @@
 package com.kyj.fx.nightmare.actions.ai;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -73,9 +74,7 @@ public abstract class SupportListViewInstaller {
 								Node graphic = new Label(" 나 ");
 								if (ValueUtil.isNotEmpty(graphicClass)) {
 									try {
-										Class<?> forName = Class.forName(graphicClass);
-										Constructor<?> declaredConstructor = forName.getDeclaredConstructor();
-										Object newInstance = declaredConstructor.newInstance();
+										Object newInstance = newInstance(graphicClass);
 										if (newInstance instanceof ICustomSupportView) {
 
 											DefaultLabel lblMe = new DefaultLabel(text, graphic);
@@ -109,6 +108,8 @@ public abstract class SupportListViewInstaller {
 
 							}
 						}
+
+						
 					});
 
 				}
@@ -125,5 +126,13 @@ public abstract class SupportListViewInstaller {
 		});
 
 	}
-
+	
+	public static Object newInstance(String graphicClass)
+			throws ClassNotFoundException, NoSuchMethodException, InstantiationException,
+			IllegalAccessException, InvocationTargetException {
+		Class<?> forName = Class.forName(graphicClass);
+		Constructor<?> declaredConstructor = forName.getDeclaredConstructor();
+		Object newInstance = declaredConstructor.newInstance();
+		return newInstance;
+	}
 }
