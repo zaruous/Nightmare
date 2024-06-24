@@ -32,10 +32,12 @@ public class JavalinStarter {
 		try {
 			Controller getHtml = new Controller();
 			var app = Javalin.create(getHtml.config())
-					.get("/", ctx -> getHtml.hellWorld(ctx))
-					.get("/getHtml", ctx -> getHtml.getHtml(ctx))
-					.get("/status", ctx -> getHtml.status(ctx))
 					.start(Integer.parseInt(string, 10));
+			
+			app.get("/", ctx -> getHtml.hellWorld(ctx))
+			.post("/getHtml", ctx -> getHtml.getHtml(ctx))
+			.get("/status", ctx -> getHtml.status(ctx));
+			
 		} catch (JavalinBindException ex) {
 			LOGGER.error(ValueUtil.toString(ex));
 			throw new AlreadyRuningException("어플리케이션이 이미 실행중입니다.");

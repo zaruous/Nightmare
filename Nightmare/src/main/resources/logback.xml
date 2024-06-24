@@ -6,30 +6,47 @@
      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
   </appender>
-
+	<appender name="file" class="ch.qos.logback.core.FileAppender">
+		<file>log\application.log</file>
+		<encoder>
+			<pattern> %-5level %d{HH:mm:ss.SSS} [%thread] %logger[%method:%line] -%msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="pluginfile" class="ch.qos.logback.core.FileAppender">
+		<file>log\plugin_support.log</file>
+		<encoder>
+			<pattern> %-5level %d{HH:mm:ss.SSS} [%thread] %logger[%method:%line] -%msg%n</pattern>
+		</encoder>
+	</appender>
 	<!-- 이 아래에 있는 애들 다 log로 찍겠다. -->
 	<logger name="com.kyj.fx.nightmare" level="DEBUG" additivity="true">
 		<appender-ref ref="SYSOUT" />
+		<appender-ref ref="file" />
 	</logger>
 	
 	<logger name="com.kyj.fx.groovy" level="INFO" additivity="false">
 		<appender-ref ref="SYSOUT" />
+		<appender-ref ref="file" />
 	</logger>
 	
 	<logger name="com.kyj.fx.websocket" level="DEBUG" additivity="false">
 		<appender-ref ref="SYSOUT" />
+		<appender-ref ref="pluginfile" />
 	</logger>
 	
 	<logger name="org.apache.http.wire" level="ERROR" additivity="false">
 		<appender-ref ref="SYSOUT" />
+		<appender-ref ref="file" />
 	</logger>
 	
 	<logger name="chat.rest.api.service.impl" level="DEBUG" additivity="false">
 		<appender-ref ref="SYSOUT" />
+		<appender-ref ref="file" />
 	</logger>
 	
 	<root level="INFO" additivity="false">
 		<appender-ref ref="SYSOUT" />
+		<appender-ref ref="file" />
 	</root>
 
 </configuration>

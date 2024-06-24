@@ -32,7 +32,7 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 	public static void main(String[] args) throws Exception {
 		
 		//socker port binding 으로 어플리케이션 실행여부 확인
-		if("Y".equals(ResourceLoader.getInstance().get("multi.application.support.yn", "N")))
+		if("N".equals(ResourceLoader.getInstance().get("multi.application.support.yn", "N")))
 			new JavalinStarter().start();
 		
 		String strLocale = ResourceLoader.getInstance().get(ResourceLoader.DEFAULT_LOCALE);

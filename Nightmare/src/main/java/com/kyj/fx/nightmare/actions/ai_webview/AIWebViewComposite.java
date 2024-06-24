@@ -15,7 +15,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.io.IOUtils;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.jsoup.Jsoup;
@@ -51,6 +50,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -67,6 +67,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.scene.web.PromptData;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebEvent;
@@ -115,25 +116,66 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 	@FXML
 	public void miScreenshotOnAction() {
 		
-		WritableImage image = new WritableImage((int)
-				this.wbDefault.getWidth(), (int)this.wbDefault.getHeight());
+//		 WebEngine webEngine = wbDefault.getEngine();
+//	        
+//	        // JavaScript to get the width and height of the entire page
+//	        String script = "var body = document.body," +
+//	                        "html = document.documentElement;" +
+//	                        "Math.max(body.scrollHeight, body.offsetHeight, " +
+//	                        "html.clientHeight, html.scrollHeight, html.offsetHeight);";
+//
+//	        // Execute the script and get the page height
+//	        webEngine.executeScript("var width = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);");
+//	        webEngine.executeScript("var height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);");
+//
+//	        Number width = (Number) webEngine.executeScript("width");
+//	        Number height = (Number) webEngine.executeScript("height");
+//	        
+//	        LOGGER.debug("width : {} height :{}" , width, height);
+//	        // Resize the WebView to the full page size
+//	        double originalWidth = wbDefault.getWidth();
+//	        double originalHeight = wbDefault.getHeight();
+//
+//	        wbDefault.setPrefSize(width.doubleValue(), height.doubleValue());
+//
+//	        // Allow the WebView to resize itself to the new size
+//	        wbDefault.layout();
+//
+//	        // Define the SnapshotParameters
+//	        SnapshotParameters snapshotParameters = new SnapshotParameters();
+//	        snapshotParameters.setFill(Color.TRANSPARENT);
+//
+//	        // Take the snapshot
+//	        WritableImage writableImage = new WritableImage(width.intValue(), height.intValue());
+//	        wbDefault.snapshot(snapshotParameters, writableImage);
+//
+//	        // Save the snapshot as a PNG file
+//	        File file = new File("webview_snapshot.png");
+//	        try {
+//	            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
+//	            ImageIO.write(bufferedImage, "png", file);
+//	        } catch (IOException e) {
+//	            e.printStackTrace();
+//	        }
+//
+//	        // Restore the WebView to its original size
+//	        wbDefault.setPrefSize(originalWidth, originalHeight);
+//	        wbDefault.layout();
+        
+		SnapshotParameters snapshotParameters = new SnapshotParameters();
+		snapshotParameters.setDepthBuffer(false);
+//		snapshotParameters.setViewport(new Rectangle2D(0, 0, 1200d, 800d));
+		WritableImage snapshot = this.wbDefault.snapshot(snapshotParameters, null);
 		
-		this.wbDefault.snapshot((result)->{
-			
-			WritableImage ret = result.getImage();
-			 // Save the WritableImage to a file
-	        File outputFile = new File("output.png");
-	        try {
-	            BufferedImage fromFXImage = SwingFXUtils.fromFXImage(ret, null);
-				ImageIO.write(fromFXImage, "png", outputFile);
-	            System.out.println("Image saved to " + outputFile.getAbsolutePath());
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	        
-			
-			return null;
-		}, new SnapshotParameters(), image);
+		BufferedImage fromFXImage = SwingFXUtils.fromFXImage(snapshot, null);
+		File outputFile = new File("output.png");
+		 try {
+			ImageIO.write(fromFXImage, "png", outputFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		
 		
 		
 	}
@@ -148,16 +190,18 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 		
 		
 		this.setOnKeyPressed(ev->{
-			
 			if((ev.getCode()  == KeyCode.LEFT|| ev.getCode() == KeyCode.BACK_SPACE) && ev.isAltDown())
 			{
 				wbDefault.getEngine().getHistory().go(-1);
-				
 			}
 			
 			else if((ev.getCode()  == KeyCode.RIGHT ) && ev.isControlDown())
 			{
 				wbDefault.getEngine().getHistory().go(1);
+			}
+			else if((ev.getCode()  == KeyCode.F5 ))
+			{
+				wbDefault.getEngine().reload();
 			}
 		});
 		
@@ -395,10 +439,9 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 									getStyleClass().remove("me");
 								}
 
+								setGraphic(item.getGraphic());
 								setPrefWidth(lvResult.getWidth() - 20); // 패딩 고려
 								setStyle("-fx-wrap-text: true;");
-
-								setGraphic(item.getGraphic());
 							}
 						}
 					}

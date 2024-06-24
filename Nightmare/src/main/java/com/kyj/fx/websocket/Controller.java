@@ -5,6 +5,9 @@ package com.kyj.fx.websocket;
 
 import java.util.function.Consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.Context;
 
@@ -12,7 +15,7 @@ import io.javalin.http.Context;
  * 
  */
 public class Controller {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
 	public Controller() {
 
 	}
@@ -26,7 +29,9 @@ public class Controller {
 	 * @return
 	 */
 	public void getHtml(Context ctx) {
-		ctx.result("Hello World");
+		Object fromJsonString = ctx.jsonMapper().fromJsonString( ctx.body(), DataBody.class);
+		LOGGER.debug("{}", fromJsonString);
+		ctx.result("1");
 	}
 
 	public Consumer<JavalinConfig> config() {
