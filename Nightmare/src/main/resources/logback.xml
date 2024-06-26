@@ -3,7 +3,10 @@
 	<!-- console로 log 남기기 -->
   <appender name="SYSOUT" class="ch.qos.logback.core.ConsoleAppender">
    <encoder>
+     <!--  
      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+     -->
+     <pattern> %-5level %d{HH:mm:ss} [%thread] %logger[%method:%line] -%msg%n</pattern>
     </encoder>
   </appender>
 	<appender name="file" class="ch.qos.logback.core.FileAppender">
@@ -19,6 +22,11 @@
 		</encoder>
 	</appender>
 	<!-- 이 아래에 있는 애들 다 log로 찍겠다. -->
+	<logger name="com.kyj.fx.nightmare" level="DEBUG" additivity="true">
+		<appender-ref ref="SYSOUT" />
+		<appender-ref ref="file" />
+	</logger>
+	
 	<logger name="com.kyj.fx.nightmare" level="DEBUG" additivity="true">
 		<appender-ref ref="SYSOUT" />
 		<appender-ref ref="file" />

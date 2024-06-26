@@ -132,7 +132,7 @@ public class SpeechToTextGptService extends ChatGpt3Service {
 		HttpEntity responseEntity = null;
 
 		HttpClientBuilder httpClientBuilder = HttpClients.custom();
-		if ("Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y"))) {
+		if ("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.SSL_VERIFY, "Y"))) {
 			httpClientBuilder.setSSLContext(GargoyleSSLVertifier.defaultContext());
 			httpClientBuilder.setSSLHostnameVerifier(GargoyleHostNameVertifier.defaultVertifier());
 		}

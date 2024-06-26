@@ -78,9 +78,10 @@ public class TextToSpeechGptService extends ChatGpt3Service {
 		// HttpClient를 사용하여 API 호출
 		HttpEntity responseEntity = null;
 		HttpClientBuilder httpClientBuilder = HttpClients.custom();
-		if ("Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y")))
-			httpClientBuilder.setSSLContext(new GargoyleSSLVertifier().getSSLContext());
-
+		if ("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.SSL_VERIFY, "Y"))) {
+			httpClientBuilder.setSSLContext(GargoyleSSLVertifier.defaultContext());
+			httpClientBuilder.setSSLHostnameVerifier(GargoyleHostNameVertifier.defaultVertifier());
+		}
 		try (CloseableHttpClient httpClient = httpClientBuilder.build();
 				CloseableHttpResponse response = httpClient.execute(httpPost)) {
 			// API 응답 처리
@@ -124,7 +125,7 @@ public class TextToSpeechGptService extends ChatGpt3Service {
 		// HttpClient를 사용하여 API 호출
 		HttpEntity responseEntity = null;
 		HttpClientBuilder httpClientBuilder = HttpClients.custom();
-		if (!"Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y"))) {
+		if ("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.SSL_VERIFY, "Y"))) {
 			httpClientBuilder.setSSLContext(GargoyleSSLVertifier.defaultContext());
 			httpClientBuilder.setSSLHostnameVerifier(GargoyleHostNameVertifier.defaultVertifier());
 		}

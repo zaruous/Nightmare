@@ -93,7 +93,15 @@ function sendHtmlNavigation()
 		iframeSrcs.push(iframes[i].src);
 	}
   
-	chrome.runtime.sendMessage({ action: 'sendHtmlNavigation', text: textOnly, location : location, iframeSrcs : iframeSrcs });
+	//console.log(chrome.storage.local);
+	let jsondata = "";
+	chrome.runtime.sendMessage({ action: 'sendHtmlNavigation', text: textOnly, location : location, iframeSrcs : iframeSrcs, storageData :jsondata });
+	/*	
+	getStorageDataAsJson(function(jsondata){
+
+	});
+	*/
+	
 }
 
 
@@ -103,4 +111,12 @@ function sendHtml() {
 }
 /*
 */
-
+// 스토리지 데이터를 JSON 형식으로 변환하여 반환하는 함수
+function getStorageDataAsJson(callback) {
+  // chrome.storage.local의 모든 데이터를 가져옵니다.
+  chrome.storage.local.get(null, function(items) {
+    // 가져온 데이터를 JSON 형식으로 변환합니다.
+    const jsonData = JSON.stringify(items);
+    callback(jsonData);
+  });
+}

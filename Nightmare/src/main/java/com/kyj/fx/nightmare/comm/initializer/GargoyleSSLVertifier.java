@@ -18,6 +18,8 @@ import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kyj.fx.nightmare.comm.ValueUtil;
+
 /**
  * @author KYJ
  *
@@ -34,7 +36,7 @@ public class GargoyleSSLVertifier {
 			ctx.init(new KeyManager[0], new TrustManager[] { new DefaultTrustManager() }, new SecureRandom());
 			SSLContext.setDefault(ctx);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(ValueUtil.toString(e));
 		}
 	}
 
@@ -70,9 +72,7 @@ public class GargoyleSSLVertifier {
 
 		@Override
 		public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-			 LOGGER.debug("########################################################################################");
-			 LOGGER.debug("checkServerTrusted");
-			 LOGGER.debug(arg1);
+			 LOGGER.debug("checkServerTrusted {} ", arg1);
 
 //			boolean present = Stream.of(arg0).filter(v -> {
 //

@@ -2,6 +2,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 app = FastAPI()
 import os
 import whisper
+# Fast api를 통해 음성을 텍스트로 변환시키는 로컬 모드
 # base - os언어, base.en 영어 
 #자세한 내용은 링크 참조 https://github.com/openai/whisper
 model = whisper.load_model("base.en")
@@ -9,7 +10,7 @@ model = whisper.load_model("base.en")
 
 @app.get("/")
 async def root():
-    return {"message":"Hello world!1"}
+    return {"message":"this is work!"}
 
 @app.post("/audio/transcriptions2")
 async def audio_transcriptions(file: UploadFile = File(...)):

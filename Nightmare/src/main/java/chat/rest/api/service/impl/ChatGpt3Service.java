@@ -98,7 +98,7 @@ public class ChatGpt3Service extends AbstractPromptService {
 		// HttpClient를 사용하여 API 호출
 		HttpEntity responseEntity = null;
 		HttpClientBuilder httpClientBuilder = HttpClients.custom();
-		if ("Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y"))) {
+		if ("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.SSL_VERIFY, "Y"))) {
 			httpClientBuilder.setSSLContext(GargoyleSSLVertifier.defaultContext());
 			httpClientBuilder.setSSLHostnameVerifier(GargoyleHostNameVertifier.defaultVertifier());
 		}

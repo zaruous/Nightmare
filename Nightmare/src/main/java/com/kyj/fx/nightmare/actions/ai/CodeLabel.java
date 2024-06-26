@@ -27,6 +27,9 @@ public class CodeLabel extends DefaultLabel {
 
 	}
 
+	/**
+	 * 프로그래밍 언어 <br/>
+	 */
 	private StringProperty codeType = new SimpleStringProperty();
 
 	public final StringProperty codeTypeProperty() {

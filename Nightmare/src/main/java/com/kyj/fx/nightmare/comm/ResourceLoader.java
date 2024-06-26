@@ -65,6 +65,8 @@ public class ResourceLoader {
 	/*화면 로드시 히스토리 로드할 데이터수를 리턴*/
 	public static final String AI_HISTORY_FETCH_COUNT = "ai.history.fetch.count";
 	
+	public static final String SSL_VERIFY = "ssl.verify";
+	
 	/**
 	 * 앱 버젼 <br/>
 	 * @최초생성일 2021. 12. 8.

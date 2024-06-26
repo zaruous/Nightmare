@@ -172,7 +172,12 @@ public class ChatGpt4oService extends ChatGpt3Service {
 
 		// HttpClient를 사용하여 API 호출
 		HttpEntity responseEntity = null;
-		try (CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpClientBuilder httpClientBuilder = HttpClients.custom();
+		if ("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.SSL_VERIFY, "Y"))) {
+			httpClientBuilder.setSSLContext(GargoyleSSLVertifier.defaultContext());
+			httpClientBuilder.setSSLHostnameVerifier(GargoyleHostNameVertifier.defaultVertifier());
+		}
+		try (CloseableHttpClient httpClient = httpClientBuilder.build();
 				CloseableHttpResponse response = httpClient.execute(httpPost)) {
 			// API 응답 처리
 //			System.out.println(response.getStatusLine().getStatusCode());

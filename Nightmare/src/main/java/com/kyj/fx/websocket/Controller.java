@@ -8,14 +8,19 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kyj.fx.nightmare.actions.ai_webview.AIWebViewComposite;
+
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.Context;
+import javafx.application.Platform;
+import javafx.stage.Stage;
 
 /**
  * 
  */
 public class Controller {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
+
 	public Controller() {
 
 	}
@@ -29,9 +34,20 @@ public class Controller {
 	 * @return
 	 */
 	public void getHtml(Context ctx) {
-		Object fromJsonString = ctx.jsonMapper().fromJsonString( ctx.body(), DataBody.class);
+		DataBody fromJsonString = ctx.jsonMapper().fromJsonString(ctx.body(), DataBody.class);
 		LOGGER.debug("{}", fromJsonString);
 		ctx.result("1");
+
+		Platform.runLater(()->{
+			Stage.getWindows().stream().filter(v -> v instanceof Stage).map(v -> ((Stage) v)).filter(v -> {
+				return v.getScene().getRoot().getClass() == AIWebViewComposite.class;
+			}).map(v -> (AIWebViewComposite) v.getScene().getRoot()).forEach(v -> {
+				v.getActive(a -> {
+					a.setLocation(fromJsonString.getLocation());
+				});
+			});	
+		});
+		
 	}
 
 	public Consumer<JavalinConfig> config() {

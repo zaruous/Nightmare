@@ -14,6 +14,16 @@ public class DataBody {
 	private String html; private String text;
 	private String location;
 	private List<String> iframeSrcs = new ArrayList<>();
+	private String storageData;
+	
+
+	public String getStorageData() {
+		return storageData;
+	}
+
+	public void setStorageData(String storageData) {
+		this.storageData = storageData;
+	}
 
 	public List<String> getIframeSrcs() {
 		return iframeSrcs;
@@ -58,8 +68,10 @@ public class DataBody {
 	@Override
 	public String toString() {
 		return "DataBody [eventName=" + eventName + ", html=" + html + ", text=" + text + ", location=" + location
-				+ ", iframeSrcs=" + iframeSrcs + "]";
+				+ ", iframeSrcs=" + iframeSrcs + ", storageData=" + storageData + "]";
 	}
+
+	
 
 	
 
