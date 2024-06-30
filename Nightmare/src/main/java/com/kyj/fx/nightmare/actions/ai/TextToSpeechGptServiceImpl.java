@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.util.Map;
 import java.util.Properties;
 
+import com.kyj.fx.nightmare.actions.comm.ai.AiActionable;
 import com.kyj.fx.nightmare.comm.DbUtil;
 import com.kyj.fx.nightmare.comm.db.DataConnection;
 
@@ -16,7 +17,7 @@ import chat.rest.api.service.impl.TextToSpeechGptService;
 /**
  * 
  */
-public class TextToSpeechGptServiceImpl extends TextToSpeechGptService {
+public class TextToSpeechGptServiceImpl extends TextToSpeechGptService implements AiActionable{
 
 	public TextToSpeechGptServiceImpl() throws Exception {
 		super();

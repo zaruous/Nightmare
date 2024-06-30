@@ -558,4 +558,12 @@ public class FileUtil {
 			}
 		});
 	}
+	
+	public static String[] IMAGES_FILES = new String[] { ".jpg", ".png", ".bmp", ".jpeg", ".gif" };
+	public static boolean isImageFile(File file) {
+		if (file.exists()) {
+			return Stream.of(IMAGES_FILES).filter(str -> file.getName().endsWith(str)).findFirst().isPresent();
+		}
+		return false;
+	}
 }

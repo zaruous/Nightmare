@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.kyj.fx.nightmare.actions.ai.AiComposite;
+import com.kyj.fx.nightmare.actions.grid.DefaultSpreadComposite;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
@@ -100,6 +101,15 @@ public class MainFormComposite extends BorderPane {
 	public void aiOnClick(){
 		try {
 			launch(new AiComposite());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void spreadOnClick(){
+		try {
+			launch(new DefaultSpreadComposite());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

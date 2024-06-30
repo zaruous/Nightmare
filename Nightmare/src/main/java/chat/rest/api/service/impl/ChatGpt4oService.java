@@ -150,8 +150,12 @@ public class ChatGpt4oService extends ChatGpt3Service {
 
 		var param = new HashMap<>();
 		param.put("model", getConfig().getModel());
-		param.put("messages", List.of(getSystemRule(), Map.of("role", "user", "content", message)));
+		param.put("messages", List.of(getSystemRule(), /*getAssist(),*/  Map.of("role", "user", "content", message)));
 
+		
+		LOGGER.debug("system {}", getSystemRule());
+		LOGGER.debug("param\n{}", param);
+		
 		// API 요청 생성
 		Gson gson = new Gson();
 		String requestJson = gson.toJson(param);
@@ -187,6 +191,10 @@ public class ChatGpt4oService extends ChatGpt3Service {
 			responseEntity = response.getEntity();
 			return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
 		}
+	}
+
+	protected Map<String,Object> getAssist() {
+		return Collections.emptyMap();
 	}
 
 	private Runnable runAsync(ResponseHandler handler, HttpPost httpPost) {

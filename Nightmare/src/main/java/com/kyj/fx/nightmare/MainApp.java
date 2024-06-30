@@ -52,7 +52,7 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 		LOGGER.debug("Default jnu encoding : {} " , jnu_encoding);
 		
 		
-		if(!"Y".equals(ResourceLoader.getInstance().get("ssl.verify", "Y"))) {
+		if("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.SSL_VERIFY, "Y"))) {
 			new SSLInitializable().initialize();
 			new HttpURLInitializer().initialize();
 			new HostNameVertifierInitializer().initialize();	
@@ -63,7 +63,8 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 	}
 
 	public void start(Stage stage) throws Exception {
-		if("Y".equals(ResourceLoader.getInstance().get("tary.support.yn", "Y")))
+		
+		if("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.TRAY_SUPPORT_YN, "Y")))
 			TraySupport.addAppToTray(stage);
 		
 		StageStore.setPrimaryStage(stage);

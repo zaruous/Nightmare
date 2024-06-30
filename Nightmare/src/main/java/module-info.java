@@ -67,12 +67,11 @@ open module ETHelper {
 	requires org.jsoup;
 	requires org.fxmisc.flowless;
 	requires io.javalin;
-	/*PDF ITEXT*/
+	requires zt.exec;
+	
+	
 
-	
-	
-	
-	
+	/*PDF ITEXT*/
 
 //	exports com.kyj.fx.nightmare;
 //	exports com.kyj.fx.nightmare.actions.comm.core;

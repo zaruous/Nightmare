@@ -67,6 +67,9 @@ public class ResourceLoader {
 	
 	public static final String SSL_VERIFY = "ssl.verify";
 	
+	public static final String TRAY_SUPPORT_YN = "tary.support.yn";
+	
+	
 	/**
 	 * 앱 버젼 <br/>
 	 * @최초생성일 2021. 12. 8.

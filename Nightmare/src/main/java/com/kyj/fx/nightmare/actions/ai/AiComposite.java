@@ -3,20 +3,21 @@
  */
 package com.kyj.fx.nightmare.actions.ai;
 
-import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.sound.sampled.Mixer.Info;
 
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,7 @@ import com.kyj.fx.fxloader.FxPostInitialize;
 import com.kyj.fx.groovy.DefaultScriptEngine;
 import com.kyj.fx.nightmare.actions.ai_voice.SimpleAIVoiceConversionComposite;
 import com.kyj.fx.nightmare.actions.ai_webview.AIWebViewComposite;
+import com.kyj.fx.nightmare.actions.grid.DefaultSpreadComposite;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxClipboardUtil;
@@ -33,6 +35,7 @@ import com.kyj.fx.nightmare.comm.Message;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
+import com.kyj.fx.nightmare.comm.codearea.CodeAreaHelper;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 
 import javafx.application.Platform;
@@ -46,6 +49,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -95,6 +99,9 @@ public class AiComposite extends AbstractCommonsApp {
 	AIDataDAO dao;
 	@FXML
 	private RadioMenuItem rbSpeackingYes, rbSpeackingNo;
+	@FXML
+	private CheckMenuItem cmiResponseMicAnswer;
+	//응답에 소리를 낼지 여부
 	BooleanProperty useSpeakingFlag = new SimpleBooleanProperty();
 
 	public AiComposite() throws Exception {
@@ -178,8 +185,31 @@ public class AiComposite extends AbstractCommonsApp {
 
 			}
 		});
-
-		speechCtx.getItems().add(miRunCode);
+		MenuItem miProperty = new MenuItem("Property");
+		miProperty.setOnAction(ev ->{
+			
+			
+			CodeArea parent = new CodeArea();
+			IntFunction<javafx.scene.Node> intFunction = LineNumberFactory.get(parent);
+			parent.setParagraphGraphicFactory(intFunction);
+			new CodeAreaHelper<CodeArea>(parent);
+			parent.setWrapText(true);
+			
+			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
+			parent.appendText(lbl.getClass().getName()+ "\n");
+			if(lbl instanceof CodeLabel)
+			{
+				parent.appendText("code type : " + ((CodeLabel) lbl).getCodeType() + "\n");
+			}
+			parent.appendText("text : " + lbl.getText() + "\n");
+			
+			FxUtil.createStageAndShow(parent, stage->{
+				stage.setWidth(1200d);
+				stage.setHeight(800d);
+			});
+		});
+		
+		speechCtx.getItems().addAll(miRunCode, miProperty);
 
 		this.lvResult.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.lvResult.setCellFactory(new Callback<ListView<DefaultLabel>, ListCell<DefaultLabel>>() {
@@ -597,11 +627,12 @@ public class AiComposite extends AbstractCommonsApp {
 
 				// if(!rbNoAnswerMic.isSelected())
 				// {
-				search(send.getId(), send.getText());
+				if(cmiResponseMicAnswer.isSelected())
+					search(send.getId(), send.getText());
 				// }
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error(ValueUtil.toString(e));
 			}
 		} else {
 
@@ -614,10 +645,8 @@ public class AiComposite extends AbstractCommonsApp {
 			} catch (IllegalArgumentException e) {
 				LOGGER.error(ValueUtil.toString(e));
 				DialogUtil.showMessageDialog("지원되지않는 마이크 형식입니다.");
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
+			}  catch (Exception e) {
+				LOGGER.error(ValueUtil.toString(e));
 			}
 		}
 	}
@@ -704,5 +733,14 @@ public class AiComposite extends AbstractCommonsApp {
 	public void miExitApplicationOnAction() {
 		Platform.exit();
 		System.exit(0);
+	}
+	@FXML
+	public void miSpreadOnAction(){
+		DefaultSpreadComposite parent = new DefaultSpreadComposite();
+		FxUtil.createStageAndShow(parent, stage -> {
+			stage.setTitle("Spread");
+			stage.setWidth(1200d);
+			stage.setHeight(800d);
+		});
 	}
 }

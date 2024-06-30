@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import org.apache.http.entity.ContentType;
 
+import com.kyj.fx.nightmare.actions.comm.ai.AiActionable;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.db.DataConnection;
 
@@ -21,7 +22,7 @@ import chat.rest.api.service.impl.SpeechToTextGptService;
 /**
  * 
  */
-public class SpeechToTextGptServiceImpl {
+public class SpeechToTextGptServiceImpl implements AiActionable{
 	private AISpeechDAO aiDataDAO;
 	private SpeechToTextGptService service;
 

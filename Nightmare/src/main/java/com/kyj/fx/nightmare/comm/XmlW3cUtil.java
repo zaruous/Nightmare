@@ -32,7 +32,9 @@ public class XmlW3cUtil {
 		if (element.tagName().toLowerCase().equals("table")) {
 			// 테이블을 CSV 형태로 변환하여 작성
 			writeTableAsCSV(element, writer);
-		} else {
+		} 
+		
+		else {
 			// 자식 요소들을 재귀적으로 탐색
 			for (Element child : element.children()) {
 				parseElement(child, writer);
@@ -40,8 +42,20 @@ public class XmlW3cUtil {
 			// TextNode의 경우 텍스트를 작성
 			if (element.children().isEmpty()) {
 				String text = element.text();
-				if(!text.isEmpty())
-					writer.write(text + "\n");
+				String nodeName = element.nodeName();
+				
+				if("img".equals(nodeName))
+				{
+					writer.write(element.attributes().getIgnoreCase("src"));
+					writer.write(" \n");
+				}
+				
+				else if(!text.isEmpty())
+				{	writer.write(text.trim());
+				
+					if("div".equals(nodeName) || "p".equals(nodeName))
+						writer.write("\n");
+				}	
 			}
 		}
 	}

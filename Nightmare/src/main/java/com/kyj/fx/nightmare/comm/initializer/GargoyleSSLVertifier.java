@@ -26,7 +26,7 @@ import com.kyj.fx.nightmare.comm.ValueUtil;
  */
 public class GargoyleSSLVertifier {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(GargoyleSSLVertifier.class);
+	private static Logger LOGGER = LoggerFactory.getLogger("GargoyleSSLVertifier");
 
 	private SSLContext ctx;
 
@@ -66,14 +66,20 @@ public class GargoyleSSLVertifier {
 		public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
 			// LOGGER.debug("######################");
 			// LOGGER.debug("checkClientTrusted");
-			LOGGER.debug(arg1);
+			LOGGER.debug("client {} " , arg1);
 			// LOGGER.debug("######################");
 		}
 
 		@Override
 		public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
 			 LOGGER.debug("checkServerTrusted {} ", arg1);
-
+//			 for(X509Certificate xc : arg0)
+//			 {
+//				 xc.checkValidity();
+//				 LOGGER.debug("sv {} {}", xc.getSigAlgName(), xc.getSubjectX500Principal().getName());	 
+//			 }
+//			if("UNKNOWN".equals(arg1))
+//				throw new CertificateException(arg1);
 //			boolean present = Stream.of(arg0).filter(v -> {
 //
 //				switch (v.getSigAlgName()) {

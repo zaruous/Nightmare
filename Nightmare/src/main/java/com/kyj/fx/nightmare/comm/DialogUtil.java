@@ -531,6 +531,14 @@ public class DialogUtil {
 
 	}
 
+	/**
+	 * @param option
+	 * @return
+	 */
+	public static File showFileDialog(Consumer<FileChooser> option) {
+		return showFileDialog(StageStore.getPrimaryStage(),option);
+	}
+	
 	public static File showFileDialog(final Window ownerWindow) {
 		return showFileDialog(ownerWindow, option -> {
 		});

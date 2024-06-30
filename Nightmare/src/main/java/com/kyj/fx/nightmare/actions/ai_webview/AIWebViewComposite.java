@@ -67,20 +67,18 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 	@FXML
 	public void initialize() {
 		try {
-			this.openAIService = new OpenAIService();
+			this.openAIService = new OpenAIService() ;
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(ValueUtil.toString(e));
 		}
-		tbWebView.getTabs().add(createNewTab("default", null));
 	}
 
 	Tab createNewTab(String title, Consumer<DefaultWebViewComposite> handler) {
-		Tab e = new Tab(title);
 		DefaultWebViewComposite value = new DefaultWebViewComposite();
+		Tab e = new Tab(title, value);
 		value.setAiService(openAIService);
 		value.setParentComposite(this);
 		value.setCurrentTab(e);
-		e.setContent(value);
 		if (handler != null) {
 			handler.accept(value);
 		}
@@ -88,18 +86,31 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 	}
 
 	public Tab addNewTabView(String location) {
-		Tab newTab = createNewTab("", c ->{
+		Tab newTab = createNewTab("새 탭", c ->{
 			c.setLocation(location);
 		});
+		newTab.setText("새 탭");
 		tbWebView.getTabs().add(newTab);
 		tbWebView.getSelectionModel().selectLast();
 		return newTab;
 	}
 
+	/**
+	 * @param handle
+	 * @return
+	 */
 	public DefaultWebViewComposite getActive(Consumer<DefaultWebViewComposite> handle) {
 		Tab selectedItem = this.tbWebView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null)
 			handle.accept((DefaultWebViewComposite) selectedItem.getContent());
 		return (DefaultWebViewComposite) selectedItem.getContent();
+	}
+	
+	/**
+	 * + 버튼 클릭시 신규 탭 추가.
+	 */
+	@FXML
+	public void miNewTabOnSelectionChange() {
+		addNewTabView("about:blank");
 	}
 }

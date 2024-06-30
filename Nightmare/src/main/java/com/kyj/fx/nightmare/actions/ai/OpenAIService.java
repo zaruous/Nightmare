@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO.Choice;
+import com.kyj.fx.nightmare.actions.comm.ai.AiActionable;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
@@ -21,7 +22,7 @@ import chat.rest.api.service.core.ChatBotService;
 /**
  * 
  */
-public class OpenAIService {
+public class OpenAIService implements AiActionable{
 
 	private static final int LIMIT_MAX_LENGTH = 65535;
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpenAIService.class);
@@ -94,12 +95,26 @@ public class OpenAIService {
 	 * @throws Exception
 	 */
 	public String send(String promptId, long speechId, String message, boolean writeHistory) throws Exception {
+		return send(promptId, speechId, message, writeHistory, true);
+	}
+	/**
+	 * @param promptId
+	 * @param speechId
+	 * @param message
+	 * @param writeHistory
+	 * @param responseAnswer
+	 * @return
+	 * @throws Exception
+	 */
+	public String send(String promptId, long speechId, String message, boolean writeHistory, boolean responseAnswer) throws Exception {
 		long chatId = -1;
 		if (writeHistory) {
 			Object aiId = serivce.getConfig().getConfig().get("id");
 			chatId = aiDataDAO.insertHistory(aiId.toString(),  promptId , speechId, this.getSystemRole(), USER.USER, message);
 		}
-		String send = serivce.send(message);
+		String send = "";
+		if(responseAnswer)
+			send = serivce.send(message);
 
 		if (writeHistory)
 			aiDataDAO.updateAnswer(chatId, send);
@@ -168,6 +183,7 @@ public class OpenAIService {
 			return message;
 		} else {
 			ResponseModelDVO ret = ResponseModelDVO.fromGtpResultMessage(message);
+			if(ret.getChoices().isEmpty())return "";
 			Choice first = ret.getChoices().getFirst();
 			String content2 = first.getMessage().getContent();
 			return content2;

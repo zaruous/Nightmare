@@ -29,7 +29,7 @@ public class DefaultScriptEngine extends AbstractEngine {
 	private Writer writer;
 	private Writer errorWriter;
 	private Reader reader;
-	private HashMap<String,Object> userBinding = new HashMap<String,Object>();
+	private HashMap<String, Object> userBinding = new HashMap<String, Object>();
 
 	public DefaultScriptEngine() {
 		super();
@@ -40,10 +40,14 @@ public class DefaultScriptEngine extends AbstractEngine {
 //		this.args = args;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.kyj.fx.groovy.AbstractEngine#createEngine()
 	 */
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.kyj.fx.groovy.AbstractEngine#createEngine()
 	 */
 	@Override
@@ -82,15 +86,15 @@ public class DefaultScriptEngine extends AbstractEngine {
 			if (reader != null)
 				engineByName.getContext().setReader(reader);
 		}
-		
+
 		Bindings createBindings = engineByName.createBindings();
 		// binding.setProperty(property, newValue);
 //		engineByName.put("BASEDIR", new File(new File("").getAbsolutePath(), "script/nashorn").getAbsolutePath());
 //		engineByName.put("$BASEDIR", new File(new File("").getAbsolutePath(), "script/nashorn").getAbsolutePath());
 		createBindings.put("BASEDIR", new File(new File("").getAbsolutePath(), "groovy"));
-		//2019.10.21 ENGINE에 대한 공용 변수 추가.
+		// 2019.10.21 ENGINE에 대한 공용 변수 추가.
 		createBindings.put("ENGINE", engineByName);
-		//2019.11.28 addAll userBinding.
+		// 2019.11.28 addAll userBinding.
 		createBindings.putAll(userBinding);
 //		createBindings.put("BASEDIR", new File(new File("").getAbsolutePath(), "script/nashorn").getAbsolutePath());
 		setBindings(engineByName, createBindings, ScriptContext.ENGINE_SCOPE);
@@ -110,8 +114,7 @@ public class DefaultScriptEngine extends AbstractEngine {
 	}
 
 	/**
-	 * @param writer
-	 *            the writer to set
+	 * @param writer the writer to set
 	 */
 	public void setWriter(Writer writer) {
 		this.writer = writer;
@@ -125,8 +128,7 @@ public class DefaultScriptEngine extends AbstractEngine {
 	}
 
 	/**
-	 * @param errorWriter
-	 *            the errorWriter to set
+	 * @param errorWriter the errorWriter to set
 	 */
 	public void setErrorWriter(Writer errorWriter) {
 		this.errorWriter = errorWriter;
@@ -140,8 +142,7 @@ public class DefaultScriptEngine extends AbstractEngine {
 	}
 
 	/**
-	 * @param reader
-	 *            the reader to set
+	 * @param reader the reader to set
 	 */
 	public void setReader(Reader reader) {
 		this.reader = reader;

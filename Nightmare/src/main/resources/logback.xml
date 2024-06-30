@@ -22,12 +22,7 @@
 		</encoder>
 	</appender>
 	<!-- 이 아래에 있는 애들 다 log로 찍겠다. -->
-	<logger name="com.kyj.fx.nightmare" level="DEBUG" additivity="true">
-		<appender-ref ref="SYSOUT" />
-		<appender-ref ref="file" />
-	</logger>
-	
-	<logger name="com.kyj.fx.nightmare" level="DEBUG" additivity="true">
+	<logger name="com.kyj.fx.nightmare" level="DEBUG" additivity="false">
 		<appender-ref ref="SYSOUT" />
 		<appender-ref ref="file" />
 	</logger>
@@ -51,6 +46,12 @@
 		<appender-ref ref="SYSOUT" />
 		<appender-ref ref="file" />
 	</logger>
+	
+	<logger name="GargoyleSSLVertifier" level="ERROR" additivity="false">
+		<appender-ref ref="SYSOUT" />
+		<appender-ref ref="file" />
+	</logger>
+	
 	
 	<root level="INFO" additivity="false">
 		<appender-ref ref="SYSOUT" />
