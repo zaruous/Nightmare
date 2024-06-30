@@ -5,9 +5,12 @@ package com.kyj.fx.nightmare.actions.grid;
 
 import java.util.List;
 
+import org.controlsfx.control.spreadsheet.Grid;
 import org.controlsfx.control.spreadsheet.GridBase;
 import org.controlsfx.control.spreadsheet.SpreadsheetCell;
 import org.controlsfx.control.spreadsheet.SpreadsheetCellType;
+
+import com.kyj.fx.nightmare.comm.ValueUtil;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,4 +36,31 @@ public class DefaultGridBase {
 		return gridBase;
 	}
 	
+	/**
+	 * @param gridBase
+	 * @return
+	 */
+	public static String toString(Grid gridBase) {
+		var sb = new StringBuilder();
+		var rowAppender = new StringBuilder();
+		List<ObservableList<SpreadsheetCell>> rows = gridBase.getRows();
+		boolean rowIsNotEmpty = false;
+		for (int row = 0; row < gridBase.getRowCount(); ++row) {
+			ObservableList<SpreadsheetCell> currentRow = rows.get(row);
+			rowAppender.setLength(0);
+			rowIsNotEmpty = false;
+			for (int column = 0; column < gridBase.getColumnCount(); ++column) {
+				SpreadsheetCell createCell = currentRow.get(column);
+				String text = createCell.getText();
+				rowIsNotEmpty |= ValueUtil.isNotEmpty(text);
+				rowAppender.append(text).append("\t");
+			}
+			if(rowIsNotEmpty)
+			{
+				sb.append(rowAppender);
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
+	}
 }

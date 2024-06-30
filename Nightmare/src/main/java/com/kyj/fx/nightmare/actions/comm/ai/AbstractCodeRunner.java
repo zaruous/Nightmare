@@ -8,7 +8,6 @@ import java.util.concurrent.TimeoutException;
 
 import org.zeroturnaround.exec.InvalidExitValueException;
 import org.zeroturnaround.exec.ProcessExecutor;
-import org.zeroturnaround.exec.stream.slf4j.Slf4jStream;
 
 /**
  * 
@@ -28,6 +27,6 @@ public abstract class AbstractCodeRunner implements Runnable {
 
 	public ProcessExecutor createDefaultProcessExecutor()
 			throws InvalidExitValueException, IOException, InterruptedException, TimeoutException {
-		return new ProcessExecutor().redirectError(Slf4jStream.of(getClass()).asInfo());
+		return new ProcessExecutor();
 	}
 }

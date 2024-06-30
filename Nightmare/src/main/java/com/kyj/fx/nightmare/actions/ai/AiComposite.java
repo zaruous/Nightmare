@@ -3,6 +3,7 @@
  */
 package com.kyj.fx.nightmare.actions.ai;
 
+import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.nio.file.Files;
@@ -26,6 +27,7 @@ import com.kyj.fx.fxloader.FxPostInitialize;
 import com.kyj.fx.groovy.DefaultScriptEngine;
 import com.kyj.fx.nightmare.actions.ai_voice.SimpleAIVoiceConversionComposite;
 import com.kyj.fx.nightmare.actions.ai_webview.AIWebViewComposite;
+import com.kyj.fx.nightmare.actions.comm.ai.PyCodeBuilder;
 import com.kyj.fx.nightmare.actions.grid.DefaultSpreadComposite;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
@@ -101,7 +103,7 @@ public class AiComposite extends AbstractCommonsApp {
 	private RadioMenuItem rbSpeackingYes, rbSpeackingNo;
 	@FXML
 	private CheckMenuItem cmiResponseMicAnswer;
-	//응답에 소리를 낼지 여부
+	// 응답에 소리를 낼지 여부
 	BooleanProperty useSpeakingFlag = new SimpleBooleanProperty();
 
 	public AiComposite() throws Exception {
@@ -165,50 +167,62 @@ public class AiComposite extends AbstractCommonsApp {
 					return;
 				if ("groovy".equals(cl.getCodeType())) {
 					ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
-
-						// FxUtil.createStageAndShow(new CodeArea(script),
-						// stage->{
-						//
-						// });
-
 						try {
 							DefaultScriptEngine engine = new DefaultScriptEngine();
 							engine.execute(script);
-							// GroovyScriptEngine engine = new
-							// GroovyScriptEngine();
-							// engine.eval(script);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					});
+				} else if ("python".equals(cl.getCodeType())) {
+
+					ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
+						try {
+							PyCodeBuilder pyCodeBuilder = new PyCodeBuilder();
+							pyCodeBuilder.codeType(cl.getCodeType());
+							
+							String pre = """
+									from matplotlib import font_manager, rc, rcParams
+
+									# 한글 폰트 설정
+									font_path = 'C:/Users/KYJ/AppData/Local/Microsoft/Windows/Fonts/NanumGothic.ttf'  # 폰트 파일 경로
+									font = font_manager.FontProperties(fname=font_path).get_name()
+									rc('font', family=font)
+									""";
+							
+							pyCodeBuilder.code(System.currentTimeMillis() + ".py", pre + script);
+							pyCodeBuilder.run();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					});
+
 				}
 
 			}
 		});
 		MenuItem miProperty = new MenuItem("Property");
-		miProperty.setOnAction(ev ->{
-			
-			
+		miProperty.setOnAction(ev -> {
+
 			CodeArea parent = new CodeArea();
 			IntFunction<javafx.scene.Node> intFunction = LineNumberFactory.get(parent);
 			parent.setParagraphGraphicFactory(intFunction);
 			new CodeAreaHelper<CodeArea>(parent);
 			parent.setWrapText(true);
-			
+
 			DefaultLabel lbl = lvResult.getSelectionModel().getSelectedItem();
-			parent.appendText(lbl.getClass().getName()+ "\n");
-			if(lbl instanceof CodeLabel)
-			{
+			parent.appendText(lbl.getClass().getName() + "\n");
+			if (lbl instanceof CodeLabel) {
 				parent.appendText("code type : " + ((CodeLabel) lbl).getCodeType() + "\n");
 			}
 			parent.appendText("text : " + lbl.getText() + "\n");
-			
-			FxUtil.createStageAndShow(parent, stage->{
+
+			FxUtil.createStageAndShow(parent, stage -> {
 				stage.setWidth(1200d);
 				stage.setHeight(800d);
 			});
 		});
-		
+
 		speechCtx.getItems().addAll(miRunCode, miProperty);
 
 		this.lvResult.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -228,7 +242,7 @@ public class AiComposite extends AbstractCommonsApp {
 					public void updateIndex(int i) {
 						super.updateIndex(i);
 					}
-					
+
 					@Override
 					public void updateItem(DefaultLabel item, boolean empty) {
 						super.updateItem(item, empty);
@@ -244,13 +258,12 @@ public class AiComposite extends AbstractCommonsApp {
 								setText(stringConverter.toString(item));
 
 								if (item instanceof CustomLabel) {
-									CustomLabel questionLabel = (CustomLabel)item;
+									CustomLabel questionLabel = (CustomLabel) item;
 //									QuestionComposite c = new QuestionComposite();
-									
-									
+
 //									c.setQuestionLabel(questionLabel);
 //									c.setData(questionLabel.getData());
-									
+
 //									c.setUserAnswer(questionLabel.getUserAnswer());
 									setGraphic(questionLabel.getGraphic());
 
@@ -324,35 +337,28 @@ public class AiComposite extends AbstractCommonsApp {
 			}
 		});
 
-		//버튼에 대한 활성화에 따라 챗리스트도 UI적으로 비슷한 효과를 준다.
-		btnEnter.disabledProperty().addListener((oba,o,n)->{
-			if(n)
-			{
+		// 버튼에 대한 활성화에 따라 챗리스트도 UI적으로 비슷한 효과를 준다.
+		btnEnter.disabledProperty().addListener((oba, o, n) -> {
+			if (n) {
 				txtPrompt.setOpacity(0.3d);
-			}
-			else
+			} else
 				txtPrompt.setOpacity(1.0d);
 		});
-		
-		//마이크 사용 여부에 따른 분기.
-		if(useMicrophoneFlag.get())
-		{
+
+		// 마이크 사용 여부에 따른 분기.
+		if (useMicrophoneFlag.get()) {
 			try {
 				mixerSettings = new MixerSettings();
 				mixerSettings.load();
 				useMicrophoneFlag.set(true);
-			}catch(MixerNotFound ex) {
+			} catch (MixerNotFound ex) {
 				LOGGER.error(ValueUtil.toString(ex));
 				miMicrophoneOnAction();
-			}	
+			}
 		}
-		
-		
+
 		try {
-			
-			
-			
-			
+
 			dao = AIDataDAO.getInstance();
 			openAIService = new OpenAIService();
 			speechService = new SpeechToTextGptServiceImpl();
@@ -400,44 +406,43 @@ public class AiComposite extends AbstractCommonsApp {
 	public void after() {
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			List<Map<String, Object>> lastHistory = dao.getLatestHistory();
-			lastHistory.stream().filter(v -> v != null).filter(m -> !m.isEmpty())
-					.forEach(m -> {
-						LOGGER.debug("{}", m);
-						String apiName = m.get("API_NAME") == null ? "" : m.get("API_NAME").toString();
-						String prompt = m.get("QUESTION") == null ? "" : m.get("QUESTION").toString();
+			lastHistory.stream().filter(v -> v != null).filter(m -> !m.isEmpty()).forEach(m -> {
+				LOGGER.debug("{}", m);
+				String apiName = m.get("API_NAME") == null ? "" : m.get("API_NAME").toString();
+				String prompt = m.get("QUESTION") == null ? "" : m.get("QUESTION").toString();
 //						String promptId = m.get("PROMPT_ID") == null ? "" : m.get("PROMPT_ID").toString();
-						String graphicClass = m.get("GRAPHIC_CLASS") == null ? "" : m.get("GRAPHIC_CLASS").toString();
-						
-						DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
-						lblMe.setTip("me");
+				String graphicClass = m.get("GRAPHIC_CLASS") == null ? "" : m.get("GRAPHIC_CLASS").toString();
+
+				DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
+				lblMe.setTip("me");
+				Platform.runLater(() -> {
+					lvResult.getItems().add(lblMe);
+				});
+
+				if (ValueUtil.isNotEmpty(graphicClass)) {
+					try {
+						ICustomSupportView supportView = (ICustomSupportView) SupportListViewInstaller
+								.newInstance(graphicClass);
+						CustomLabel ret = new CustomLabel(supportView);
+						String content2 = openAIService.toUserMessage(apiName, m.get("ANSWER").toString());
+						supportView.setData(content2);
 						Platform.runLater(() -> {
-							lvResult.getItems().add(lblMe);
+							lvResult.getItems().add(ret);
 						});
 
-						if(ValueUtil.isNotEmpty(graphicClass))
-						{
-							try {
-								ICustomSupportView supportView = (ICustomSupportView)SupportListViewInstaller.newInstance(graphicClass);
-								CustomLabel ret = new CustomLabel(supportView);
-								String content2 = openAIService.toUserMessage(apiName, m.get("ANSWER").toString());
-								supportView.setData(content2);
-								Platform.runLater(() -> {
-									lvResult.getItems().add(ret);	
-								});
-								
-							} catch (Exception e) {
-								e.printStackTrace();
-							}	
-							return;
-						}
-						
-						if (m.get("ANSWER") != null) {
-							Platform.runLater(() -> {
-								updateChatList(apiName, m.get("ANSWER").toString(), false);
-							});
-						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return;
+				}
 
+				if (m.get("ANSWER") != null) {
+					Platform.runLater(() -> {
+						updateChatList(apiName, m.get("ANSWER").toString(), false);
 					});
+				}
+
+			});
 		});
 
 	}
@@ -477,10 +482,11 @@ public class AiComposite extends AbstractCommonsApp {
 	void search(String promptId, String system, String msg, Function<String, DefaultLabel> customResponseHandler) {
 		search(promptId, -1, system, msg, customResponseHandler);
 	}
-	
-	void search(String promptId, long speechId, String system, String msg, Function<String, DefaultLabel> customResponseHandler) {
 
-		btnEnter.setDisable(true);	
+	void search(String promptId, long speechId, String system, String msg,
+			Function<String, DefaultLabel> customResponseHandler) {
+
+		btnEnter.setDisable(true);
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			try {
 				openAIService.setSystemRole(openAIService.createDefault(system));
@@ -490,7 +496,7 @@ public class AiComposite extends AbstractCommonsApp {
 					if (customResponseHandler != null) {
 						DefaultLabel apply = customResponseHandler.apply(openAIService.toUserMessage(send));
 						lvResult.getItems().add(apply);
-						
+
 					} else {
 						updateChatList(send);
 					}
@@ -627,7 +633,7 @@ public class AiComposite extends AbstractCommonsApp {
 
 				// if(!rbNoAnswerMic.isSelected())
 				// {
-				if(cmiResponseMicAnswer.isSelected())
+				if (cmiResponseMicAnswer.isSelected())
 					search(send.getId(), send.getText());
 				// }
 
@@ -645,7 +651,7 @@ public class AiComposite extends AbstractCommonsApp {
 			} catch (IllegalArgumentException e) {
 				LOGGER.error(ValueUtil.toString(e));
 				DialogUtil.showMessageDialog("지원되지않는 마이크 형식입니다.");
-			}  catch (Exception e) {
+			} catch (Exception e) {
 				LOGGER.error(ValueUtil.toString(e));
 			}
 		}
@@ -654,33 +660,35 @@ public class AiComposite extends AbstractCommonsApp {
 	@FXML
 	public void miMicrophoneOnAction() {
 		Info[] mixerInfos = mixerSettings.getMixers();
-		
+
 		List<InfoDVO> collect = Stream.of(mixerInfos).map(InfoDVO::new).collect(Collectors.toList());
 		try {
-			
+
 			BorderPane root = new BorderPane();
 			root.setTop(new Label(mixerSettings.getConfigedMixerName()));
 			TableView<InfoDVO> tableView = FxUtil.createTableView(collect);
-			
+
 			root.setCenter(tableView);
 			Button btn = new Button("선택");
 			btn.setOnAction(ae -> {
 
-				
-				DialogUtil.showYesOrNoDialog("마이크 선택", Message.getInstance().getMessage("AiComposite_BaseMicSelectedQuestion" /*기본 마이크로 선택하시겠습니까?*/)).ifPresent(v -> {
-					if ("Y".equals(v.getValue())) {
-						InfoDVO selectedItem = tableView.getSelectionModel().getSelectedItem();
-						// String name = selectedItem.getName();
-						Info info = selectedItem.getInfo();
+				DialogUtil
+						.showYesOrNoDialog("마이크 선택", Message.getInstance()
+								.getMessage("AiComposite_BaseMicSelectedQuestion" /* 기본 마이크로 선택하시겠습니까? */))
+						.ifPresent(v -> {
+							if ("Y".equals(v.getValue())) {
+								InfoDVO selectedItem = tableView.getSelectionModel().getSelectedItem();
+								// String name = selectedItem.getName();
+								Info info = selectedItem.getInfo();
 
-						mixerSettings.createSettings(info);
-						mixerSettings.load();
-						
+								mixerSettings.createSettings(info);
+								mixerSettings.load();
 
-						// SaveComplete=저장되었습니다.
-						DialogUtil.showMessageDialog(Message.getInstance().getMessage("AiComposite_SaveComplete" /*저장되었습니다.*/));
-					}
-				});
+								// SaveComplete=저장되었습니다.
+								DialogUtil.showMessageDialog(
+										Message.getInstance().getMessage("AiComposite_SaveComplete" /* 저장되었습니다. */));
+							}
+						});
 
 			});
 			btn.setPrefWidth(80d);
@@ -688,8 +696,12 @@ public class AiComposite extends AbstractCommonsApp {
 			value.setPadding(new Insets(5));
 			value.setAlignment(Pos.CENTER_RIGHT);
 			root.setBottom(value);
-			
-			tableView.setOnMouseClicked(ev ->{ if(ev.getClickCount() == 2 && ev.getButton() == MouseButton.PRIMARY) { btn.fire() ; } });
+
+			tableView.setOnMouseClicked(ev -> {
+				if (ev.getClickCount() == 2 && ev.getButton() == MouseButton.PRIMARY) {
+					btn.fire();
+				}
+			});
 			FxUtil.createStageAndShowAndWait(root, stage -> {
 				stage.setWidth(800d);
 				stage.setTitle("마이크 세팅");
@@ -729,13 +741,15 @@ public class AiComposite extends AbstractCommonsApp {
 		btnMicStopOnAction();
 		super.miHomeOnAction();
 	}
+
 	@FXML
 	public void miExitApplicationOnAction() {
 		Platform.exit();
 		System.exit(0);
 	}
+
 	@FXML
-	public void miSpreadOnAction(){
+	public void miSpreadOnAction() {
 		DefaultSpreadComposite parent = new DefaultSpreadComposite();
 		FxUtil.createStageAndShow(parent, stage -> {
 			stage.setTitle("Spread");

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.zeroturnaround.exec.InvalidExitValueException;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.stream.LogOutputStream;
+import org.zeroturnaround.exec.stream.slf4j.Slf4jStream;
 
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
@@ -55,13 +56,23 @@ public class PyCodeBuilder extends AbstractCodeRunner {
 	public ProcessExecutor defaultBuilder()
 			throws InvalidExitValueException, IOException, InterruptedException, TimeoutException {
 		ProcessExecutor defaultProcessExecutor = createDefaultProcessExecutor();
+		defaultProcessExecutor.redirectError(new LogOutputStream() {
+			@Override
+			protected void processLine(String line) {
+				LOGGER.error("{}", line);
+			}
+		});
 		defaultProcessExecutor.directory(new File("../python/"));
+//		String absolutePath = new File("../python/execute",".pythonrc.py").getAbsolutePath();
+//		LOGGER.debug("pyrc {}" , absolutePath);
 		defaultProcessExecutor.command(PYTHON, "execute/" + pythonFile.getName()).redirectOutput(new LogOutputStream() {
 			@Override
 			protected void processLine(String line) {
 				LOGGER.debug("{}", line);
 			}
-		}).environment("PYTHONIOENCODING", "utf8");
+		})
+		.environment("PYTHONIOENCODING", "utf8");
+//		.environment("PYTHONSTARTUP", absolutePath);
 		defaultProcessExecutor.destroyOnExit();
 		return defaultProcessExecutor;
 	}

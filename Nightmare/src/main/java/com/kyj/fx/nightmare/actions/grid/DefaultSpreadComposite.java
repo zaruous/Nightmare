@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.controlsfx.control.spreadsheet.SpreadsheetCell;
 import org.controlsfx.control.spreadsheet.SpreadsheetCellType;
+import org.controlsfx.control.spreadsheet.SpreadsheetView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,7 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -279,6 +281,33 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 			DialogUtil.showExceptionDailog(e);
 		}
 
+	}
+
+	public final TabPane getTabPane() {
+		return tabPane;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getDocumentText() {
+		
+		ObservableList<Tab> tabs = getTabPane().getTabs();
+		Optional<String> reduce = tabs.stream()
+		.filter(v -> v.getContent()!=null)
+		.map(tab ->{
+			DefaultSpreadItemComposite composite = (DefaultSpreadItemComposite) tab.getContent();
+			DefaultSpreadSheetView spreadSheet = composite.getSpreadSheet();
+			SpreadsheetView view = spreadSheet.getView();
+			
+			String text = tab.getText();
+			String string = DefaultGridBase.toString(view.getGrid());
+			return "#" + text+ "\n" + string;
+		}).reduce((a, b) -> a.concat("\n").concat(b));
+		
+		if(reduce.isPresent())
+			return reduce.get();
+		return ""; 
 	}
 
 	@FXML

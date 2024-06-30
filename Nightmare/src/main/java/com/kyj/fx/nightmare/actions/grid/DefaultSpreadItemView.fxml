@@ -26,7 +26,7 @@
 								<HBox alignment="CENTER">
 									<children>
 										<TextArea fx:id="txtPrompt" maxWidth="1.7976931348623157E308" onKeyPressed="#txtPromptOnKeyPressed" HBox.hgrow="ALWAYS" />
-										<Button fx:id="btnEnter" disable="true" maxWidth="120.0" mnemonicParsing="false" onAction="#btnEnterOnAction" prefWidth="80.0" styleClass="ai-button" text="Enter" />
+										<Button fx:id="btnEnter" maxWidth="120.0" mnemonicParsing="false" onAction="#btnEnterOnAction" prefWidth="80.0" styleClass="ai-button" text="Enter" />
 									</children>
 								</HBox>
 							</items>
