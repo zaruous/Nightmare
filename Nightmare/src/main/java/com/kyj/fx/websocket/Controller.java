@@ -34,15 +34,14 @@ public class Controller {
 	 * @return
 	 */
 	public void getHtml(Context ctx) {
-		DataBody fromJsonString = ctx.jsonMapper().fromJsonString(ctx.body(), DataBody.class);
-		LOGGER.debug("{}", fromJsonString);
 		ctx.result("1");
-
 		Platform.runLater(()->{
 			Stage.getWindows().stream().filter(v -> v instanceof Stage).map(v -> ((Stage) v)).filter(v -> {
 				return v.getScene().getRoot().getClass() == AIWebViewComposite.class;
 			}).map(v -> (AIWebViewComposite) v.getScene().getRoot()).forEach(v -> {
 				v.getActive(a -> {
+					DataBody fromJsonString = ctx.jsonMapper().fromJsonString(ctx.body(), DataBody.class);
+					LOGGER.debug("{}", fromJsonString);
 					a.setLocation(fromJsonString.getLocation());
 				});
 			});	

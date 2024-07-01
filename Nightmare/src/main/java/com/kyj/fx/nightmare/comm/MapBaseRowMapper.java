@@ -34,14 +34,12 @@ public class MapBaseRowMapper implements RowMapper<Map<String, Object>> {
 	public Map<String, Object> mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 		Map<String, Object> map = newMapInstance();
-		if (rs.next()) {
-			ResultSetMetaData metaData = rs.getMetaData();
-			int columnCount = metaData.getColumnCount();
-			for (int i = 1; i <= columnCount; i++) {
-				String columnName = metaData.getColumnName(i);
-				Object value = rs.getObject(i);
-				map.put(columnName, value);
-			}
+		ResultSetMetaData metaData = rs.getMetaData();
+		int columnCount = metaData.getColumnCount();
+		for (int i = 1; i <= columnCount; i++) {
+			String columnName = metaData.getColumnName(i);
+			Object value = rs.getObject(i);
+			map.put(columnName, value);
 		}
 
 		return map;
