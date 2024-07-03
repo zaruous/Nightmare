@@ -6,6 +6,8 @@ package com.kyj.fx.nightmare.actions.grid;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -22,14 +24,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.fxloader.FXMLController;
+import com.kyj.fx.nightmare.actions.ai.AIDataDAO;
 import com.kyj.fx.nightmare.actions.ai.OpenAIService;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExcelUtil;
+import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.GargoyleExtensionFilters;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
+import com.kyj.fx.nightmare.ui.grid.AnnotationOptions;
+import com.kyj.fx.nightmare.ui.grid.Buttons;
+import com.kyj.fx.nightmare.ui.grid.CrudBaseGridView;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -37,7 +45,6 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -327,6 +334,45 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 	
 	@FXML
 	public void miDBToolsOnAction() {
+		CrudBaseGridView<Datasource> view = new CrudBaseGridView<Datasource>(Datasource.class, new AnnotationOptions<>(Datasource.class) {
+
+			@Override
+			public int useButtons() {
+				return Buttons.ADD | Buttons.DELETE | Buttons.SAVE | Buttons.UPDATE;
+			}
+
+			@Override
+			public boolean useCommonCheckBox() {
+				return true;
+			}
+		});
+		
+		
+		view.setSaveClickCallback(list ->{
+			try {
+				var ds = AIDataDAO.getInstance();
+				ds.saveBatch(list);
+			} catch (Exception e) {
+				DialogUtil.showExceptionDailog(e);
+			}
+		});
+		
+		FxUtil.createStageAndShow(view, stage->{
+			
+		});
+		
+		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(()->{
+			var ds = AIDataDAO.getInstance();
+			String statement = """
+					select * from datasource where 1=1 
+					""";
+			List<Datasource> queryForList = ds.queryForList(statement, Map.of(), Datasource.class);
+			
+			Platform.runLater(()->{
+				view.getItems().addAll(queryForList);	
+			});
+
+		});
 		
 	}
 }

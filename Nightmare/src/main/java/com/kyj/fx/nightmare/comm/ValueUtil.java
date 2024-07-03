@@ -11,10 +11,12 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -39,6 +41,134 @@ import com.google.gson.Gson;
  */
 public class ValueUtil {
 
+	/**
+	 * 소문자와 대문자로 구경된 문자열을 SQL 테이블 컬럼에서 사용하는 <br/>
+	 * 
+	 * 대문자_대문자 패턴으로 변환하는 역할을 수행 <br/>
+	 * 
+	 * <pre>
+	 * 		Example 
+	 * 		mappingNm -> MAPPING_NM
+	 * 		MappingNm -> _MAPPING_NM
+	 * </pre>
+	 * 
+	 * @작성자 : KYJ (callakrsos@naver.com)
+	 * @작성일 : 2020. 9. 14.
+	 * @param s
+	 */
+	public static String toColumnNamePattern(String s) {
+		char[] charArray = s.toCharArray();
+		StringBuffer sb = new StringBuffer();
+		for (char c : charArray) {
+			if (Character.isUpperCase(c)) {
+				sb.append("_");
+			}
+			sb.append(Character.toUpperCase(c));
+		}
+		return sb.toString();
+
+	}
+	
+	/**
+	 * @작성자 : KYJ
+	 * @작성일 : 2018. 5. 1.
+	 * @param name
+	 * @return
+	 */
+	public static String toCamelCase(final String name) {
+
+		String[] names = tokenizeToStringArray(name.toLowerCase(), "_");
+		StringBuffer buf = new StringBuffer();
+		int i = 0;
+		for (String n : names) {
+			buf.append(i++ == 0 ? n : capitalize(n));
+		}
+		return buf.toString();
+	}
+	/**
+	 * from springframework
+	 *
+	 * Tokenize the given String into a String array via a StringTokenizer. Trims
+	 * tokens and omits empty tokens.
+	 * <p>
+	 * The given delimiters string is supposed to consist of any number of delimiter
+	 * characters. Each of those characters can be used to separate tokens. A
+	 * delimiter is always a single character; for multi-character delimiters,
+	 * consider using {@code delimitedListToStringArray}
+	 *
+	 * @param str        the String to tokenize
+	 * @param delimiters the delimiter characters, assembled as String (each of
+	 *                   those characters is individually considered as delimiter).
+	 * @return an array of the tokens
+	 * @see java.util.StringTokenizer
+	 * @see String#trim()
+	 * @see #delimitedListToStringArray
+	 */
+	public static String[] tokenizeToStringArray(String str, String delimiters) {
+		return tokenizeToStringArray(str, delimiters, true, true);
+	}
+	/**
+	 *
+	 * from springframework.
+	 *
+	 * Tokenize the given String into a String array via a StringTokenizer.
+	 * <p>
+	 * The given delimiters string is supposed to consist of any number of delimiter
+	 * characters. Each of those characters can be used to separate tokens. A
+	 * delimiter is always a single character; for multi-character delimiters,
+	 * consider using {@code delimitedListToStringArray}
+	 *
+	 * @param str               the String to tokenize
+	 * @param delimiters        the delimiter characters, assembled as String (each
+	 *                          of those characters is individually considered as
+	 *                          delimiter)
+	 * @param trimTokens        trim the tokens via String's {@code trim}
+	 * @param ignoreEmptyTokens omit empty tokens from the result array (only
+	 *                          applies to tokens that are empty after trimming;
+	 *                          StringTokenizer will not consider subsequent
+	 *                          delimiters as token in the first place).
+	 * @return an array of the tokens ({@code null} if the input String was
+	 *         {@code null})
+	 * @see java.util.StringTokenizer
+	 * @see String#trim()
+	 * @see #delimitedListToStringArray
+	 */
+	public static String[] tokenizeToStringArray(String str, String delimiters, boolean trimTokens,
+			boolean ignoreEmptyTokens) {
+
+		if (str == null) {
+			return null;
+		}
+		StringTokenizer st = new StringTokenizer(str, delimiters);
+		List<String> tokens = new ArrayList<String>();
+		while (st.hasMoreTokens()) {
+			String token = st.nextToken();
+			if (trimTokens) {
+				token = token.trim();
+			}
+			if (!ignoreEmptyTokens || token.length() > 0) {
+				tokens.add(token);
+			}
+		}
+		return toStringArray(tokens);
+	}
+	/**
+	 * from springframework.
+	 *
+	 * Copy the given Collection into a String array. The Collection must contain
+	 * String elements only.
+	 *
+	 * @param collection the Collection to copy
+	 * @return the String array ({@code null} if the passed-in Collection was
+	 *         {@code null})
+	 */
+	public static String[] toStringArray(Collection<String> collection) {
+		if (collection == null) {
+			return null;
+		}
+		return collection.toArray(new String[collection.size()]);
+	}
+	
 	public static String capitalize(String name) {
 		return StringUtils.capitalize(name);
 	}

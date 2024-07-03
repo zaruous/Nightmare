@@ -178,12 +178,18 @@ public class CrudBaseGridView<T extends AbstractDVO> extends BorderPane {
 
 			@Override
 			public void handle(MouseEvent event) {
-				ObservableList<T> items = gridview.getItems();
+				
+				
+				ObservableList<T> items = gridview.getSelectionModel().getSelectedItems();
 				for (int i = 0; i < items.size(); i++) {
 					T t = items.get(i);
-					if (t.getClicked()) {
-						t.set_status(CommonConst._STATUS_UPDATE);
-					}
+					t.setClicked(true);
+//					if (t.getClicked()) {
+//						var before = t.get_status();
+//						if(!CommonConst._STATUS_CREATE.equals(before))
+							t.set_status(CommonConst._STATUS_UPDATE);
+//					}
+//					t.setClicked(false);
 				}
 
 			}
@@ -313,25 +319,28 @@ public class CrudBaseGridView<T extends AbstractDVO> extends BorderPane {
 	 */
 	private EventHandler<? super MouseEvent> deleteBtnClickHandler() {
 		return event -> {
-			ObservableList<T> items = gridview.getItems();
-			int SIZE = items.size() - 1;
-			for (int i = SIZE; i >= 0; i--) {
-
-				T t = items.get(i);
-				if (t.commonsClickedProperty().get()) {
+			
+//			ObservableList<T> items = gridview.getItems();
+//			int SIZE = items.size() - 1;
+//			for (int i = SIZE; i >= 0; i--) {
+				T t = gridview.getSelectionModel().getSelectedItem();
+//				T t = items.get(i);
+//				if (t.commonsClickedProperty().get()) {
 
 					if (Objects.equals(CommonConst._STATUS_CREATE, t.get_status())) {
 						// UI에서 새롭게 추가된 항목은 처리항목없음
 						/* Nothing.. */
+						
 					} else {
 						// 데이터베이스 삭제처리를 위해 플래그 처리한다.
 						t.set_status(CommonConst._STATUS_DELETE);
 						deleteItems.add(t);
 					}
-					items.remove(i);
-				}
+					
+					gridview.getItems().remove(t);
+//				}
 
-			}
+//			}
 		};
 	}
 

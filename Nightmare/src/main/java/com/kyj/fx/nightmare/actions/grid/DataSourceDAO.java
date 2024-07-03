@@ -15,9 +15,10 @@ import com.kyj.fx.nightmare.comm.DbUtil;
  */
 public class DataSourceDAO extends AbstractDAO {
 	private String aliasName;
+
 	public DataSourceDAO(String aliasName) throws Exception {
 		this.aliasName = aliasName;
-		
+
 		var ds = AIDataDAO.getInstance();
 		String statement = """
 				select * from datasource where 1=1 and ALIAS_NAME = :aliasName
@@ -31,5 +32,6 @@ public class DataSourceDAO extends AbstractDAO {
 		setDataSource(DbUtil.getDataSource(map.get("DRIVER").toString(), map.get("URL").toString(),
 				map.get("USER_ID").toString(), map.get("USER_PWD").toString()));
 	}
+
 
 }

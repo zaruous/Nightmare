@@ -8,6 +8,7 @@ package com.kyj.fx.nightmare.ui.grid;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.nightmare.comm.AbstractDVO;
+import com.kyj.fx.nightmare.comm.ValueUtil;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
@@ -26,6 +28,7 @@ import javafx.event.EventDispatcher;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -231,6 +234,26 @@ public class CrudBaseColumnMapper<T extends AbstractDVO> implements IColumnMappe
 
 			}
 
+			@Override
+			public void updateItem(Object item, boolean empty) {
+				super.updateItem(item, empty);
+			}
+
+			@Override
+			public void commitEdit(Object newValue) {
+				if(newValue instanceof String)
+				{
+					T t = tableViewProperty().get().getItems().get(getIndex());
+					
+					try {
+						Method method = t.getClass().getMethod("set"+ValueUtil.capitalize(columnName), String.class);
+						method.invoke(t, newValue);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					super.commitEdit(newValue);
+				}
+			}
 		};
 
 		StringConverter<Object> converter = naming.stringConverter(columnName);
@@ -240,10 +263,10 @@ public class CrudBaseColumnMapper<T extends AbstractDVO> implements IColumnMappe
 			textFieldTableCell.setConverter(converter);
 		}
 
-		EventDispatcher originalDispatcher = textFieldTableCell.getEventDispatcher();
-		textFieldTableCell.setEventDispatcher((event, tail) -> {
-			return textFieldCellEventDispatcher(textFieldTableCell, originalDispatcher, event, tail);
-		});
+//		EventDispatcher originalDispatcher = textFieldTableCell.getEventDispatcher();
+//		textFieldTableCell.setEventDispatcher((event, tail) -> {
+//			return textFieldCellEventDispatcher(textFieldTableCell, originalDispatcher, event, tail);
+//		});
 		return textFieldTableCell;
 	}
 
@@ -312,35 +335,37 @@ public class CrudBaseColumnMapper<T extends AbstractDVO> implements IColumnMappe
 		});
 	}
 
-	private Event textFieldCellEventDispatcher(TextFieldTableCell<T, Object> cell, EventDispatcher originalDispatcher,
-			Event event, EventDispatchChain tail) {
-
-		// 편집후 마우스 엔터인경우 이벤트 else
-		if (event instanceof ActionEvent) {
-
-			tail.append(new EventDispatcher() {
-				@Override
-				public Event dispatchEvent(Event event, EventDispatchChain tail) {
-					int index = cell.getIndex();
-					Object item = cell.getTableRow().getItem();
-					TableColumn<T, Object> _tableColumn = cell.getTableColumn();
-					TableRow _tableRow = cell.getTableRow();
-
-					TableView<T> tableView = cell.getTableView();
-
-					GridBaseTableCellValueChangeEvent dispatchEvent = new GridBaseTableCellValueChangeEvent();
-					dispatchEvent.setItem(item);
-					dispatchEvent.setRowIndex(index);
-					dispatchEvent.setTableRow(_tableRow);
-					dispatchEvent.setTableColumn(_tableColumn);
-					Event.fireEvent(tableView, dispatchEvent);
-
-					return event;
-				}
-			});
-		}
-		return originalDispatcher.dispatchEvent(event, tail);
-	}
+//	private Event textFieldCellEventDispatcher(TextFieldTableCell<T, Object> cell, EventDispatcher originalDispatcher,
+//			Event event, EventDispatchChain tail) {
+//
+//		// 편집후 마우스 엔터인경우 이벤트 else
+//		if (event instanceof ActionEvent) {
+//
+//			tail.append(new EventDispatcher() {
+//				@Override
+//				public Event dispatchEvent(Event event, EventDispatchChain tail) {
+//					int index = cell.getIndex();
+//					Object item2 = cell.getItem();
+//					cell.commitEdit(originalDispatcher);
+//					Object item = cell.getTableRow().getItem();
+//					TableColumn<T, Object> _tableColumn = cell.getTableColumn();
+//					TableRow _tableRow = cell.getTableRow();
+//
+//					TableView<T> tableView = cell.getTableView();
+//
+//					GridBaseTableCellValueChangeEvent dispatchEvent = new GridBaseTableCellValueChangeEvent();
+//					dispatchEvent.setItem(item);
+//					dispatchEvent.setRowIndex(index);
+//					dispatchEvent.setTableRow(_tableRow);
+//					dispatchEvent.setTableColumn(_tableColumn);
+//					Event.fireEvent(tableView, dispatchEvent);
+//
+//					return event;
+//				}
+//			});
+//		}
+//		return originalDispatcher.dispatchEvent(event, tail);
+//	}
 
 	private Event choiceBoxTableCellCellEventDispatcher(ChoiceBoxTableCell<T, Object> cell,
 			EventDispatcher originalDispatcher, Event event, EventDispatchChain tail) {

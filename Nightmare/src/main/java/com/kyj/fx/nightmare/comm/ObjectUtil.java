@@ -133,9 +133,11 @@ public class ObjectUtil {
 	 * @작성일 : 2020. 10. 30.
 	 * @param t
 	 * @return
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
 	 */
-	public static Map<String, Object> getKeys(Class<?> t) {
-		return getKeys(LinkedHashMap::new, t, a -> true);
+	public static Map<String, Object> getKeys(Object instance) throws IllegalArgumentException, IllegalAccessException {
+		return getKeys(LinkedHashMap::new, instance, a -> true);
 	}
 
 	/**
@@ -144,9 +146,11 @@ public class ObjectUtil {
 	 * @param t
 	 * @param fieldNameFilter
 	 * @return
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
 	 */
-	public static Map<String, Object> getKeys(Class<?> t, Predicate<String> fieldNameFilter) {
-		return getKeys(LinkedHashMap::new, t, fieldNameFilter);
+	public static Map<String, Object> getKeys(Object instance, Predicate<String> fieldNameFilter) throws IllegalArgumentException, IllegalAccessException {
+		return getKeys(LinkedHashMap::new, instance, fieldNameFilter);
 	}
 
 	/**
@@ -158,20 +162,21 @@ public class ObjectUtil {
 	 * @param t
 	 * @param fieldNameFilter
 	 * @return
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
 	 */
-	public static Map<String, Object> getKeys(Supplier<Map<String, Object>> collection, Class<?> t, Predicate<String> fieldNameFilter) {
+	public static Map<String, Object> getKeys(Supplier<Map<String, Object>> collection, Object instance, Predicate<String> fieldNameFilter) throws IllegalArgumentException, IllegalAccessException {
 
 		Map<String, Object> hashMap = collection.get();
-
-		if (t == null)
+		if (instance == null)
 			return hashMap;
 
-		Field[] fields = t.getDeclaredFields();
+		Field[] fields = instance.getClass().getDeclaredFields();
 
 		// Iterate over all the attributes
 		for (Field field : fields) {
 
-			if (!field.isAccessible()) {
+			if (!field.canAccess(instance)) {
 				field.setAccessible(true);
 			}
 
@@ -180,7 +185,7 @@ public class ObjectUtil {
 				if (!fieldNameFilter.test(name))
 					continue;
 			}
-			hashMap.put(name, null);
+			hashMap.put(name, field.get(instance));
 
 		}
 		return hashMap;
