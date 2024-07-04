@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.nightmare.comm.AbstractDVO;
+import com.kyj.fx.nightmare.comm.FxUtil;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

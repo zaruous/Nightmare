@@ -5,7 +5,7 @@ package com.kyj.fx.nightmare.actions.grid;
 
 import com.kyj.fx.nightmare.comm.AbstractDVO;
 import com.kyj.fx.nightmare.ui.grid.ColumnWidth;
-import com.kyj.fx.nightmare.ui.grid.NonEditable;
+import com.kyj.fx.nightmare.ui.grid.PrimaryKeyColumn;
 import com.kyj.fx.nightmare.ui.grid.TableName;
 
 /**
@@ -14,7 +14,7 @@ import com.kyj.fx.nightmare.ui.grid.TableName;
 @TableName("Datasource")
 public class Datasource extends AbstractDVO{
 	
-	@NonEditable
+	@PrimaryKeyColumn
 	@ColumnWidth(80)
 	private String aliasName;
 	@ColumnWidth(120)

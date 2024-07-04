@@ -287,9 +287,14 @@ public class DbUtil {
 
 	public static Map<String, Object> selectOne(final Connection con, final String sql) throws Exception {
 		return selectOne(con, sql, 1, 1, DEFAULT_PREPAREDSTATEMENT_CONVERTER, (meta, rs) -> {
+			
+				
 			try {
-				MapBaseRowMapper mapBaseRowMapper = new MapBaseRowMapper();
-				return mapBaseRowMapper.mapRow(rs, 0);
+				if(rs.next())
+				{
+					MapBaseRowMapper mapBaseRowMapper = new MapBaseRowMapper();
+					return mapBaseRowMapper.mapRow(rs, 0);	
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

@@ -300,62 +300,64 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 	 * @param speack
 	 */
 	private void updateChatList(String send) {
-		ResponseModelDVO fromGtpResultMessage = ResponseModelDVO.fromGtpResultMessage(send);
-		LOGGER.info("{}", fromGtpResultMessage);
-		List<Choice> choices = fromGtpResultMessage.getChoices();
-		choices.forEach(c -> {
-			try {
+		
+//		ResponseModelDVO fromGtpResultMessage = //ResponseModelDVO.fromGtpResultMessage(send);
+//		LOGGER.info("{}", fromGtpResultMessage);
+//		List<Choice> choices = fromGtpResultMessage.getChoices();
+//		choices.forEach(c -> {});
 
-				String content2 = c.getMessage().getContent();
+		try {
+			String content2 = openAIService.get().toUserMessage(send);
+//			String content2 = c.getMessage().getContent();
 
-				LOGGER.debug(content2);
-				LineNumberReader br = new LineNumberReader(new StringReader(content2));
-				String temp = null;
-				boolean isCodeBlock = false;
-				String codeType = "";
-				StringBuilder sb = new StringBuilder();
-				while ((temp = br.readLine()) != null) {
-					if (temp.startsWith("```") && !isCodeBlock) {
-						isCodeBlock = true;
-						codeType = temp.replace("```", "");
-						continue;
-					}
-
-					if (temp.startsWith("```") && isCodeBlock) {
-						isCodeBlock = false;
-						CodeLabel content = new CodeLabel(sb.toString());
-
-						Label graphic = new Label("Copy");
-						graphic.getStyleClass().add("code-label-item-cell");
-						graphic.setOnMouseClicked(new EventHandler<MouseEvent>() {
-							@Override
-							public void handle(MouseEvent ev) {
-								FxClipboardUtil.putString(content.getText());
-								DialogUtil.showMessageDialog("클립보드에 복사되었습니다.");
-							}
-						});
-
-						VBox vBox = new VBox(graphic);
-						vBox.setSpacing(5.0d);
-						content.setGraphic(vBox);
-
-						content.setCodeType(codeType);
-						sb.setLength(0);
-						lvResult.getItems().add(content);
-						continue;
-					}
-
-					if (isCodeBlock) {
-						sb.append(temp).append(System.lineSeparator());
-					} else {
-						DefaultLabel content = new DefaultLabel(temp);
-						lvResult.getItems().add(content);
-					}
+			LOGGER.debug(content2);
+			LineNumberReader br = new LineNumberReader(new StringReader(content2));
+			String temp = null;
+			boolean isCodeBlock = false;
+			String codeType = "";
+			StringBuilder sb = new StringBuilder();
+			while ((temp = br.readLine()) != null) {
+				if (temp.startsWith("```") && !isCodeBlock) {
+					isCodeBlock = true;
+					codeType = temp.replace("```", "");
+					continue;
 				}
 
-			} catch (Exception e) {
-				LOGGER.error(ValueUtil.toString(e));
+				if (temp.startsWith("```") && isCodeBlock) {
+					isCodeBlock = false;
+					CodeLabel content = new CodeLabel(sb.toString());
+
+					Label graphic = new Label("Copy");
+					graphic.getStyleClass().add("code-label-item-cell");
+					graphic.setOnMouseClicked(new EventHandler<MouseEvent>() {
+						@Override
+						public void handle(MouseEvent ev) {
+							FxClipboardUtil.putString(content.getText());
+							DialogUtil.showMessageDialog("클립보드에 복사되었습니다.");
+						}
+					});
+
+					VBox vBox = new VBox(graphic);
+					vBox.setSpacing(5.0d);
+					content.setGraphic(vBox);
+
+					content.setCodeType(codeType);
+					sb.setLength(0);
+					lvResult.getItems().add(content);
+					continue;
+				}
+
+				if (isCodeBlock) {
+					sb.append(temp).append(System.lineSeparator());
+				} else {
+					DefaultLabel content = new DefaultLabel(temp);
+					lvResult.getItems().add(content);
+				}
 			}
-		});
+
+		} catch (Exception e) {
+			LOGGER.error(ValueUtil.toString(e));
+		}
+	
 	}
 }

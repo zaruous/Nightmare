@@ -19,6 +19,7 @@ import org.controlsfx.control.table.TableFilter.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kyj.fx.nightmare.comm.codearea.TableViewSearchComposite;
 import com.kyj.fx.nightmare.ui.grid.CommonsBaseGridView;
 import com.kyj.fx.nightmare.ui.grid.IColumnMapper;
 import com.kyj.fx.nightmare.ui.grid.IOptions;
@@ -41,6 +42,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
@@ -622,6 +624,33 @@ public class FxTableViewUtil {
 					}
 
 				}
+			}
+		});
+	}
+
+	/**
+	 * tableView 찾기 기능을 추가한다. <br/>
+	 * 
+	 * @작성자 : KYJ
+	 * @작성일 : 2017. 10. 31.
+	 * @param owner
+	 *            owner 부모 팝업
+	 * @param tb
+	 *            대상 테이블뷰
+	 * @param customConverter
+	 *            데이터 변환 컨버터
+	 */
+	public static <T> void installFindKeyEvent(Window owner, TableView<T> tb,
+			BiFunction<TableColumn<?, ?>, Object, Object> customConverter) {
+		tb.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
+			if (!ev.isAltDown() && !ev.isShiftDown() && ev.isControlDown() && ev.getCode() == KeyCode.F) {
+				if (ev.isConsumed())
+					return;
+				ev.consume();
+				TableViewSearchComposite<T> composite = new TableViewSearchComposite<>(owner, tb);
+				composite.setCustomConverter(customConverter);
+				composite.show();
+
 			}
 		});
 	}

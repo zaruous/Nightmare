@@ -5,6 +5,7 @@ package com.kyj.fx.nightmare.actions.grid;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import com.kyj.fx.nightmare.comm.ExcelUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.GargoyleExtensionFilters;
+import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 import com.kyj.fx.nightmare.ui.grid.AnnotationOptions;
@@ -49,6 +51,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.WritableImage;
@@ -223,8 +226,6 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		if (openFile == null)
 			return;
 
-		
-		
 		tabPane.getTabs().remove(1, tabPane.getTabs().size());
 
 		ObservableList<Tab> tabList = FXCollections.emptyObservableList();
@@ -247,7 +248,6 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 						for (int c = firstCellNum; c < lastCellNum; c++) {
 							Cell cell = row.getCell(c);
 
-							
 							SpreadsheetCell spreadsheetCell = spreadSheet.getRows().get(i).get(c);
 							switch (cell.getCellType()) {
 							case BLANK:
@@ -264,7 +264,8 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 								break;
 							case NUMERIC:
 								double numericCellValue = cell.getNumericCellValue();
-								SpreadsheetCell newCell = SpreadsheetCellType.DOUBLE.createCell(i, c, 1, 1, numericCellValue);
+								SpreadsheetCell newCell = SpreadsheetCellType.DOUBLE.createCell(i, c, 1, 1,
+										numericCellValue);
 								spreadSheet.getRows().get(i).set(c, newCell);
 								break;
 							case STRING:
@@ -282,7 +283,7 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 
 			}
 			tabPane.getTabs().addAll(tabList);
-			tabPane.getSelectionModel().select( activeSheetIndex + 1);
+			tabPane.getSelectionModel().select(activeSheetIndex + 1);
 			currentFile.set(openFile);
 		} catch (IOException e) {
 			DialogUtil.showExceptionDailog(e);
@@ -298,23 +299,21 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 	 * @return
 	 */
 	public String getDocumentText() {
-		
+
 		ObservableList<Tab> tabs = getTabPane().getTabs();
-		Optional<String> reduce = tabs.stream()
-		.filter(v -> v.getContent()!=null)
-		.map(tab ->{
+		Optional<String> reduce = tabs.stream().filter(v -> v.getContent() != null).map(tab -> {
 			DefaultSpreadItemComposite composite = (DefaultSpreadItemComposite) tab.getContent();
 			DefaultSpreadSheetView spreadSheet = composite.getSpreadSheet();
 			SpreadsheetView view = spreadSheet.getView();
-			
+
 			String text = tab.getText();
 			String string = DefaultGridBase.toString(view.getGrid());
-			return "#" + text+ "\n" + string;
+			return "#" + text + "\n" + string;
 		}).reduce((a, b) -> a.concat("\n").concat(b));
-		
-		if(reduce.isPresent())
+
+		if (reduce.isPresent())
 			return reduce.get();
-		return ""; 
+		return "";
 	}
 
 	@FXML
@@ -323,32 +322,56 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 
 	@FXML
 	public void miFileSaveAsOnAction() {
-		Tab selectedItem = this.tabPane.getSelectionModel().getSelectedItem();
-		DefaultSpreadItemComposite c = null;
-		if (selectedItem != null)
-			c = (DefaultSpreadItemComposite) selectedItem.getContent();
-		DefaultSpreadSheetView ss = c.getSpreadSheet();
+		File saveFile = DialogUtil.showFileSaveDialog(StageStore.getPrimaryStage(), chooser -> {
+			chooser.getExtensionFilters()
+					.add(new ExtensionFilter(GargoyleExtensionFilters.XLSX_NAME, GargoyleExtensionFilters.XLSX));
+		});
+		if (saveFile == null)
+			return;
 
-		new SpreadSaveAction().miSaveAsOnAction(ss.getRows(), 0, 100, 0, 100);
-	}
-	
-	@FXML
-	public void miDBToolsOnAction() {
-		CrudBaseGridView<Datasource> view = new CrudBaseGridView<Datasource>(Datasource.class, new AnnotationOptions<>(Datasource.class) {
+		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
+			boolean success = false;
+			SpreadSaveAction spreadSaveAction = new SpreadSaveAction();
+			try (Workbook wb = ExcelUtil.createNewWorkBookXlsx()) {
+				spreadSaveAction.addSheetData(wb, this);
+				try (FileOutputStream stream = new FileOutputStream(saveFile)) {
+					wb.write(stream);
+				}
+				success = true;
+			} catch (IOException e) {
+				Platform.runLater(() -> {
+					DialogUtil.showExceptionDailog(e);
+				});	
+				return;
+			}			
 
-			@Override
-			public int useButtons() {
-				return Buttons.ADD | Buttons.DELETE | Buttons.SAVE | Buttons.UPDATE;
-			}
-
-			@Override
-			public boolean useCommonCheckBox() {
-				return true;
+			if(success)
+			{
+				Platform.runLater(() -> {
+					DialogUtil.showMessageDialog("Complete");
+				});	
 			}
 		});
-		
-		
-		view.setSaveClickCallback(list ->{
+
+	}
+
+	@FXML
+	public void miDBToolsOnAction() {
+		CrudBaseGridView<Datasource> view = new CrudBaseGridView<Datasource>(Datasource.class,
+				new AnnotationOptions<>(Datasource.class) {
+
+					@Override
+					public int useButtons() {
+						return Buttons.ADD | Buttons.DELETE | Buttons.SAVE | Buttons.UPDATE;
+					}
+
+					@Override
+					public boolean useCommonCheckBox() {
+						return true;
+					}
+				});
+
+		view.setSaveClickCallback(list -> {
 			try {
 				var ds = AIDataDAO.getInstance();
 				ds.saveBatch(list);
@@ -356,23 +379,27 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 				DialogUtil.showExceptionDailog(e);
 			}
 		});
-		
-		FxUtil.createStageAndShow(view, stage->{
-			
+		view.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		view.getSelectionModel().setCellSelectionEnabled(true);
+
+		FxUtil.installClipboardKeyEvent(view.getRealGrid());
+
+		FxUtil.createStageAndShow(view, stage -> {
+			FxUtil.installFindKeyEvent(stage, view.getRealGrid());
 		});
-		
-		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(()->{
+
+		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			var ds = AIDataDAO.getInstance();
 			String statement = """
-					select * from datasource where 1=1 
+					select * from datasource where 1=1
 					""";
 			List<Datasource> queryForList = ds.queryForList(statement, Map.of(), Datasource.class);
-			
-			Platform.runLater(()->{
-				view.getItems().addAll(queryForList);	
+
+			Platform.runLater(() -> {
+				view.getItems().addAll(queryForList);
 			});
 
 		});
-		
+
 	}
 }

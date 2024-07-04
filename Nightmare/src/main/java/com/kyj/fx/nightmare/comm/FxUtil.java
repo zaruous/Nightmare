@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import org.controlsfx.control.spreadsheet.SpreadsheetView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -719,5 +720,26 @@ public class FxUtil {
 		return null;
 	}
 
+	/**
+	 * @작성자 : KYJ
+	 * @작성일 : 2018. 6. 12.
+	 * @param owner
+	 * @param tb
+	 */
+	public static <T> void installFindKeyEvent(Window owner, TableView<T> tb) {
+		installFindKeyEvent(owner, tb, null);
+	}
+
+	public static <T> void installFindKeyEvent(Window owner, TableView<T> tb,
+			BiFunction<TableColumn<?, ?>, Object, Object> customConverter) {
+		FxTableViewUtil.installFindKeyEvent(owner, tb, customConverter);
+	}
+
+	public static void installFindKeyEvent(Stage window, SpreadsheetView ssv) {
+		FxSpreadViewUtil.installFindKeyEvent(window, ssv, null);
+	}
 	
+	public static void installFindKeyEvent(Stage window, SpreadsheetView ssv, BiFunction<TableColumn<?, ?>, Object, Object> customConverter) {
+		FxSpreadViewUtil.installFindKeyEvent(window, ssv, customConverter);
+	}
 }

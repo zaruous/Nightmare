@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.nightmare.comm.FileUtil;
 import com.kyj.fx.nightmare.comm.FxClipboardUtil;
+import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
 import javafx.collections.FXCollections;
@@ -49,6 +50,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * @author KYJ
@@ -73,11 +75,18 @@ public class DefaultSpreadSheetView extends StackPane {
 		});
 		// ssv.setGrid(grid);
 		init();
+		
+		
+		FxUtil.installFindKeyEvent((Stage)this.getScene().getWindow(), ssv);
 	}
 
 	public SpreadsheetView getView() {
 		return this.ssv;
 	}
+	
+	public int getRowCount() { return ssv.getGrid().getRowCount(); }
+	public int getColumnCount() { return ssv.getGrid().getColumnCount(); }
+	
 
 	/**
 	 * @return

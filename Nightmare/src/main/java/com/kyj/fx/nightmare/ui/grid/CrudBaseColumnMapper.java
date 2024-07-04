@@ -208,6 +208,12 @@ public class CrudBaseColumnMapper<T extends AbstractDVO> implements IColumnMappe
 						if (!editable)
 							return;
 
+//						NonEditable annotationClass = getAnnotationClass(_abstractvo.getClass(), NonEditable.class,
+//								columnName);
+//						if (annotationClass != null) {
+//							return;
+//						}
+						
 						super.startEdit();
 						LOGGER.debug("start Edit");
 					} else if (Objects.equals(CommonConst._STATUS_UPDATE, _abstractvo.get_status())) {
@@ -220,8 +226,13 @@ public class CrudBaseColumnMapper<T extends AbstractDVO> implements IColumnMappe
 								columnName);
 						if (annotationClass != null) {
 							LOGGER.debug("non start Edit");
-
 						} else {
+						
+							PrimaryKeyColumn pkColumn = getAnnotationClass(_abstractvo.getClass(), PrimaryKeyColumn.class,
+									columnName);
+							if(pkColumn !=null)
+								return;
+							
 							super.startEdit();
 							LOGGER.debug("start Edit");
 						}
