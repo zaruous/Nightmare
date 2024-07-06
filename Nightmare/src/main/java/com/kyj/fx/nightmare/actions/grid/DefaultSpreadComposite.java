@@ -33,6 +33,7 @@ import com.kyj.fx.nightmare.comm.ExcelUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.GargoyleExtensionFilters;
+import com.kyj.fx.nightmare.comm.Message;
 import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
@@ -456,6 +457,8 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 			try {
 				var ds = AIDataDAO.getInstance();
 				ds.saveBatch(list);
+				
+				DialogUtil.showMessageDialog(Message.getInstance().getMessage("SaveComplete")/*"저장되었습니다."*/);
 			} catch (Exception e) {
 				DialogUtil.showExceptionDailog(e);
 			}
@@ -486,7 +489,7 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 	private List<Datasource> getDataSourceList() {
 		var ds = AIDataDAO.getInstance();
 		String statement = """
-				select * from datasource where 1=1
+				select * from datasource where 1=1 order by FST_REG_DT 
 				""";
 		List<Datasource> queryForList = ds.queryForList(statement, Map.of(), Datasource.class);
 		return queryForList;

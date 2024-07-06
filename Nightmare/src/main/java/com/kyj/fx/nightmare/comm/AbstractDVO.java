@@ -10,6 +10,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.kyj.fx.nightmare.ui.grid.CommonConst;
+
 import javafx.beans.property.Property;
 
 import javafx.beans.property.BooleanProperty;
@@ -24,9 +26,9 @@ public class AbstractDVO {
 
 	private String _status;
 
-	public static final String UPDATE = "U";
-	public static final String DELETE = "D";
-	public static final String CREATE = "C";
+	public static final String UPDATE = CommonConst._STATUS_UPDATE;
+	public static final String DELETE = CommonConst._STATUS_DELETE;
+	public static final String CREATE = CommonConst._STATUS_CREATE;
 
 	public AbstractDVO() {
 

@@ -244,7 +244,7 @@ public class AbstractDAO {
 		T instance = list.get(0);
 		List<String> pks = DbUtil.pks(tableName, DbUtil.CAMEL_CONVERTER);
 
-		Map<String, Object> allColumns = ObjectUtil.getKeys(instance, name -> !pks.contains(name));
+		Map<String, Object> allColumns = ObjectUtil.getFileteredKeys(instance, name -> !pks.contains(name));
 		StringBuilder sb = new StringBuilder();
 		sb.append("update $tableName \n");
 		sb.append("set ");
@@ -296,7 +296,8 @@ public class AbstractDAO {
 		if(list.isEmpty()) {return new int[0]; }
 
 		T instance = list.get(0);
-		Map<String, Object> allColumns = ObjectUtil.getKeys(instance);
+		Map<String, Object> allColumns = ObjectUtil.getKeys(instance, ObjectUtil.STR_COLUMN_NAME_CONVERTER);
+		Map<String, Object> camelColumns = ObjectUtil.getKeys(instance);
 		StringBuilder sb = new StringBuilder();
 		sb.append("insert into $tableName \n");
 		sb.append("( ");
@@ -308,12 +309,12 @@ public class AbstractDAO {
 		
 		sb.append(" )\nvalues\n(");
 		
-		for(String key : allColumns.keySet())
+		for(String key : camelColumns.keySet())
 		{
 			sb.append(" :").append(key).append(",");
 		}
 		sb.deleteCharAt(sb.length() -1 );
-		sb.append(")\n");
+		sb.append(" )\n");
 		
 		String sql = sb.toString();
 		Map<String, Object> param = Map.of("tableName", tableName);
@@ -323,12 +324,13 @@ public class AbstractDAO {
 			sql = writer.toString();
 		}
 //		
-		DbUtil.noticeQuery(sql);
+		
 		Map[] array = new HashMap[list.size()];
 		for(int i=0, size = list.size(); i< size; i++)
 		{
 			array[i] = ObjectUtil.getKeys(list.get(i));
 		}
+		DbUtil.noticeQuery(sql, array);
 		return getNamedJdbcTemplate().batchUpdate(sql, array);
 	}
 	
@@ -350,7 +352,7 @@ public class AbstractDAO {
 		if(list.isEmpty()) {return new int[0]; }
 
 		T instance = list.get(0);
-		List<String> pks = DbUtil.pks(tableName);
+		List<String> pks = DbUtil.pks(tableName, DbUtil.CAMEL_CONVERTER);
 		if(pks.isEmpty())throw new RuntimeException("pk does not exists.");
 		StringBuilder sb = new StringBuilder();
 		sb.append("delete from $tableName \n");

@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -38,6 +40,12 @@ public class ObjectUtil {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ObjectUtil.class);
 
+	public static final Function<String, String> STR_CAMEL_CONVERTER = (str) -> {
+		return ValueUtil.toCamelCase(str);
+	};
+	public static final Function<String, String> STR_COLUMN_NAME_CONVERTER = (str) -> {
+		return ValueUtil.toColumnNamePattern(str);
+	};
 	/**
 	 * @작성자 : KYJ
 	 * @작성일 : 2017. 3. 31.
@@ -81,7 +89,8 @@ public class ObjectUtil {
 	 * @param fieldNameFilter
 	 * @return
 	 */
-	public static Map<String, Object> toMap(Supplier<Map<String, Object>> collection, Object t, Predicate<String> fieldNameFilter) {
+	public static Map<String, Object> toMap(Supplier<Map<String, Object>> collection, Object t,
+			Predicate<String> fieldNameFilter) {
 
 		if (t == null)
 			return collection.get();
@@ -129,28 +138,35 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * @작성자 : KYJ (zaruous@naver.com)
-	 * @작성일 : 2020. 10. 30.
-	 * @param t
+	 * @param instance
 	 * @return
-	 * @throws IllegalAccessException 
-	 * @throws IllegalArgumentException 
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
 	 */
-	public static Map<String, Object> getKeys(Object instance) throws IllegalArgumentException, IllegalAccessException {
-		return getKeys(LinkedHashMap::new, instance, a -> true);
+	public static Map<String, Object> getKeys(Object instance) throws Exception {
+		return getKeys(LinkedHashMap::new, instance, a -> true, null);
+	}
+
+	
+	/**
+	 * @param instance
+	 * @param fieldNameFilter
+	 * @return
+	 * @throws Exception
+	 */
+	public static Map<String, Object> getFileteredKeys(Object instance, Predicate<String> fieldNameFilter) throws Exception {
+		return getKeys(LinkedHashMap::new, instance, fieldNameFilter, null);
 	}
 
 	/**
-	 * @작성자 : KYJ (zaruous@naver.com)
-	 * @작성일 : 2020. 10. 30.
-	 * @param t
-	 * @param fieldNameFilter
+	 * @param instance
+	 * @param keyNameConverter
 	 * @return
-	 * @throws IllegalAccessException 
-	 * @throws IllegalArgumentException 
+	 * @throws Exception
 	 */
-	public static Map<String, Object> getKeys(Object instance, Predicate<String> fieldNameFilter) throws IllegalArgumentException, IllegalAccessException {
-		return getKeys(LinkedHashMap::new, instance, fieldNameFilter);
+	public static Map<String, Object> getKeys(Object instance, Function<String, String> keyNameConverter)
+			throws Exception {
+		return getKeys(LinkedHashMap::new, instance, a -> true, keyNameConverter);
 	}
 
 	/**
@@ -162,10 +178,11 @@ public class ObjectUtil {
 	 * @param t
 	 * @param fieldNameFilter
 	 * @return
-	 * @throws IllegalAccessException 
-	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
 	 */
-	public static Map<String, Object> getKeys(Supplier<Map<String, Object>> collection, Object instance, Predicate<String> fieldNameFilter) throws IllegalArgumentException, IllegalAccessException {
+	public static Map<String, Object> getKeys(Supplier<Map<String, Object>> collection, Object instance,
+			Predicate<String> fieldNameFilter, Function<String, String> keyNameConverter) throws Exception {
 
 		Map<String, Object> hashMap = collection.get();
 		if (instance == null)
@@ -185,6 +202,8 @@ public class ObjectUtil {
 				if (!fieldNameFilter.test(name))
 					continue;
 			}
+			if (keyNameConverter != null)
+				name = keyNameConverter.apply(name);
 			hashMap.put(name, field.get(instance));
 
 		}
@@ -228,7 +247,8 @@ public class ObjectUtil {
 		 * @param fieldNameFilter
 		 * @return
 		 */
-		public static Map<String, Object> toMap(Supplier<Map<String, Object>> collection, Object t, Predicate<String> fieldNameFilter) {
+		public static Map<String, Object> toMap(Supplier<Map<String, Object>> collection, Object t,
+				Predicate<String> fieldNameFilter) {
 			BeanInfo beanInfo = null;
 			try {
 				beanInfo = Introspector.getBeanInfo(t.getClass());
@@ -385,14 +405,12 @@ public class ObjectUtil {
 	 * from객체에서 to 객체로 값을 바인드한다.
 	 *
 	 * @주처리내용 setter와 getter로 처리되며 접근지정자는 public
-	 * @예외 static이나 from객체에서 [final로 선언된 함수는 바인드 처리안함.] -> final은 처리함 field처랑
-	 *     헷깔린듯.
+	 * @예외 static이나 from객체에서 [final로 선언된 함수는 바인드 처리안함.] -> final은 처리함 field처랑 헷깔린듯.
 	 * @작성자 : KYJ
 	 * @작성일 : 2015. 10. 6.
 	 * @param from
 	 * @param to
-	 * @param from에서
-	 *            특정변수만 바인드처리.
+	 * @param from에서 특정변수만 바인드처리.
 	 * @return 바인드된 결과 객체
 	 */
 	public static <T, K> K populate(final T from, K to, final List<String> props) {

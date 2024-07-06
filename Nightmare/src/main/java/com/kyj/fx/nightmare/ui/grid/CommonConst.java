@@ -12,7 +12,7 @@ public class CommonConst {
 	 * 
 	 * @최초생성일 2015. 10. 9.
 	 */
-	public static final String _STATUS_CREATE = "I";
+	public static final String _STATUS_CREATE = "C";
 
 	/**
 	 * 상태값 UPDATE

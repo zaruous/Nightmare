@@ -27,7 +27,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <ComboBox fx:id="cbDatabase" prefWidth="150.0" promptText="SQL" />
+                              <ComboBox fx:id="cbDatabase" prefWidth="150.0" promptText="Select DataSource" />
                            </children>
                         </HBox>
                      </children>
