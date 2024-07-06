@@ -68,7 +68,7 @@ open module ETHelper {
 	requires org.fxmisc.flowless;
 	requires io.javalin;
 	requires zt.exec;
-	
+	requires reactfx;
 	
 
 	/*PDF ITEXT*/

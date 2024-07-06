@@ -45,7 +45,7 @@ public class SpreadSaveAction {
 		for (Tab tab : tabs) {
 			DefaultSpreadItemComposite subc = (DefaultSpreadItemComposite) tab.getContent();
 			if(subc == null) continue; 
-			DefaultSpreadSheetView ss = subc.getSpreadSheet();
+			DefaultSpreadSheetView ss = subc.getView();
 			int rowCount = ss.getRowCount();
 			int columnCount = ss.getColumnCount();
 

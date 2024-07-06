@@ -6,9 +6,17 @@ package com.kyj.fx.nightmare.actions.grid;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.controlsfx.control.spreadsheet.GridBase;
+import org.controlsfx.control.spreadsheet.SpreadsheetCell;
+import org.controlsfx.control.spreadsheet.SpreadsheetCellType;
+import org.controlsfx.control.spreadsheet.SpreadsheetView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +24,6 @@ import com.kyj.fx.fxloader.FXMLController;
 import com.kyj.fx.nightmare.actions.ai.CodeLabel;
 import com.kyj.fx.nightmare.actions.ai.DefaultLabel;
 import com.kyj.fx.nightmare.actions.ai.OpenAIService;
-import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO;
-import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO.Choice;
 import com.kyj.fx.nightmare.actions.comm.ai.PyCodeBuilder;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
@@ -29,6 +35,8 @@ import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -71,7 +79,7 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 
 	private int row = 100;
 	private int column = 100;
-	ContextMenu ctx = new ContextMenu();
+	private ContextMenu ctx = new ContextMenu();
 
 	public DefaultSpreadItemComposite() {
 		try {
@@ -91,8 +99,11 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 		}
 	}
 
-	public final DefaultSpreadSheetView getSpreadSheet() {
+	public final DefaultSpreadSheetView getView() {
 		return sv.get();
+	}
+	public final SpreadsheetView getSpreadSheetView() {
+		return sv.get().getView();
 	}
 
 	StringConverter<DefaultLabel> stringConverter = new StringConverter<DefaultLabel>() {
@@ -290,7 +301,7 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 	 * @return
 	 */
 	private String getDocumentText() {
-		return DefaultGridBase.toString(getSpreadSheet().getView().getGrid());
+		return DefaultGridBase.toString(getSpreadSheetView().getGrid());
 	}
 
 	/**
@@ -359,5 +370,82 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 			LOGGER.error(ValueUtil.toString(e));
 		}
 	
+	}
+
+	public void updateUI(List<Map<String, Object>> query, int startRow, int startCol) {
+		SpreadsheetView ssv = getSpreadSheetView();
+		
+		Map<String, Object> map = query.get(0);
+		GridBase grid = DefaultGridBase.createGrid(query.size() + 100, map.size() > 100 ? map.size() : 100 );
+		ssv.setGrid(grid);
+		ObservableList<ObservableList<SpreadsheetCell>> rows = ssv.getItems();
+		
+		//head
+		ObservableList<SpreadsheetCell> headerCells = rows.get(0);
+		
+		Iterator<Entry<String, Object>> it = map.entrySet().iterator();
+		int c = startCol;
+		
+		while(it.hasNext())
+		{
+			Entry<String, Object> next = it.next();
+			headerCells.get(c).setItem(next.getKey());
+			c++;
+		}
+		ObservableList<SpreadsheetCell> cellList = null;
+		//data
+		for(int i= (startRow + 1), size = rows.size(); i< size; i++)
+		{
+			cellList = rows.get(i);
+			map = query.get(i);
+			
+			c = startCol;
+			it = map.entrySet().iterator();
+			while(it.hasNext())
+			{
+				
+				Entry<String, Object> next = it.next();
+				SpreadsheetCell spreadsheetCell = cellList.get(c);
+				Object value = next.getValue();
+				if(value instanceof Date) {
+					LocalDate localDate = ((Date)value).toLocalDate();
+					spreadsheetCell = SpreadsheetCellType.DATE.createCell(spreadsheetCell.getRow(), spreadsheetCell.getColumn(), 1, 1, localDate);
+					cellList.set(c, spreadsheetCell);
+				}
+				else {
+					spreadsheetCell.setItem(value);	
+				}
+				
+				c++;
+			}
+		}
+		
+		for(int i= rows.size(), size = query.size(); i< size; i++ )
+		{
+			ObservableList<SpreadsheetCell> newRowList = FXCollections.observableArrayList();
+			rows.add(newRowList);
+//			cellList = items.get(i);
+			map = query.get(i);
+			c = startCol;
+			it = map.entrySet().iterator();
+			while(it.hasNext())
+			{
+				
+				Entry<String, Object> next = it.next();
+//				SpreadsheetCell spreadsheetCell = cellList.get(c);
+				Object value = next.getValue();
+				if(value instanceof Date) {
+					LocalDate localDate = ((Date)value).toLocalDate();
+					SpreadsheetCell spreadsheetCell = SpreadsheetCellType.DATE.createCell(i, c, 1, 1, localDate);
+					newRowList.set(c, spreadsheetCell);
+				}
+				else {
+					SpreadsheetCell spreadsheetCell = SpreadsheetCellType.STRING.createCell(i, c, 1, 1, (String)value);
+					newRowList.set(c, spreadsheetCell);
+				}
+				c++;
+			}
+//			items.add(cellList)
+		}
 	}
 }

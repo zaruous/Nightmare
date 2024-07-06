@@ -26,7 +26,7 @@ public class FxSpreadViewUtil {
 				if (ev.isConsumed())
 					return;
 				ev.consume();
-				SpreadViewSearchComposite<T> composite = new SpreadViewSearchComposite<>(owner, ssv);
+				SpreadViewSearchComposite composite = new SpreadViewSearchComposite(owner, ssv);
 				composite.setCustomConverter(customConverter);
 				composite.show();
 

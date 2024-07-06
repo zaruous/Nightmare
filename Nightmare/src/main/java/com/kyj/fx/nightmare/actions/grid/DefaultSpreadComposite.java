@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.fxloader.FXMLController;
+import com.kyj.fx.fxloader.FxPostInitialize;
 import com.kyj.fx.nightmare.actions.ai.AIDataDAO;
 import com.kyj.fx.nightmare.actions.ai.OpenAIService;
 import com.kyj.fx.nightmare.comm.DialogUtil;
@@ -48,6 +49,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -62,6 +64,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Pair;
+import javafx.util.StringConverter;
 
 /**
  * 
@@ -74,11 +77,13 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 	@FXML
 	private Tab tabNew;
 	@FXML
-	private BorderPane borContent;
-
+	private BorderPane borContent, borSql;
+	
 	private OpenAIService openAIService;
 	private ObjectProperty<File> currentFile = new SimpleObjectProperty<File>();
-
+	@FXML
+	private ComboBox<Datasource> cbDatabase;
+	private SqlKeywords sqlKeywords;
 	public DefaultSpreadComposite() {
 		try {
 			FxUtil.loadRoot(DefaultSpreadComposite.class, this);
@@ -87,6 +92,16 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		}
 	}
 
+	@FxPostInitialize
+	public void after() {
+		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(()->{
+			List<Datasource> dataSourceList = getDataSourceList();
+			Platform.runLater(()->{
+				cbDatabase.getItems().addAll(dataSourceList);
+			});
+		});
+		
+	}
 	@FXML
 	public void miScreenshotOnAction() {
 
@@ -132,8 +147,55 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		});
 
 		addNewTabView("Sheet1");
+		
+		
+		sqlKeywords = new SqlKeywords();
+		borSql.setCenter(sqlKeywords);
+		sqlKeywords.addEventFilter(KeyEvent.KEY_PRESSED, this::sqlKeywordOnKeyPressed);
+		
+		this.cbDatabase.setConverter(new StringConverter<Datasource>() {
+			
+			@Override
+			public String toString(Datasource object) {
+				return object.getAliasName();
+			}
+			
+			@Override
+			public Datasource fromString(String string) {
+				return null;
+			}
+		});
+		
+		
 	}
 
+	
+	public void sqlKeywordOnKeyPressed(KeyEvent ke) {
+		if(ke.getCode() == KeyCode.ENTER && ke.isControlDown()) {
+			if(!ke.isConsumed()) ke.consume();
+			Datasource ds = cbDatabase.getSelectionModel().getSelectedItem();
+			
+			try {
+				var dao = new DataSourceDAO(ds.getAliasName());
+				List<Map<String, Object>> query = dao.query(sqlKeywords.getCodeArea().getText(), Map.of());
+				
+				DefaultSpreadItemComposite currentView = getCurrentView();
+				currentView.updateUI(query, 0, 0);
+				
+				
+			} catch (Exception e) {
+				LOGGER.error(ValueUtil.toString(e));
+			}
+
+		}
+	}
+	
+//	private Connection getConnection(Datasource v) throws SQLException {
+//		return DbUtil.getConnection(v.getDriver(), v.getUrl(), v.getUserId(), v.getUserPwd() , ds->{
+//		});	
+//	}
+	
+	
 	Tab createNewTab(String title, Consumer<DefaultSpreadItemComposite> handler) {
 		return createNewTab(title, 100, 100, handler);
 	}
@@ -156,6 +218,13 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		return e;
 	}
 
+	public DefaultSpreadItemComposite getCurrentView() {
+		Tab selectedItem = tabPane.getSelectionModel().getSelectedItem();
+		if(selectedItem == null)
+			throw new RuntimeException("no tab selected.");
+		return (DefaultSpreadItemComposite) selectedItem.getContent();
+	}
+	
 	/**
 	 * @param e
 	 */
@@ -175,8 +244,6 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		Optional<Tab> any = tabPane.getTabs().stream().filter(t -> ValueUtil.equals(t.getText(), newTabName)).findAny();
 		if (any.isPresent()) {
 			DialogUtil.showMessageDialog(String.format("중복된 이름이 존재합니다.[%s]", newTabName));
-			// throw new TabNameAlreadyExistsException(String.format("중복된 이름이 존재합니다.[%s]",
-			// newTabName));
 			return false;
 		}
 		return true;
@@ -240,7 +307,7 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 				int firstRowNum = sheetAt.getFirstRowNum();
 				Tab newTab = createNewTab(sheetAt.getSheetName(), composite -> {
 
-					DefaultSpreadSheetView spreadSheet = composite.getSpreadSheet();
+					DefaultSpreadSheetView spreadSheet = composite.getView();
 					for (int i = firstRowNum; i < lastRowNum; i++) {
 						Row row = sheetAt.getRow(i);
 						short lastCellNum = row.getLastCellNum();
@@ -303,7 +370,7 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		ObservableList<Tab> tabs = getTabPane().getTabs();
 		Optional<String> reduce = tabs.stream().filter(v -> v.getContent() != null).map(tab -> {
 			DefaultSpreadItemComposite composite = (DefaultSpreadItemComposite) tab.getContent();
-			DefaultSpreadSheetView spreadSheet = composite.getSpreadSheet();
+			DefaultSpreadSheetView spreadSheet = composite.getView();
 			SpreadsheetView view = spreadSheet.getView();
 
 			String text = tab.getText();
@@ -318,6 +385,13 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 
 	@FXML
 	public void miFileSaveOnAction() {
+		File saveFile = currentFile.get();
+		if(saveFile == null)
+		{
+			miFileSaveAsOnAction();
+			return;
+		}
+		saveFileProcessor(saveFile);
 	}
 
 	@FXML
@@ -329,6 +403,14 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		if (saveFile == null)
 			return;
 
+		saveFileProcessor(saveFile);
+
+	}
+
+	/**
+	 * @param saveFile
+	 */
+	private void saveFileProcessor(File saveFile) {
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			boolean success = false;
 			SpreadSaveAction spreadSaveAction = new SpreadSaveAction();
@@ -352,7 +434,6 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 				});	
 			}
 		});
-
 	}
 
 	@FXML
@@ -389,11 +470,7 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		});
 
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
-			var ds = AIDataDAO.getInstance();
-			String statement = """
-					select * from datasource where 1=1
-					""";
-			List<Datasource> queryForList = ds.queryForList(statement, Map.of(), Datasource.class);
+			List<Datasource> queryForList = getDataSourceList();
 
 			Platform.runLater(() -> {
 				view.getItems().addAll(queryForList);
@@ -401,5 +478,17 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 
 		});
 
+	}
+
+	/**
+	 * @return
+	 */
+	private List<Datasource> getDataSourceList() {
+		var ds = AIDataDAO.getInstance();
+		String statement = """
+				select * from datasource where 1=1
+				""";
+		List<Datasource> queryForList = ds.queryForList(statement, Map.of(), Datasource.class);
+		return queryForList;
 	}
 }

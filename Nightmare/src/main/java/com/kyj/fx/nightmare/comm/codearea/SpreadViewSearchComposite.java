@@ -33,8 +33,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -53,7 +51,7 @@ import javafx.stage.Window;
  *
  */
 @FXMLController(value = "TextSearchView.fxml", css = "TextSearchView.css", isSelfController = true)
-public class SpreadViewSearchComposite<T> extends BorderPane {
+public class SpreadViewSearchComposite extends BorderPane {
 	private static Logger LOGGER = LoggerFactory.getLogger(SpreadViewSearchComposite.class);
 
 	/**
@@ -249,7 +247,10 @@ public class SpreadViewSearchComposite<T> extends BorderPane {
 		}
 		return slidingStartRowIndexProperty.get();
 	}
-
+	
+	
+	
+	
 	private boolean find(String findWord, Function<SearchResultVO, SearchResultVO> function,
 			int size, int index, Predicate<SearchResultVO> isBreak) {
 		ObservableList<SpreadsheetColumn> columns = ssv.getColumns();
@@ -334,14 +335,15 @@ public class SpreadViewSearchComposite<T> extends BorderPane {
 		if (ValueUtil.isEmpty(findWord))
 			return;
 
-		ObservableList<T> items = this.ssv.getItems();
-		ObservableList<TableColumn<T, ?>> columns = this.ssv.getColumns();
+		ObservableList<ObservableList<SpreadsheetCell>> items = this.ssv.getItems();
 
 		for (int i = 0, max = items.size(); i < max; i++) {
-			find(findWord, function, columns, max, i, v -> false);
+			find(findWord, function, max, i, v -> false);
 		}
 
 	}
+
+	
 
 	/**
 	 * 찾기탭에서 찾기

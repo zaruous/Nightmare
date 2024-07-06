@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import javax.script.Bindings;
 import javax.script.ScriptException;
@@ -17,8 +18,6 @@ import javax.script.ScriptException;
 import org.controlsfx.control.spreadsheet.Grid;
 import org.controlsfx.control.spreadsheet.GridChange;
 import org.controlsfx.control.spreadsheet.SpreadsheetCell;
-import org.controlsfx.control.spreadsheet.SpreadsheetCellBase;
-import org.controlsfx.control.spreadsheet.SpreadsheetCellEditor;
 import org.controlsfx.control.spreadsheet.SpreadsheetCellType;
 import org.controlsfx.control.spreadsheet.SpreadsheetColumn;
 import org.controlsfx.control.spreadsheet.SpreadsheetView;
@@ -29,22 +28,20 @@ import org.slf4j.LoggerFactory;
 import com.kyj.fx.nightmare.comm.FileUtil;
 import com.kyj.fx.nightmare.comm.FxClipboardUtil;
 import com.kyj.fx.nightmare.comm.FxUtil;
+import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Skin;
 import javafx.scene.control.TablePosition;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -62,12 +59,14 @@ public class DefaultSpreadSheetView extends StackPane {
 	private Label status;
 	private static Logger LOGGER = LoggerFactory.getLogger(DefaultSpreadSheetView.class);
 
+	private Stack<Command> undoStack = new Stack<>();
+	private Stack<Command> redoStack = new Stack<>();
+
 //	public DefaultSpreadSheetView() {
 //		init();
 //	}
 
 	public DefaultSpreadSheetView(Grid grid) {
-
 		ssv = new SpreadsheetView(grid);
 		ObservableList<SpreadsheetColumn> columns = ssv.getColumns();
 		columns.forEach(col -> {
@@ -75,18 +74,27 @@ public class DefaultSpreadSheetView extends StackPane {
 		});
 		// ssv.setGrid(grid);
 		init();
-		
-		
-		FxUtil.installFindKeyEvent((Stage)this.getScene().getWindow(), ssv);
+
+		Platform.runLater(() -> {
+			Stage window = (Stage) this.getScene().getWindow();
+			if (window == null)
+				window = StageStore.getPrimaryStage();
+			FxUtil.installFindKeyEvent(window, ssv);
+		});
+
 	}
 
 	public SpreadsheetView getView() {
 		return this.ssv;
 	}
-	
-	public int getRowCount() { return ssv.getGrid().getRowCount(); }
-	public int getColumnCount() { return ssv.getGrid().getColumnCount(); }
-	
+
+	public int getRowCount() {
+		return ssv.getGrid().getRowCount();
+	}
+
+	public int getColumnCount() {
+		return ssv.getGrid().getColumnCount();
+	}
 
 	/**
 	 * @return
@@ -110,55 +118,46 @@ public class DefaultSpreadSheetView extends StackPane {
 
 		ContextMenu contextMenu = this.ssv.getContextMenu();
 		ObservableList<MenuItem> contextMenuItems = contextMenu.getItems();
-		
+
 		Menu mCode = new Menu("Code");
 		MenuItem miCopyJavaArrayList = new MenuItem("Copy java ArrayList");
 		miCopyJavaArrayList.setOnAction(this::miCopyJavaArrayListOnAction);
 		mCode.getItems().add(miCopyJavaArrayList);
-		
+
 		Menu mCellType = new Menu("Cell Type");
 		MenuItem miCellNumber = new MenuItem("Integer");
 		miCellNumber.setOnAction(this::miCellTypeNumberOnAction);
 		mCellType.getItems().add(miCellNumber);
-		
+
 		contextMenuItems.add(mCellType);
 
 		
-		
-//		DefaultScriptEngine engine = new DefaultScriptEngine();
-//		File f = new File("read-script/SpreadSheetContextMenu.js");
-//		if(f.exists()) {
-//			try {
-//				String script = FileUtil.readToString(f) ;
-//				engine.invokeFunction(script, "addContextMenu", contextMenu, this.ssv, this);	
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-
-		// {
-		// Node node = new ImageView(new
-		// Image(GagoyleSpreadSheetView.class.getResourceAsStream("testImage.jpg"),
-		// 500, 500, false, false));
-		// new DragDropWrapping(this, node);
-		// getChildren().add(node);
-		// }
-		// {
-		// Node node = new ImageView(new
-		// Image(GagoyleSpreadSheetView.class.getResourceAsStream("testImage.jpg"),
-		// 500, 500, false, false));
-		// new DragDropWrapping(this, node);
-		// getChildren().add(node);
-		// }
 		this.ssv.getGrid().addEventHandler(GridChange.GRID_CHANGE_EVENT, gridChangeListener);
+		this.ssv.getGrid().addEventHandler(GridChange.GRID_CHANGE_EVENT, gridUnRedo);
 	}
 
+	EventHandler<GridChange> gridUnRedo = new EventHandler<GridChange>() {
+		@Override
+		public void handle(GridChange ev) {
+			Object oldValue = ev.getOldValue();
+			Object newValue = ev.getNewValue();
+			int row = ev.getRow();
+			int column = ev.getColumn();
+			Grid g = (Grid) ev.getSource();
+			SpreadsheetCell cell = g.getRows().get(row).get(column);
+			EditCommand command = new EditCommand(cell, oldValue, newValue);
+			executeCommand(command);
+			LOGGER.debug("{}", command);
+		}
+	};
+	
 	EventHandler<GridChange> gridChangeListener = new EventHandler<GridChange>() {
 		@Override
 		public void handle(GridChange ev) {
 			int row = ev.getRow();
 			int column = ev.getColumn();
 			Grid g = (Grid) ev.getSource();
+			Object oldValue = ev.getOldValue();
 			Object newValue = ev.getNewValue();
 			if (newValue == null || !(newValue.toString().startsWith("=")))
 				return;
@@ -174,27 +173,24 @@ public class DefaultSpreadSheetView extends StackPane {
 //				String exp = a + "" + row2;
 //				createBindings.put(exp, c.getItem());
 //			});
-			
-			
-			
+
 			String[] tokens = script.split("[\s,\\+,\\-,\\*,\\/]+");
-			for(String token : tokens)
-			{
-				switch(token) {
+			for (String token : tokens) {
+				switch (token) {
 				case "+", "=", "-", "*", "/":
 					break;
 				}
-				
+
 				String[] split = token.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-				if(split.length == 2) {
+				if (split.length == 2) {
 					int ch = split[0].toCharArray()[0] - 65;
-					int num = Integer.parseInt(split[1],10) - 1;
-					
+					int num = Integer.parseInt(split[1], 10) - 1;
+
 					SpreadsheetCell spreadsheetCell = g.getRows().get(num).get(ch);
 					Object item = spreadsheetCell.getItem();
 					createBindings.put(token, item);
 				}
-				
+
 			}
 
 			try {
@@ -215,33 +211,20 @@ public class DefaultSpreadSheetView extends StackPane {
 		ObservableList<TablePosition> selectedCells = this.ssv.getSelectionModel().getSelectedCells();
 		ObservableList<ObservableList<SpreadsheetCell>> items = this.ssv.getItems();
 
-		selectedCells.forEach(pos ->{
+		selectedCells.forEach(pos -> {
 			int row = pos.getRow();
 			int column = pos.getColumn();
-			
+
 			Object item = items.get(row).get(column).getItem();
 			try {
 				int v = Integer.parseInt(item.toString());
 				items.get(row).set(column, SpreadsheetCellType.INTEGER.createCell(row, column, 1, 1, v));
-			}catch(Exception ex) {
+			} catch (Exception ex) {
 				items.get(row).set(column, SpreadsheetCellType.INTEGER.createCell(row, column, 1, 1, 0));
 			}
 		});
-//		items.stream().flatMap(v -> v.stream()).forEach(v -> {
-//			
-//		});
-//		StringBuilder sb = new StringBuilder();
-//		sb.append("List a = new ArrayList();");
-//		for (TablePosition pot : selectedCells) {
-//			SpreadsheetCell cell = this.ssv.getItems().get(pot.getRow()).get(pot.getColumn());
-//			String text = cell.getText().trim();
-//			if (ValueUtil.isEmpty(text))
-//				continue;
-//
-//			sb.append("a.add(").append("\"").append(text).append("\");");
-//		}
-//		FxClipboardUtil.putString(sb.toString());
 	}
+
 	/**
 	 * 선택된 셀들을 코드형태로 바꿔서 클립보드에 복사한다<br/>
 	 * 
@@ -313,9 +296,7 @@ public class DefaultSpreadSheetView extends StackPane {
 				SpreadsheetCell cell = new ImageCellType().createCell(row, column, 1, 1, pastImage);
 
 				ssv.getGrid().getRows().get(tablePosition.getRow()).set(tablePosition.getColumn(), cell);
-
-				// this.getGrid().setCellValue(tablePosition.getRow(),
-				// tablePosition.getColumn(), new ImageView(pastImage));
+				
 			}
 
 				break;
@@ -328,22 +309,28 @@ public class DefaultSpreadSheetView extends StackPane {
 						try {
 							if (FileUtil.isImageFile(file)) {
 								Image pastImage = new Image(file.toURI().toURL().openStream());
-
-								ObservableList<TablePosition> selectedCells = ssv.getSelectionModel()
-										.getSelectedCells();
+//								double height = pastImage.getHeight();
+//								double width = pastImage.getWidth();
+								ObservableList<TablePosition> selectedCells = ssv.getSelectionModel().getSelectedCells();
 								TablePosition tablePosition = selectedCells.get(0);
 
 								int row = tablePosition.getRow();
 								int column = tablePosition.getColumn();
-								SpreadsheetCell cell = new ImageCellType().createCell(row, column, 1, 1, pastImage);
-
-								ssv.getGrid().getRows().get(tablePosition.getRow()).set(tablePosition.getColumn(),
-										cell);
+								
+								var imgcellType = new ImageCellType();
+//								SpreadsheetCellEditor editor = imgcellType.createEditor(ssv);
+								
+								SpreadsheetCell cell = imgcellType.createCell(row, column, 1, 1, pastImage);
+//								cell.setHasPopup(true);
+//								cell.getPopupItems().add(new MenuItem("test"));
+//								cell.getOptionsForEditor().add(editor);
+								ObservableList<SpreadsheetCell> observableList = ssv.getGrid().getRows().get(tablePosition.getRow());
+								observableList.set(tablePosition.getColumn(), cell);
 
 							}
 
 						} catch (Exception e1) {
-							e1.printStackTrace();
+							LOGGER.error(ValueUtil.toString(e1));
 						}
 					}
 				} else {
@@ -353,15 +340,7 @@ public class DefaultSpreadSheetView extends StackPane {
 					int column = tablePosition.getColumn();
 					for (File f : pastFiles) {
 						String name = f.getName();
-						// SpreadsheetCell cell = new
-						// ImageCellType().createCell(row, column, 1, 1,
-						// pastImage);
-//						SpreadsheetCell cell = new SpreadsheetCellBase(row, column, 1, 1, SpreadsheetCellType.STRING);
-//						cell.setItem(name);
-
 						ssv.getGrid().getRows().get(row++).get(column).setItem(name);
-
-//						ssv.getGrid().getRows().get(row).set(column, cell);
 					}
 				}
 				break;
@@ -389,12 +368,15 @@ public class DefaultSpreadSheetView extends StackPane {
 				break;
 			}
 		}
-//		else if(e.getCode() == KeyCode.ENTER)
-//		{
-//			ObservableList<TablePosition> selectedCells = ssv.getSelectionModel().getSelectedCells();
-//			System.out.println(selectedCells);
-//		}
-		e.consume();
+		else if(e.getCode() == KeyCode.Z && e.isControlDown())
+		{
+			undo();
+		}
+		else if(e.getCode() == KeyCode.U && e.isControlDown())
+		{
+			redo();
+		}
+//		e.consume();
 
 	}
 
@@ -485,35 +467,35 @@ public class DefaultSpreadSheetView extends StackPane {
 
 		int _column = column;
 		String[] split = pastString.split("\n");
-
 		Grid grid = ssv.getGrid();
-
 		ObservableList<ObservableList<SpreadsheetCell>> rows = grid.getRows();
-
+		
+		ArrayList<CellEdit> cellEdits = new ArrayList<>();
+		
 		for (String str : split) {
 			String[] split2 = str.split("\t");
 			_column = column;
 			for (String str2 : split2) {
 				SpreadsheetCell spreadsheetCell = null;
-
 				if (rows.size() > row)
 					spreadsheetCell = rows.get(row).get(_column);
 				/* 새로운 로우를 생성함. */
 				else {
-
 					ObservableList<SpreadsheetCell> newCells = createNewRow();
 					spreadsheetCell = newCells.get(_column);
 					rows.add(newCells);
 				}
-
+				
+				cellEdits.add(new CellEdit(spreadsheetCell, spreadsheetCell.getItem(), str2));
+				
 				spreadsheetCell.setItem(str2);
 				_column++;
 			}
-
 			row++;
 		}
-
-		ssv.setGrid(grid);
+		
+		executeCommand(new RangeCommand(cellEdits));
+//		ssv.setGrid(grid);
 	}
 
 	/**
@@ -537,180 +519,6 @@ public class DefaultSpreadSheetView extends StackPane {
 		}
 
 		return newCells;
-	}
-
-	class ImageCellType extends SpreadsheetCellType<ImageControl> {
-
-		/**
-		 * Creates a cell that hold a String at the specified position, with the
-		 * specified row/column span.
-		 *
-		 * @param row        row number
-		 * @param column     column number
-		 * @param rowSpan    rowSpan (1 is normal)
-		 * @param columnSpan ColumnSpan (1 is normal)
-		 * @param value      the value to display
-		 * @return a {@link SpreadsheetCell}
-		 */
-		public SpreadsheetCell createCell(final int row, final int column, final int rowSpan, final int columnSpan,
-				final Image value) {
-			SpreadsheetCell cell = new SpreadsheetCellBase(row, column, rowSpan, columnSpan, this);
-			cell.setGraphic(new ImageControl(value));
-			// cell.setItem(new ImageControl(value));
-			return cell;
-		}
-
-		@Override
-		public SpreadsheetCellEditor createEditor(SpreadsheetView view) {
-			return new ImageViewCellEditor(view);
-		}
-
-		@Override
-		public String toString(ImageControl object) {
-			return object.toString();
-		}
-
-		@Override
-		public boolean match(Object value) {
-			return true;
-		}
-
-		@Override
-		public ImageControl convertValue(Object value) {
-			if (value != null && value instanceof ImageControl) {
-				return (ImageControl) value;
-			}
-			return null;
-		}
-
-		@Override
-		public boolean match(Object value, Object... options) {
-			return match(value);
-		}
-
-	}
-
-	class ImageControl extends Control {
-
-		ImageViewSkin imageViewSkin;
-
-		public ImageControl() {
-			imageViewSkin = new ImageViewSkin(this);
-		}
-
-		public ImageControl(Image image) {
-			this();
-			imageViewSkin.setImage(image);
-		}
-
-		/**
-		 * @return the image
-		 */
-		public Image getImage() {
-			return imageViewSkin.getImage();
-		}
-
-		/**
-		 * @param image the image to set
-		 */
-		public void setImage(Image image) {
-			imageViewSkin.setImage(image);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 *
-		 * @see javafx.scene.control.Control#createDefaultSkin()
-		 */
-		@Override
-		protected Skin<?> createDefaultSkin() {
-
-			return imageViewSkin;
-		}
-
-	}
-
-	class ImageViewSkin implements Skin<ImageControl> {
-
-		private ImageControl imageControl;
-
-		private ImageView iv;
-
-		/**
-		 * @return the image
-		 */
-		public Image getImage() {
-			return iv.getImage();
-		}
-
-		/**
-		 * @param image the image to set
-		 */
-		public void setImage(Image image) {
-			if (image != null)
-				iv.setImage(image);
-		}
-
-		public ImageViewSkin(ImageControl imageControl) {
-			this.imageControl = imageControl;
-			iv = new ImageView();
-		}
-
-		@Override
-		public ImageControl getSkinnable() {
-			return imageControl;
-		}
-
-		@Override
-		public Node getNode() {
-			return iv;
-		}
-
-		@Override
-		public void dispose() {
-
-		}
-
-	}
-
-	class ImageViewCellEditor extends SpreadsheetCellEditor {
-
-		private ImageControl iv;
-
-		public ImageViewCellEditor(SpreadsheetView view) {
-			super(view);
-			this.iv = new ImageControl();
-		}
-
-		@Override
-		public void startEdit(Object value) {
-
-			if (value != null && value instanceof ImageControl) {
-				iv.setImage((Image) value);
-			}
-		}
-
-		@Override
-		public Control getEditor() {
-			return iv;
-		}
-
-		@Override
-		public String getControlValue() {
-			return iv.toString();
-		}
-
-		@Override
-		public void end() {
-
-		}
-
-		@Override
-		public void startEdit(Object item, String format, Object... options) {
-			LOGGER.debug("start edit : {} {} {}", item, format, options);
-
-		}
-
 	}
 
 	public ObservableList<String> getColumnHeaders() {
@@ -744,6 +552,28 @@ public class DefaultSpreadSheetView extends StackPane {
 
 	public SpreadsheetColumn getColumn(int index) {
 		return getColumns().get(index);
+	}
+
+	private void undo() {
+		if (!undoStack.isEmpty()) {
+			Command command = undoStack.pop();
+			command.undo();
+			redoStack.push(command);
+		}
+	}
+
+	private void redo() {
+		if (!redoStack.isEmpty()) {
+			Command command = redoStack.pop();
+			command.execute();
+			undoStack.push(command);
+		}
+	}
+
+	private void executeCommand(Command command) {
+		command.execute();
+		undoStack.push(command);
+		redoStack.clear();
 	}
 
 }
