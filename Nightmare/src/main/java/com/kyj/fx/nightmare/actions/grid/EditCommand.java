@@ -15,11 +15,13 @@ public class EditCommand implements Command {
 
 	@Override
 	public void execute() {
+		if(newValue!=null)
 		cell.setItem(newValue);
 	}
 
 	@Override
 	public void undo() {
+		if(oldValue!=null)
 		cell.setItem(oldValue);
 	}
 

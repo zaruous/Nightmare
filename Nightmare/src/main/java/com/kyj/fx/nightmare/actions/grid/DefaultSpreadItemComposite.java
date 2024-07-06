@@ -35,7 +35,6 @@ import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -235,11 +234,12 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 	}
 
 	private Tab currentTab;
-
 	public void setCurrentTab(Tab e) {
 		this.currentTab = e;
 	}
-
+	public Tab getCurrentTab() {
+		return this.currentTab;
+	}
 	/*******************************************************************************************************************/
 
 	@FXML
@@ -293,14 +293,14 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 	/**
 	 * @return
 	 */
-	private String getAllDocumentText() {
+	public String getAllDocumentText() {
 		return parentComposite.getDocumentText();
 	}
 
 	/**
 	 * @return
 	 */
-	private String getDocumentText() {
+	public String getDocumentText() {
 		return DefaultGridBase.toString(getSpreadSheetView().getGrid());
 	}
 
@@ -373,16 +373,16 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 	}
 
 	public void updateUI(List<Map<String, Object>> query, int startRow, int startCol) {
-		SpreadsheetView ssv = getSpreadSheetView();
+//		SpreadsheetView ssv = getSpreadSheetView();
+		DefaultSpreadSheetView view = getView();
 		
 		Map<String, Object> map = query.get(0);
-		GridBase grid = DefaultGridBase.createGrid(query.size() + 100, map.size() > 100 ? map.size() : 100 );
-		ssv.setGrid(grid);
-		ObservableList<ObservableList<SpreadsheetCell>> rows = ssv.getItems();
+		GridBase grid = DefaultGridBase.createGrid( (query.size() + 100), map.size() > 100 ? map.size() : 100 );
+		view.setGrid(grid);
+		ObservableList<ObservableList<SpreadsheetCell>> rows = view.getItems();
 		
 		//head
 		ObservableList<SpreadsheetCell> headerCells = rows.get(0);
-		
 		Iterator<Entry<String, Object>> it = map.entrySet().iterator();
 		int c = startCol;
 		
@@ -392,12 +392,13 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 			headerCells.get(c).setItem(next.getKey());
 			c++;
 		}
+		
 		ObservableList<SpreadsheetCell> cellList = null;
 		//data
-		for(int i= (startRow + 1), size = rows.size(); i< size; i++)
+		for(int i= startRow+ 1, size = query.size(); i< size; i++)
 		{
 			cellList = rows.get(i);
-			map = query.get(i);
+			map = query.get(i );
 			
 			c = startCol;
 			it = map.entrySet().iterator();
@@ -420,32 +421,32 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 			}
 		}
 		
-		for(int i= rows.size(), size = query.size(); i< size; i++ )
-		{
-			ObservableList<SpreadsheetCell> newRowList = FXCollections.observableArrayList();
-			rows.add(newRowList);
-//			cellList = items.get(i);
-			map = query.get(i);
-			c = startCol;
-			it = map.entrySet().iterator();
-			while(it.hasNext())
-			{
-				
-				Entry<String, Object> next = it.next();
-//				SpreadsheetCell spreadsheetCell = cellList.get(c);
-				Object value = next.getValue();
-				if(value instanceof Date) {
-					LocalDate localDate = ((Date)value).toLocalDate();
-					SpreadsheetCell spreadsheetCell = SpreadsheetCellType.DATE.createCell(i, c, 1, 1, localDate);
-					newRowList.set(c, spreadsheetCell);
-				}
-				else {
-					SpreadsheetCell spreadsheetCell = SpreadsheetCellType.STRING.createCell(i, c, 1, 1, (String)value);
-					newRowList.set(c, spreadsheetCell);
-				}
-				c++;
-			}
-//			items.add(cellList)
-		}
+//		for(int i= rows.size(), size = query.size(); i< size; i++ )
+//		{
+//			ObservableList<SpreadsheetCell> newRowList = FXCollections.observableArrayList();
+//			rows.add(newRowList);
+////			cellList = items.get(i);
+//			map = query.get(i);
+//			c = startCol;
+//			it = map.entrySet().iterator();
+//			while(it.hasNext())
+//			{
+//				
+//				Entry<String, Object> next = it.next();
+////				SpreadsheetCell spreadsheetCell = cellList.get(c);
+//				Object value = next.getValue();
+//				if(value instanceof Date) {
+//					LocalDate localDate = ((Date)value).toLocalDate();
+//					SpreadsheetCell spreadsheetCell = SpreadsheetCellType.DATE.createCell(i, c, 1, 1, localDate);
+//					newRowList.set(c, spreadsheetCell);
+//				}
+//				else {
+//					SpreadsheetCell spreadsheetCell = SpreadsheetCellType.STRING.createCell(i, c, 1, 1, (String)value);
+//					newRowList.set(c, spreadsheetCell);
+//				}
+//				c++;
+//			}
+////			items.add(cellList)
+//		}
 	}
 }

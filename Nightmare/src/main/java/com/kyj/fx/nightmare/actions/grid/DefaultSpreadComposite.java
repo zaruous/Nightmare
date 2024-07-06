@@ -178,7 +178,7 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 			try {
 				var dao = new DataSourceDAO(ds.getAliasName());
 				List<Map<String, Object>> query = dao.query(sqlKeywords.getCodeArea().getText(), Map.of());
-				
+				LOGGER.debug("data size : {}", query.size());
 				DefaultSpreadItemComposite currentView = getCurrentView();
 				currentView.updateUI(query, 0, 0);
 				

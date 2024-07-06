@@ -16,6 +16,7 @@ import javax.script.Bindings;
 import javax.script.ScriptException;
 
 import org.controlsfx.control.spreadsheet.Grid;
+import org.controlsfx.control.spreadsheet.GridBase;
 import org.controlsfx.control.spreadsheet.GridChange;
 import org.controlsfx.control.spreadsheet.SpreadsheetCell;
 import org.controlsfx.control.spreadsheet.SpreadsheetCellType;
@@ -32,6 +33,8 @@ import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -67,7 +70,22 @@ public class DefaultSpreadSheetView extends StackPane {
 //	}
 
 	public DefaultSpreadSheetView(Grid grid) {
-		ssv = new SpreadsheetView(grid);
+
+		ssv = new SpreadsheetView();
+		this.ssv.gridProperty().addListener(new ChangeListener<Grid>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Grid> observable, Grid oldValue, Grid newValue) {
+				if (newValue == null)
+					return;
+				LOGGER.debug("new grid listener.");
+				newValue.addEventHandler(GridChange.GRID_CHANGE_EVENT, gridChangeListener);
+				newValue.addEventHandler(GridChange.GRID_CHANGE_EVENT, gridUnRedo);
+			}
+		});
+//		undoStack.add(new GridCommand(ssv, ssv.getGrid(), grid));
+		ssv.setGrid(grid);
+
 		ObservableList<SpreadsheetColumn> columns = ssv.getColumns();
 		columns.forEach(col -> {
 			col.setPrefWidth(100d);
@@ -131,9 +149,11 @@ public class DefaultSpreadSheetView extends StackPane {
 
 		contextMenuItems.add(mCellType);
 
-		
-		this.ssv.getGrid().addEventHandler(GridChange.GRID_CHANGE_EVENT, gridChangeListener);
-		this.ssv.getGrid().addEventHandler(GridChange.GRID_CHANGE_EVENT, gridUnRedo);
+//		this.ssv.addEventHandler(GridChange.GRID_CHANGE_EVENT, gridChangeListener);
+//		this.ssv.addEventHandler(GridChange.GRID_CHANGE_EVENT, gridUnRedo);
+
+//		this.ssv.getGrid().addEventHandler(GridChange.GRID_CHANGE_EVENT, gridChangeListener);
+//		this.ssv.getGrid().addEventHandler(GridChange.GRID_CHANGE_EVENT, gridUnRedo);
 	}
 
 	EventHandler<GridChange> gridUnRedo = new EventHandler<GridChange>() {
@@ -150,14 +170,13 @@ public class DefaultSpreadSheetView extends StackPane {
 			LOGGER.debug("{}", command);
 		}
 	};
-	
 	EventHandler<GridChange> gridChangeListener = new EventHandler<GridChange>() {
 		@Override
 		public void handle(GridChange ev) {
 			int row = ev.getRow();
 			int column = ev.getColumn();
 			Grid g = (Grid) ev.getSource();
-			Object oldValue = ev.getOldValue();
+//			Object oldValue = ev.getOldValue();
 			Object newValue = ev.getNewValue();
 			if (newValue == null || !(newValue.toString().startsWith("=")))
 				return;
@@ -206,7 +225,7 @@ public class DefaultSpreadSheetView extends StackPane {
 
 		}
 	};
-
+	@SuppressWarnings("rawtypes")
 	public void miCellTypeNumberOnAction(ActionEvent e) {
 		ObservableList<TablePosition> selectedCells = this.ssv.getSelectionModel().getSelectedCells();
 		ObservableList<ObservableList<SpreadsheetCell>> items = this.ssv.getItems();
@@ -230,9 +249,10 @@ public class DefaultSpreadSheetView extends StackPane {
 	 * 
 	 * @param e
 	 */
+	@SuppressWarnings("rawtypes")
 	public void miCopyJavaArrayListOnAction(ActionEvent e) {
 		ObservableList<TablePosition> selectedCells = this.ssv.getSelectionModel().getSelectedCells();
-		ObservableList<ObservableList<SpreadsheetCell>> items = this.ssv.getItems();
+//		ObservableList<ObservableList<SpreadsheetCell>> items = this.ssv.getItems();
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("List a = new ArrayList();");
@@ -246,11 +266,13 @@ public class DefaultSpreadSheetView extends StackPane {
 		}
 		FxClipboardUtil.putString(sb.toString());
 	}
-
+	
+	@SuppressWarnings("rawtypes")
 	public void spreadSheetKeyPress(KeyEvent e) {
 		if (e.isControlDown() && e.getCode() == KeyCode.C) {
 
 			StringBuffer clipboardContent = new StringBuffer();
+			
 			ObservableList<TablePosition> selectedCells = ssv.getSelectionModel().getSelectedCells();
 
 			int prevRow = -1;
@@ -296,7 +318,7 @@ public class DefaultSpreadSheetView extends StackPane {
 				SpreadsheetCell cell = new ImageCellType().createCell(row, column, 1, 1, pastImage);
 
 				ssv.getGrid().getRows().get(tablePosition.getRow()).set(tablePosition.getColumn(), cell);
-				
+
 			}
 
 				break;
@@ -311,20 +333,22 @@ public class DefaultSpreadSheetView extends StackPane {
 								Image pastImage = new Image(file.toURI().toURL().openStream());
 //								double height = pastImage.getHeight();
 //								double width = pastImage.getWidth();
-								ObservableList<TablePosition> selectedCells = ssv.getSelectionModel().getSelectedCells();
+								ObservableList<TablePosition> selectedCells = ssv.getSelectionModel()
+										.getSelectedCells();
 								TablePosition tablePosition = selectedCells.get(0);
 
 								int row = tablePosition.getRow();
 								int column = tablePosition.getColumn();
-								
+
 								var imgcellType = new ImageCellType();
 //								SpreadsheetCellEditor editor = imgcellType.createEditor(ssv);
-								
+
 								SpreadsheetCell cell = imgcellType.createCell(row, column, 1, 1, pastImage);
 //								cell.setHasPopup(true);
 //								cell.getPopupItems().add(new MenuItem("test"));
 //								cell.getOptionsForEditor().add(editor);
-								ObservableList<SpreadsheetCell> observableList = ssv.getGrid().getRows().get(tablePosition.getRow());
+								ObservableList<SpreadsheetCell> observableList = ssv.getGrid().getRows()
+										.get(tablePosition.getRow());
 								observableList.set(tablePosition.getColumn(), cell);
 
 							}
@@ -347,6 +371,7 @@ public class DefaultSpreadSheetView extends StackPane {
 			case FxClipboardUtil.URL: {
 				String pasteUrl = FxClipboardUtil.pasteUrl();
 				Image pastImage = new Image(pasteUrl);
+				
 				ObservableList<TablePosition> selectedCells = ssv.getSelectionModel().getSelectedCells();
 				TablePosition tablePosition = selectedCells.get(0);
 
@@ -367,13 +392,9 @@ public class DefaultSpreadSheetView extends StackPane {
 				paste();
 				break;
 			}
-		}
-		else if(e.getCode() == KeyCode.Z && e.isControlDown())
-		{
+		} else if (e.getCode() == KeyCode.Z && e.isControlDown()) {
 			undo();
-		}
-		else if(e.getCode() == KeyCode.U && e.isControlDown())
-		{
+		} else if (e.getCode() == KeyCode.U && e.isControlDown()) {
 			redo();
 		}
 //		e.consume();
@@ -469,9 +490,9 @@ public class DefaultSpreadSheetView extends StackPane {
 		String[] split = pastString.split("\n");
 		Grid grid = ssv.getGrid();
 		ObservableList<ObservableList<SpreadsheetCell>> rows = grid.getRows();
-		
+
 		ArrayList<CellEdit> cellEdits = new ArrayList<>();
-		
+
 		for (String str : split) {
 			String[] split2 = str.split("\t");
 			_column = column;
@@ -485,15 +506,15 @@ public class DefaultSpreadSheetView extends StackPane {
 					spreadsheetCell = newCells.get(_column);
 					rows.add(newCells);
 				}
-				
+
 				cellEdits.add(new CellEdit(spreadsheetCell, spreadsheetCell.getItem(), str2));
-				
+
 				spreadsheetCell.setItem(str2);
 				_column++;
 			}
 			row++;
 		}
-		
+
 		executeCommand(new RangeCommand(cellEdits));
 //		ssv.setGrid(grid);
 	}
@@ -556,6 +577,7 @@ public class DefaultSpreadSheetView extends StackPane {
 
 	private void undo() {
 		if (!undoStack.isEmpty()) {
+			LOGGER.debug("undo");
 			Command command = undoStack.pop();
 			command.undo();
 			redoStack.push(command);
@@ -564,6 +586,7 @@ public class DefaultSpreadSheetView extends StackPane {
 
 	private void redo() {
 		if (!redoStack.isEmpty()) {
+			LOGGER.debug("redo");
 			Command command = redoStack.pop();
 			command.execute();
 			undoStack.push(command);
@@ -574,6 +597,16 @@ public class DefaultSpreadSheetView extends StackPane {
 		command.execute();
 		undoStack.push(command);
 		redoStack.clear();
+	}
+
+	public void setGrid(GridBase newValue) {
+		Grid oldValue = ssv.getGrid();
+		ssv.setGrid(newValue);
+		executeCommand(new GridCommand(ssv, oldValue, newValue));
+	}
+
+	public ObservableList<ObservableList<SpreadsheetCell>> getItems() {
+		return ssv.getItems();
 	}
 
 }
