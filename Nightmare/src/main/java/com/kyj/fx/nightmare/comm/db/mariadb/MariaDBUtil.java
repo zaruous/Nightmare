@@ -9,7 +9,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.function.Predicate;
@@ -67,31 +69,44 @@ public class MariaDBUtil {
 					}
 				}
 
-//				writer.println("\n-- Data for table " + tableName);
-//				try (Statement stmt = conn.createStatement()) {
-//					ResultSet rs = stmt.executeQuery("SELECT * FROM " + tableName);
-//					ResultSetMetaData rsmd = rs.getMetaData();
-//					int columnCount = rsmd.getColumnCount();
-//
-//					while (rs.next()) {
-//						writer.print("INSERT INTO `" + tableName + "` VALUES (");
-//						for (int i = 1; i <= columnCount; i++) {
-//							if (i > 1)
-//								writer.print(", ");
-//							Object value = rs.getObject(i);
-//							if (value == null) {
-//								writer.print("NULL");
-//							} else if (value instanceof String) {
-//								writer.print("'" + value.toString().replace("'", "''") + "'");
-//							} else {
-//								writer.print(value.toString());
-//							}
-//						}
-//						writer.println(");");
-//					}
-//				}
 				writer.println();
 			}
 		}
+	}
+
+	/**
+	 * @param conn
+	 * @param tableName
+	 * @param out
+	 * @throws SQLException
+	 */
+	public static void exportData(Connection conn, String tableName, OutputStream out) throws SQLException {
+		try (PrintWriter writer = new PrintWriter(out)) {
+			writer.println("\n-- Data for table " + tableName);
+
+			try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + tableName)) {
+				ResultSet rs = stmt.executeQuery();
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int columnCount = rsmd.getColumnCount();
+
+				while (rs.next()) {
+					writer.print("INSERT INTO `" + tableName + "` VALUES (");
+					for (int i = 1; i <= columnCount; i++) {
+						if (i > 1)
+							writer.print(", ");
+						Object value = rs.getObject(i);
+						if (value == null) {
+							writer.print("NULL");
+						} else if (value instanceof String) {
+							writer.print("'" + value.toString().replace("'", "''") + "'");
+						} else {
+							writer.print(value.toString());
+						}
+					}
+					writer.println(");");
+				}
+			}
+		}
+
 	}
 }
