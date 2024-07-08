@@ -20,9 +20,9 @@ USE `nightmare`;
 -- 테이블 nightmare.chat_history 구조 내보내기
 CREATE TABLE IF NOT EXISTS `chat_history` (
   `ID` double NOT NULL,
-  `SYSTEM` text DEFAULT NULL,
-  `QUESTION` text DEFAULT NULL,
-  `ANSWER` text DEFAULT NULL,
+  `SYSTEM` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `QUESTION` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ANSWER` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `FIRST_REGER_ID` enum('USER','AI') DEFAULT NULL,
   `FST_REG_DT` timestamp NULL DEFAULT sysdate(),
   `AI_ID` double DEFAULT NULL,
@@ -33,12 +33,25 @@ CREATE TABLE IF NOT EXISTS `chat_history` (
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
+-- 테이블 nightmare.datasource 구조 내보내기
+CREATE TABLE IF NOT EXISTS `datasource` (
+  `ALIAS_NAME` varchar(50) NOT NULL,
+  `DRIVER` varchar(200) DEFAULT NULL,
+  `URL` varchar(200) DEFAULT NULL,
+  `USER_ID` varchar(50) DEFAULT NULL,
+  `USER_PWD` varchar(50) DEFAULT NULL,
+  `FST_REG_DT` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`ALIAS_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+
 -- 테이블 nightmare.speech_history 구조 내보내기
 CREATE TABLE IF NOT EXISTS `speech_history` (
   `ID` double NOT NULL,
   `SYSTEM` text DEFAULT NULL,
   `QUESTION` mediumblob DEFAULT NULL,
-  `ANSWER` text DEFAULT NULL,
+  `ANSWER` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `CONTENT_TYPE` varchar(50) DEFAULT NULL,
   `FIRST_REGER_ID` enum('USER','AI') DEFAULT NULL,
   `FST_REG_DT` timestamp NULL DEFAULT sysdate(),
@@ -83,9 +96,31 @@ CREATE TABLE IF NOT EXISTS `tbm_sm_prompts` (
   `USE_YN` varchar(1) DEFAULT 'Y' COMMENT '사용여부',
   `DESCRIPTION` text DEFAULT NULL,
   `GRAPHIC_CLASS` varchar(100) DEFAULT NULL,
+  `SYSTEM` text DEFAULT NULL COMMENT 'SYSTEM 메세지',
   PRIMARY KEY (`GROUP`,`ID`),
   UNIQUE KEY `ID` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='시스템 옵션으로 추가될 프롬프트 정보 입력';
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+
+-- 테이블 nightmare.test_test 구조 내보내기
+CREATE TABLE IF NOT EXISTS `test_test` (
+  `a` decimal(20,6) NOT NULL DEFAULT 0.000000,
+  `b` int(11) DEFAULT NULL,
+  PRIMARY KEY (`a`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+
+-- 테이블 nightmare.web_favorite 구조 내보내기
+CREATE TABLE IF NOT EXISTS `web_favorite` (
+  `ID` varchar(50) NOT NULL DEFAULT '',
+  `TEXT` varchar(250) DEFAULT NULL,
+  `URL` varchar(500) DEFAULT NULL,
+  `FOLDER` text DEFAULT NULL,
+  `PARENT_ID` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
