@@ -65,7 +65,7 @@ public class SpeechToTextGptServiceImpl implements AiActionable{
 	/**
 	 * @param of
 	 */
-	public void setSystemRole(Map<String, String> of) {
+	public void setSystemRole(Map<String, Object> of) {
 		this.service.setSystemRole(of);
 	}
 
@@ -80,7 +80,7 @@ public class SpeechToTextGptServiceImpl implements AiActionable{
 	}
 
 	public String getSystemRole() {
-		return this.service.getSystemRule().get("content");
+		return this.service.getSystemRule().get("content") == null ? "" : this.service.getSystemRule().get("content").toString();
 	}
 
 	/**

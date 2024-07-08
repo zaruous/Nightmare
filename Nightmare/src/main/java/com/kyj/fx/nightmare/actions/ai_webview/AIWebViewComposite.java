@@ -19,6 +19,8 @@ import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.SnapshotParameters;
@@ -34,7 +36,7 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AIWebViewComposite.class);
 	@FXML
 	private TabPane tbWebView;
-	private OpenAIService openAIService;
+	private ObjectProperty<OpenAIService> openAIService = new SimpleObjectProperty<>();
 
 	public AIWebViewComposite() {
 		try {
@@ -67,7 +69,7 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 	@FXML
 	public void initialize() {
 		try {
-			this.openAIService = new OpenAIService() ;
+			this.openAIService.set(new OpenAIService());
 		} catch (Exception e) {
 			LOGGER.error(ValueUtil.toString(e));
 		}
@@ -76,7 +78,8 @@ public class AIWebViewComposite extends AbstractCommonsApp {
 	Tab createNewTab(String title, Consumer<DefaultWebViewComposite> handler) {
 		DefaultWebViewComposite value = new DefaultWebViewComposite();
 		Tab e = new Tab(title, value);
-		value.setAiService(openAIService);
+		value.openAIServiceProperty().bind(openAIService);
+//		value.setAiService(openAIService.get());
 		value.setParentComposite(this);
 		value.setCurrentTab(e);
 		if (handler != null) {

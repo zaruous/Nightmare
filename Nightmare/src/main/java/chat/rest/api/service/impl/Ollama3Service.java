@@ -219,4 +219,9 @@ public class Ollama3Service extends AbstractPromptService {
 		}
 	}
 
+	@Override
+	public String send(List<Map<String, Object>> assistance, String message) throws Exception {
+		return send(message);
+	}
+
 }

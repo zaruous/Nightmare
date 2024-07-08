@@ -263,7 +263,7 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 		}
 
 		OpenAIService openAIService = this.openAIService.get();
-		Map<String, String> default1 = openAIService.createDefault(systemContent);
+		Map<String, Object> default1 = openAIService.createDefault(systemContent);
 		openAIService.setSystemRole(default1);
 
 		String prompt = txtPrompt.getText();
@@ -318,11 +318,11 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 //		choices.forEach(c -> {});
 
 		try {
-			String content2 = openAIService.get().toUserMessage(send);
+//			String content2 = openAIService.get().toUserMessage(send);
 //			String content2 = c.getMessage().getContent();
 
-			LOGGER.debug(content2);
-			LineNumberReader br = new LineNumberReader(new StringReader(content2));
+			LOGGER.debug(send);
+			LineNumberReader br = new LineNumberReader(new StringReader(send));
 			String temp = null;
 			boolean isCodeBlock = false;
 			String codeType = "";

@@ -37,23 +37,20 @@ public abstract class AbstractPromptService implements ChatBotService {
 	 */
 	public abstract ChatBotConfig createConfig() throws Exception;
 
-	public Map<String, String> getSystemRule() {
+	public Map<String, Object> getSystemRule() {
 		return this.rule.getSystemRole();
 	}
 
-	public void setSystemRole(Map<String, String> systemRole) {
+	public void setSystemRole(Map<String, Object> systemRole) {
 		if (systemRole.containsKey("role") && systemRole.get("role") != null) {
 			this.rule.setSystemRole(systemRole);
 		} else {
-			Map<String, String> copyOf = new HashMap<>(systemRole);
+			Map<String, Object> copyOf = new HashMap<>(systemRole);
 			copyOf.put("role", "system");
 			this.rule.setSystemRole(copyOf);
 		}
 
 	}
 
-	public Map<String, String> assistant() {
-		return this.rule.getAssistant();
-	}
 
 }

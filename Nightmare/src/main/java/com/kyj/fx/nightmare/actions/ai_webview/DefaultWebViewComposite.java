@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
@@ -31,12 +29,11 @@ import com.kyj.fx.fxloader.FXMLController;
 import com.kyj.fx.nightmare.actions.ai.CodeLabel;
 import com.kyj.fx.nightmare.actions.ai.DefaultLabel;
 import com.kyj.fx.nightmare.actions.ai.OpenAIService;
-import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO;
-import com.kyj.fx.nightmare.actions.ai.ResponseModelDVO.Choice;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxClipboardUtil;
 import com.kyj.fx.nightmare.comm.FxUtil;
+import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.comm.XmlW3cUtil;
 import com.kyj.fx.nightmare.comm.codearea.CodeAreaHelper;
@@ -104,7 +101,7 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 	private StringProperty content = new SimpleStringProperty();
 	private ObjectProperty<OpenAIService> openAIService = new SimpleObjectProperty<OpenAIService>();
 	private AIWebViewComposite parentComposite;
-	
+
 	public WebView getWebView() {
 		return this.wbDefault;
 	}
@@ -129,14 +126,14 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 
 			@Override
 			public WebEngine call(PopupFeatures param) {
-				
+
 				Tab newTab = parentComposite.addNewTabView("");
 				DefaultWebViewComposite c = (DefaultWebViewComposite) newTab.getContent();
-				
+
 				WebView webView = c.getWebView();
 //				// 팝업 WebEngine의 location 변경 이벤트를 통해 URL을 알림
 				webView.getEngine().locationProperty().addListener((obs, oldLocation, newLocation) -> {
-	
+
 					webView.getEngine().load(newLocation);
 				});
 //
@@ -156,7 +153,6 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 			}
 		});
 
-
 		wbDefault.getEngine().locationProperty().addListener(new ChangeListener<String>() {
 
 			@Override
@@ -164,19 +160,6 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 //				String newHost = getHost(newValue);
 				LOGGER.debug("newHost : {}", newValue);
 			}
-
-//			private String getHost(String url) {
-//				try {
-//					URI uri = new URI(url);
-//					return uri.getHost();
-//				} catch (URISyntaxException e) {
-//					e.printStackTrace();
-//					return null;
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//					return null;
-//				}
-//			}
 		});
 		wbDefault.getEngine().setPromptHandler(new Callback<PromptData, String>() {
 
@@ -193,13 +176,13 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 		});
 
 		wbDefault.getEngine().load("about:blank");
-		
+
 		wbDefault.getEngine().getLoadWorker().exceptionProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-            	LOGGER.error(ValueUtil.toString(newValue));
-            }
-        });
-		
+			if (newValue != null) {
+				LOGGER.error(ValueUtil.toString(newValue));
+			}
+		});
+
 		wbDefault.getEngine().getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
 
 			@Override
@@ -208,7 +191,7 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 				wbDefault.setOpacity(0.5d);
 				btnEnter.setDisable(true);
 				txtUrl.setText(wbDefault.getEngine().getLocation());
-				
+
 //				LOGGER.debug("engine state : {} ", newValue);
 				if (State.SUCCEEDED == newValue) {
 					wbDefault.setOpacity(1.0d);
@@ -235,9 +218,6 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 				DialogUtil.showMessageDialog(event.getData());
 			}
 		});
-		
-		
-		  
 
 		MenuItem menuItem = new MenuItem("text");
 		menuItem.setOnAction(ev -> {
@@ -404,20 +384,22 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 	 * @param location
 	 */
 	public void load(String location) {
-		
-		if(ValueUtil.isEmpty(location) || "about:blank".equals(location))return;
-		
+
+		if (ValueUtil.isEmpty(location))
+			return;
+
 		String _location = "";
 		if (location.startsWith("https://") || (location.startsWith("http://")))
 			wbDefault.getEngine().load(location);
-		else
-		{
-			_location = URLEncoder.encode(location, StandardCharsets.UTF_8);
-			String url = cbProtocol.getSelectionModel().getSelectedItem() + _location;
-			LOGGER.debug(url);
-			wbDefault.getEngine().load(url);
+		else {
+			String def = ResourceLoader.getInstance().get("default.web.search.url", "https://www.google.com/search?q=%s");
+			String srch = URLEncoder.encode(location, StandardCharsets.UTF_8);
+			_location = String.format(def, srch);
+//			_location = URLEncoder.encode(location, StandardCharsets.UTF_8);
+//			String url = cbProtocol.getSelectionModel().getSelectedItem() + _location;
+			LOGGER.debug(_location);
+			wbDefault.getEngine().load(_location);
 		}
-			
 
 		txtUrl.setText(location);
 
@@ -456,7 +438,7 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 		}
 
 		OpenAIService openAIService = this.openAIService.get();
-		Map<String, String> default1 = openAIService.createDefault(systemContent);
+		Map<String, Object> default1 = openAIService.createDefault(systemContent);
 		openAIService.setSystemRole(default1);
 
 		String prompt = txtPrompt.getText();
@@ -490,55 +472,53 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 	 * @param speack
 	 */
 	private void updateChatList(String send) {
-		ResponseModelDVO fromGtpResultMessage = ResponseModelDVO.fromGtpResultMessage(send);
-		LOGGER.info("{}", fromGtpResultMessage);
-		List<Choice> choices = fromGtpResultMessage.getChoices();
-		choices.forEach(c -> {
-			try {
+//		String userMessage = openAIService.get().toUserMessage(send);
+//		ResponseModelDVO fromGtpResultMessage = ResponseModelDVO.fromGtpResultMessage(send);
+//		LOGGER.info("{}", fromGtpResultMessage);
+//		List<Choice> choices = fromGtpResultMessage.getChoices();
 
-				String content2 = c.getMessage().getContent();
-
-				LOGGER.debug(content2);
-				LineNumberReader br = new LineNumberReader(new StringReader(content2));
-				String temp = null;
-				boolean isCodeBlock = false;
-				String codeType = "";
-				StringBuilder sb = new StringBuilder();
-				while ((temp = br.readLine()) != null) {
-					if (temp.startsWith("```") && !isCodeBlock) {
-						isCodeBlock = true;
-						codeType = temp.replace("```", "");
-						continue;
-					}
-
-					if (temp.startsWith("```") && isCodeBlock) {
-						isCodeBlock = false;
-						CodeLabel content = new CodeLabel(sb.toString());
-						Label graphic = new Label("Copy");
-						graphic.setOnMouseClicked(ev -> {
-							FxClipboardUtil.putString(content.getText());
-							DialogUtil.showMessageDialog("클립보드에 복사되었습니다.");
-						});
-						content.setGraphic(graphic);
-
-						content.setCodeType(codeType);
-						sb.setLength(0);
-						lvResult.getItems().add(content);
-						continue;
-					}
-
-					if (isCodeBlock) {
-						sb.append(temp).append(System.lineSeparator());
-					} else {
-						DefaultLabel content = new DefaultLabel(temp);
-						lvResult.getItems().add(content);
-					}
+//		String content2 = c.getMessage().getContent();
+		try {
+			LOGGER.debug(send);
+			LineNumberReader br = new LineNumberReader(new StringReader(send));
+			String temp = null;
+			boolean isCodeBlock = false;
+			String codeType = "";
+			StringBuilder sb = new StringBuilder();
+			while ((temp = br.readLine()) != null) {
+				if (temp.startsWith("```") && !isCodeBlock) {
+					isCodeBlock = true;
+					codeType = temp.replace("```", "");
+					continue;
 				}
 
-			} catch (Exception e) {
-				LOGGER.error(ValueUtil.toString(e));
+				if (temp.startsWith("```") && isCodeBlock) {
+					isCodeBlock = false;
+					CodeLabel content = new CodeLabel(sb.toString());
+					Label graphic = new Label("Copy");
+					graphic.setOnMouseClicked(ev -> {
+						FxClipboardUtil.putString(content.getText());
+						DialogUtil.showMessageDialog("클립보드에 복사되었습니다.");
+					});
+					content.setGraphic(graphic);
+
+					content.setCodeType(codeType);
+					sb.setLength(0);
+					lvResult.getItems().add(content);
+					continue;
+				}
+
+				if (isCodeBlock) {
+					sb.append(temp).append(System.lineSeparator());
+				} else {
+					DefaultLabel content = new DefaultLabel(temp);
+					lvResult.getItems().add(content);
+				}
 			}
-		});
+		} catch (Exception ex) {
+			LOGGER.error(ValueUtil.toString(ex));
+		}
+
 	}
 
 //	Object executeScript = wbDefault.getEngine().executeScript("document.documentElement.outerHTML");
@@ -548,7 +528,7 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 //		try {
 //			Document document = Jsoup.parse(string);
 //			String text = XmlW3cUtil.parseElement(document.body());
-			
+
 	public String getDocumentText() {
 		Object executeScript = wbDefault.getEngine().executeScript("document.documentElement.outerHTML");
 		String string = executeScript.toString();
@@ -560,7 +540,7 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		Element body = document.body();
 		return body.wholeText();
 	}
@@ -596,7 +576,6 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 			});
 	}
 
-	
 	public void setAiService(OpenAIService openAIService) {
 		this.openAIService.set(openAIService);
 	}
@@ -606,8 +585,24 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 	}
 
 	private Tab current;
+
 	public void setCurrentTab(Tab e) {
 		this.current = e;
 	}
+
+	public final ObjectProperty<OpenAIService> openAIServiceProperty() {
+		return this.openAIService;
+	}
+	
+
+	public final OpenAIService getOpenAIService() {
+		return this.openAIServiceProperty().get();
+	}
+	
+
+	public final void setOpenAIService(final OpenAIService openAIService) {
+		this.openAIServiceProperty().set(openAIService);
+	}
+	
 
 }

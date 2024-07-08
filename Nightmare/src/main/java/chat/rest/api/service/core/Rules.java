@@ -10,24 +10,24 @@ import java.util.Map;
  */
 public class Rules {
 
-	Map<String, String> systemRole = Map.of("role", "system", "content", "");
-	Map<String, String> assistant = Map.of("role", "assistant", "content", "");
+	Map<String, Object> systemRole = Map.of("role", "system", "content", "");
+//	Map<String, String> assistant = Map.of("role", "assistant", "content", "");
 
-	public Map<String, String> getSystemRole() {
+	public Map<String, Object> getSystemRole() {
 		return systemRole;
 	}
 
-	public void setSystemRole(Map<String, String> systemRole) {
+	public void setSystemRole(Map<String, Object> systemRole) {
 		this.systemRole = systemRole;
 	}
 
-	public Map<String, String> getAssistant() {
-		return assistant;
-	}
+//	public Map<String, String> getAssistant() {
+//		return assistant;
+//	}
 
-	public void setAssistant(Map<String, String> assistant) {
-		this.assistant = assistant;
-	}
+//	public void setAssistant(Map<String, String> assistant) {
+//		this.assistant = assistant;
+//	}
 
 	public static Rules newInstance() {
 		return new Rules();
@@ -43,8 +43,8 @@ public class Rules {
 	/**
 	 * @param content
 	 */
-	public Rules assistantRuleContent(String content) {
-		assistant = Map.of("role", "assistant", "content", "");
-		return this;
-	}
+//	public Rules assistantRuleContent(String content) {
+//		assistant = Map.of("role", "assistant", "content", "");
+//		return this;
+//	}
 }

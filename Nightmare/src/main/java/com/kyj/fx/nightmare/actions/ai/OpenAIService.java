@@ -3,8 +3,11 @@
  */
 package com.kyj.fx.nightmare.actions.ai;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,19 +116,34 @@ public class OpenAIService implements AiActionable{
 			chatId = aiDataDAO.insertHistory(aiId.toString(),  promptId , speechId, this.getSystemRole(), USER.USER, message);
 		}
 		String send = "";
+		String userMessage= "";
 		if(responseAnswer)
-			send = serivce.send(message);
+		{
+			List<Map<String, Object>> latestHistory = aiDataDAO.getLatestHistory(5);
+			List<Map<String, Object>> assists = latestHistory.stream().flatMap(v ->{
+				String q = v.get("QUESTION") == null ? "" : v.get("QUESTION").toString();
+				String a = v.get("ANSWER") == null ? "" : v.get("ANSWER").toString();
+				return Stream.of(
+						Map.of("role", "user", "content", List.of(Map.of("type", "text", "text", q))),
+						Map.of("role", "assistant", "content", List.of(Map.of("type", "text", "text", a))
+				));
+			}).collect(Collectors.toList());
+			
+			send = serivce.send(assists, message);
+			userMessage = toUserMessage(send);
+		}
+			
 
 		if (writeHistory)
-			aiDataDAO.updateAnswer(chatId, send);
+			aiDataDAO.updateAnswer(chatId, userMessage);
 
-		return send;
+		return userMessage;
 	}
 
 	/**
 	 * @param of
 	 */
-	public void setSystemRole(Map<String, String> of) {
+	public void setSystemRole(Map<String, Object> of) {
 		this.serivce.setSystemRole(of);
 	}
 
@@ -135,12 +153,12 @@ public class OpenAIService implements AiActionable{
 	 * @param systemContent
 	 * @return
 	 */
-	public Map<String, String> createDefault(String systemContent) {
+	public Map<String, Object> createDefault(String systemContent) {
 		return Map.of("type", "text", "content", systemContent);
 	}
 
 	public String getSystemRole() {
-		String string = this.serivce.getSystemRule().get("content");
+		String string = this.serivce.getSystemRule().get("content") == null ? "" : this.serivce.getSystemRule().get("content").toString();
 		if(string.length() > LIMIT_MAX_LENGTH)
 			return string.substring(0, LIMIT_MAX_LENGTH);
 		return string;

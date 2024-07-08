@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
+import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.comm.initializer.GargoyleHostNameVertifier;
 import com.kyj.fx.nightmare.comm.initializer.GargoyleSSLVertifier;
 import com.kyj.fx.nightmare.comm.initializer.ProxyInitializable;
@@ -98,7 +100,7 @@ public class ChatGpt4oService extends ChatGpt3Service {
 		}
 
 		Map<String, Object> c = Map.of("role", "user", "content", userContents);
-		Map<String, String> d = getSystemRule();
+		Map<String, Object> d = getSystemRule();
 
 		List<Object> asList = Arrays.asList(c, d);
 		if (null != request.getSystemMessage())
@@ -145,12 +147,30 @@ public class ChatGpt4oService extends ChatGpt3Service {
 		}
 
 	}
-
 	public String send(String message) throws Exception {
+		return send(null, message);
+	}
+	
+	public String send(List<Map<String,Object>> assistance, String message) throws Exception {
 
 		var param = new HashMap<>();
 		param.put("model", getConfig().getModel());
-		param.put("messages", List.of(getSystemRule(), /*getAssist(),*/  Map.of("role", "user", "content", message)));
+		
+		List<Map<String, Object>> messages = null;
+		if(ValueUtil.isNotEmpty(assistance))
+		{
+			messages = new ArrayList<>(2 + assistance.size());
+			messages.add(getSystemRule());
+			messages.addAll(assistance);
+			messages.add(Map.of("role", "user", "content", message));
+		}
+		else
+		{
+//			this.getRule().getAssistant();
+			messages = List.of(getSystemRule(),  Map.of("role", "user", "content", message));
+		}
+		
+		param.put("messages", messages);
 
 		
 		LOGGER.debug("system {}", getSystemRule());

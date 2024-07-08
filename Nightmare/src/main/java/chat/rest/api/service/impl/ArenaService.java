@@ -5,6 +5,7 @@ package chat.rest.api.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -109,5 +110,11 @@ public class ArenaService extends AbstractPromptService {
 	public void send(String message, ResponseHandler handler) throws Exception {
 		throw new RuntimeException("not support.");
 	}
+
+	@Override
+	public String send(List<Map<String, Object>> assistance, String message) throws Exception {
+		throw new RuntimeException("not support.");
+	}
+
 
 }

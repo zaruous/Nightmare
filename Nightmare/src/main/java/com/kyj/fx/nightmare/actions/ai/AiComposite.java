@@ -380,9 +380,9 @@ public class AiComposite extends AbstractCommonsApp {
 					ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 						try {
 							String send = openAIService.send(request, false);
-							String content2 = openAIService.toUserMessage(send);
+//							String content2 = openAIService.toUserMessage(send);
 							Platform.runLater(() -> {
-								FxUtil.createStageAndShow(new TextArea(content2), stage -> {
+								FxUtil.createStageAndShow(new TextArea(send), stage -> {
 									stage.setTitle(item.getDisplayText());
 								});
 							});
@@ -424,8 +424,8 @@ public class AiComposite extends AbstractCommonsApp {
 						ICustomSupportView supportView = (ICustomSupportView) SupportListViewInstaller
 								.newInstance(graphicClass);
 						CustomLabel ret = new CustomLabel(supportView);
-						String content2 = openAIService.toUserMessage(apiName, m.get("ANSWER").toString());
-						supportView.setData(content2);
+//						String content2 = openAIService.toUserMessage(apiName, m.get("ANSWER").toString());
+						supportView.setData(m.get("ANSWER").toString());
 						Platform.runLater(() -> {
 							lvResult.getItems().add(ret);
 						});
@@ -490,11 +490,13 @@ public class AiComposite extends AbstractCommonsApp {
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			try {
 				openAIService.setSystemRole(openAIService.createDefault(system));
+				
 				String send = openAIService.send(promptId, speechId, msg);
+//				String userMessage = openAIService.toUserMessage(send);
 				Platform.runLater(() -> {
 					lvResult.getItems().add(new DefaultLabel("", new Label(openAIService.getConfig().getModel())));
 					if (customResponseHandler != null) {
-						DefaultLabel apply = customResponseHandler.apply(openAIService.toUserMessage(send));
+						DefaultLabel apply = customResponseHandler.apply(send);
 						lvResult.getItems().add(apply);
 
 					} else {
@@ -531,7 +533,7 @@ public class AiComposite extends AbstractCommonsApp {
 	 */
 	private void updateChatList(String apiName, String send, boolean speech) {
 		try {
-			String content2 = openAIService.toUserMessage(apiName, send);
+			String content2 = send; //openAIService.toUserMessage(apiName, send);
 
 			if (speech && useMicrophoneFlag.get()) {
 				var allData = new DefaultLabel(content2);
