@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kyj.fx.nightmare.actions.ai_webview.AIWebViewComposite;
+import com.kyj.fx.nightmare.comm.ValueUtil;
 
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.Context;
@@ -35,18 +36,24 @@ public class Controller {
 	 */
 	public void getHtml(Context ctx) {
 		ctx.result("1");
+		String body = ctx.body();
+		DataBody fromJsonString = ctx.jsonMapper().fromJsonString(body, DataBody.class);
 		Platform.runLater(()->{
 			Stage.getWindows().stream().filter(v -> v instanceof Stage).map(v -> ((Stage) v)).filter(v -> {
 				return v.getScene().getRoot().getClass() == AIWebViewComposite.class;
 			}).map(v -> (AIWebViewComposite) v.getScene().getRoot()).forEach(v -> {
 				v.getActive(a -> {
-					DataBody fromJsonString = ctx.jsonMapper().fromJsonString(ctx.body(), DataBody.class);
-					LOGGER.debug("{}", fromJsonString);
-					a.setLocation(fromJsonString.getLocation());
+					try {
+						LOGGER.debug("{}", fromJsonString.getLocation());
+						a.setLocation(fromJsonString.getLocation());	
+					}catch(Exception ex) {
+//						LOGGER.info("{}", body);
+						LOGGER.error(ValueUtil.toString(ex));
+					}
 				});
 			});	
 		});
-		
+		ctx.result("ok");
 	}
 
 	public Consumer<JavalinConfig> config() {
