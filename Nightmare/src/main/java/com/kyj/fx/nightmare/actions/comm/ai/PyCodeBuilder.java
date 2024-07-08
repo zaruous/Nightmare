@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.zeroturnaround.exec.InvalidExitValueException;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.stream.LogOutputStream;
-import org.zeroturnaround.exec.stream.slf4j.Slf4jStream;
 
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
@@ -24,17 +23,25 @@ import com.kyj.fx.nightmare.comm.ValueUtil;
  */
 public class PyCodeBuilder extends AbstractCodeRunner {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PyCodeBuilder.class);
-	private static final String PYTHON = "python";
+	private static final String command = "python";
 	private File pythonFile;
-	final static String BASE_DIR = "../python/execute/";
+//	private String baseDir = "../python/execute/";
+	private String baseDir = "../python/";
 
 	public PyCodeBuilder() {
-		super(PYTHON);
+		super(command);
+	}
 
+	public String getBaseDir() {
+		return baseDir;
+	}
+
+	public void setBaseDir(String baseDir) {
+		this.baseDir = baseDir;
 	}
 
 	public PyCodeBuilder code(String fileName, String code) throws IOException {
-		Path of = Path.of(BASE_DIR + fileName);
+		Path of = Path.of(baseDir + fileName);
 		LOGGER.debug("temp python file path {}", of.toAbsolutePath().toString());
 		Files.writeString(of, code, StandardCharsets.UTF_8);
 		this.pythonFile = of.getFileName().toFile();
@@ -42,7 +49,7 @@ public class PyCodeBuilder extends AbstractCodeRunner {
 	}
 
 	public PyCodeBuilder file(String simpleFileName) throws IOException {
-		this.pythonFile = new File(BASE_DIR, simpleFileName);
+		this.pythonFile = new File(baseDir, simpleFileName);
 		return this;
 	}
 
@@ -62,10 +69,10 @@ public class PyCodeBuilder extends AbstractCodeRunner {
 				LOGGER.error("{}", line);
 			}
 		});
-		defaultProcessExecutor.directory(new File("../python/"));
+		defaultProcessExecutor.directory(new File(baseDir));
 //		String absolutePath = new File("../python/execute",".pythonrc.py").getAbsolutePath();
 //		LOGGER.debug("pyrc {}" , absolutePath);
-		defaultProcessExecutor.command(PYTHON, "execute/" + pythonFile.getName()).redirectOutput(new LogOutputStream() {
+		defaultProcessExecutor.command(command, pythonFile.getName()).redirectOutput(new LogOutputStream() {
 			@Override
 			protected void processLine(String line) {
 				LOGGER.debug("{}", line);

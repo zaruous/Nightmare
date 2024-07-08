@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -431,8 +431,6 @@ public class DbUtil {
 		return "";
 	};
 
-
-
 	public static final FourThFunction<String, String, String, DatabaseMetaData, ResultSet> PRIMARY_CONVERTER = (
 			catalog, schema, tableNamePattern, metaData) -> {
 		try {
@@ -659,6 +657,5 @@ public class DbUtil {
 				e.printStackTrace();
 			}
 		}
-	}
-
+	}	
 }

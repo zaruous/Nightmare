@@ -190,7 +190,7 @@ public class AiComposite extends AbstractCommonsApp {
 									rc('font', family=font)
 									""";
 							
-							pyCodeBuilder.code(System.currentTimeMillis() + ".py", pre + script);
+							pyCodeBuilder.code("execute/" + System.currentTimeMillis() + ".py", pre + script);
 							pyCodeBuilder.run();
 						} catch (IOException e) {
 							e.printStackTrace();
