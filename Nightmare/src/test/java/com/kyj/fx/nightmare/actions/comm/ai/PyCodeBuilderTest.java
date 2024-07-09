@@ -19,7 +19,7 @@ class PyCodeBuilderTest {
 	@Test
 	void testRun() throws IOException {
 		PyCodeBuilder pyCodeBuilder = new PyCodeBuilder();
-		pyCodeBuilder.code((System.currentTimeMillis() + ".py"), "print('hello world!')");
+		pyCodeBuilder.code("print('hello world!')");
 		pyCodeBuilder.run();
 	}
 	
