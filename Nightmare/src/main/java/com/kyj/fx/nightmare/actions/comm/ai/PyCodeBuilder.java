@@ -39,12 +39,15 @@ public class PyCodeBuilder extends AbstractCodeRunner {
 	public void setBaseDir(String baseDir) {
 		this.baseDir = baseDir;
 	}
+	public final File getPythonFile() {return pythonFile;}
 
-	public PyCodeBuilder code(String fileName, String code) throws IOException {
-		Path of = Path.of(baseDir + fileName);
-		LOGGER.debug("temp python file path {}", of.toAbsolutePath().toString());
-		Files.writeString(of, code, StandardCharsets.UTF_8);
-		this.pythonFile = of.getFileName().toFile();
+	public PyCodeBuilder code(String code) throws IOException {
+		String filePathName = "../python/execute/" + System.currentTimeMillis() + ".py";
+		var f = new File(filePathName);
+//		Path of = Path.of(filePathName);
+		LOGGER.debug("temp python file path {}", f.getAbsolutePath());
+		Files.writeString(f.toPath(), code, StandardCharsets.UTF_8);
+		this.pythonFile = f;
 		return this;
 	}
 
@@ -72,7 +75,7 @@ public class PyCodeBuilder extends AbstractCodeRunner {
 		defaultProcessExecutor.directory(new File(baseDir));
 //		String absolutePath = new File("../python/execute",".pythonrc.py").getAbsolutePath();
 //		LOGGER.debug("pyrc {}" , absolutePath);
-		defaultProcessExecutor.command(command, pythonFile.getName()).redirectOutput(new LogOutputStream() {
+		defaultProcessExecutor.command(command, getPythonFile().getAbsolutePath()).redirectOutput(new LogOutputStream() {
 			@Override
 			protected void processLine(String line) {
 				LOGGER.debug("{}", line);

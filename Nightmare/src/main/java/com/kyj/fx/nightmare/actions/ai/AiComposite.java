@@ -190,7 +190,7 @@ public class AiComposite extends AbstractCommonsApp {
 									rc('font', family=font)
 									""";
 							
-							pyCodeBuilder.code("execute/" + System.currentTimeMillis() + ".py", pre + script);
+							pyCodeBuilder.code(pre + script);
 							pyCodeBuilder.run();
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -460,6 +460,7 @@ public class AiComposite extends AbstractCommonsApp {
 		DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
 		lblMe.setTip("me");
 		lvResult.getItems().add(lblMe);
+		lvResult.getItems().add(new DefaultLabel(""));
 		search(prompt);
 	}
 

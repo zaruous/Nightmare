@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
@@ -208,7 +209,7 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 								""";
 								
 								
-								pyCodeBuilder.code(System.currentTimeMillis() + ".py", pre + codeLabel.getText());
+								pyCodeBuilder.code(pre + codeLabel.getText());
 								pyCodeBuilder.run();
 							} catch (IOException e) {
 								e.printStackTrace();
@@ -411,6 +412,18 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 				if(value instanceof Date) {
 					LocalDate localDate = ((Date)value).toLocalDate();
 					spreadsheetCell = SpreadsheetCellType.DATE.createCell(spreadsheetCell.getRow(), spreadsheetCell.getColumn(), 1, 1, localDate);
+					cellList.set(c, spreadsheetCell);
+				}
+				else if(value instanceof java.sql.Timestamp) 
+				{
+					var localDate = ((Timestamp)value).toLocalDateTime();
+					spreadsheetCell = new LocalDateTimeCellType().createCell(spreadsheetCell.getRow(), spreadsheetCell.getColumn(), 1, 1, localDate);
+					cellList.set(c, spreadsheetCell);
+					
+				}
+				else if(value instanceof Double) {
+					Double d = ((Double)value);
+					spreadsheetCell = SpreadsheetCellType.DOUBLE.createCell(spreadsheetCell.getRow(), spreadsheetCell.getColumn(), 1, 1, d);
 					cellList.set(c, spreadsheetCell);
 				}
 				else {

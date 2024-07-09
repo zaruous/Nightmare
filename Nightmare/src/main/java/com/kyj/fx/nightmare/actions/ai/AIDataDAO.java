@@ -110,13 +110,16 @@ public class AIDataDAO extends AbstractDAO {
 	 */
 	public List<Map<String, Object>> getLatestHistory() {
 		String fetchCnt = ResourceLoader.getInstance().get(ResourceLoader.AI_HISTORY_FETCH_COUNT, "50");
-		return getLatestHistory(Integer.parseInt(fetchCnt, 10));
+		return getLatestHistory("", Integer.parseInt(fetchCnt, 10));
+	}
+	public List<Map<String, Object>> getLatestHistory(int limit) {
+		return getLatestHistory("", limit);
 	}
 	/**
 	 * @param limit
 	 * @return
 	 */
-	public List<Map<String, Object>> getLatestHistory(int limit) {
+	public List<Map<String, Object>> getLatestHistory(String aiId, int limit) {
 		
 		
 		String state = """
@@ -127,12 +130,16 @@ public class AIDataDAO extends AbstractDAO {
 						    	ON h.AI_ID = cnf.ID
 						    LEFT JOIN tbm_sm_prompts pt
 						    	ON h.prompt_id = pt.ID
+						    WHERE 1=1
+						    #if($aiId && $aiId.length > 0)
+						    	AND h.AI_ID = :aiId
+						    #end
 						    ORDER BY h.ID DESC
 						    LIMIT $fetchCnt 
 						) subquery
 						ORDER BY ID ASC
 				""";
-		List<Map<String, Object>> query = query(state, Map.of("fetchCnt", limit));
+		List<Map<String, Object>> query = query(state, Map.of("fetchCnt", limit, "aiId", aiId));
 		return query;
 	}
 

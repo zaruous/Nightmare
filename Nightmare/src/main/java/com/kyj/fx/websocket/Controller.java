@@ -38,6 +38,7 @@ public class Controller {
 		ctx.result("1");
 		String body = ctx.body();
 		DataBody fromJsonString = ctx.jsonMapper().fromJsonString(body, DataBody.class);
+		
 		Platform.runLater(()->{
 			Stage.getWindows().stream().filter(v -> v instanceof Stage).map(v -> ((Stage) v)).filter(v -> {
 				return v.getScene().getRoot().getClass() == AIWebViewComposite.class;
@@ -45,7 +46,8 @@ public class Controller {
 				v.getActive(a -> {
 					try {
 						LOGGER.debug("{}", fromJsonString.getLocation());
-						a.setLocation(fromJsonString.getLocation());	
+						a.setLocation(fromJsonString.getLocation());
+//						a.setHtml(fromJsonString.getHtml());
 					}catch(Exception ex) {
 //						LOGGER.info("{}", body);
 						LOGGER.error(ValueUtil.toString(ex));

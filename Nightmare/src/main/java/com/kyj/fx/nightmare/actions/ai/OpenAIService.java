@@ -119,6 +119,8 @@ public class OpenAIService implements AiActionable{
 		String userMessage= "";
 		if(responseAnswer)
 		{
+			String id = serivce.getConfig().getConfig().get("id") == null ? null : serivce.getConfig().getConfig().get("id").toString();
+//			config.setProperty("id",
 			List<Map<String, Object>> latestHistory = aiDataDAO.getLatestHistory(5);
 			List<Map<String, Object>> assists = latestHistory.stream().flatMap(v ->{
 				String q = v.get("QUESTION") == null ? "" : v.get("QUESTION").toString();
@@ -197,7 +199,7 @@ public class OpenAIService implements AiActionable{
 	}
 	
 	public String toUserMessage(API api, String message) {
-		if (API.LLAMA3 == api) {
+		if (API.LLAMA3 == api || API.GEMMA == api) {
 			return message;
 		} else {
 			ResponseModelDVO ret = ResponseModelDVO.fromGtpResultMessage(message);

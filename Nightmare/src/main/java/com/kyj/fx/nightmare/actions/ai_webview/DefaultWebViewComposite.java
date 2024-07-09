@@ -603,6 +603,10 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 	public final void setOpenAIService(final OpenAIService openAIService) {
 		this.openAIServiceProperty().set(openAIService);
 	}
+
+	public void setHtml(String html) {
+		this.getWebView().getEngine().loadContent(html);
+	}
 	
 
 }
