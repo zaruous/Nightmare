@@ -64,8 +64,17 @@ public class QuestionComposite extends AbstractCommonsApp implements ICustomSupp
 				if (ValueUtil.isEmpty(newValue))
 					return;
 
+				String fixedText = newValue;
+				final String preffix = "```json";
+				int st = fixedText.indexOf(preffix);
+				if(st > -1)
+				{
+					int ed = fixedText.indexOf("```", st + 1);
+					fixedText = newValue.substring(st + preffix.length(), ed);
+				}
+				
 				try {
-					Question question = mapper.readValue(newValue, Question.class);
+					Question question = mapper.readValue(fixedText, Question.class);
 					lblQuestion.setText(question.getQuestion());
 					List<Answer> questionList = question.getQuestionList();
 
