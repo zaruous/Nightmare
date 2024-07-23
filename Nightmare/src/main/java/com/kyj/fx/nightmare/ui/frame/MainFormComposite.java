@@ -20,6 +20,7 @@ import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -60,7 +61,9 @@ public class MainFormComposite extends BorderPane {
 						AbstractCommonsApp app = StageStore.getApp();
 						if(app!=null && (app.getClass() == AiComposite.class))
 							return;
-						aiOnClick();
+						Platform.runLater(()->{
+							aiOnClick();	
+						});
 					}
 				}, 2000);
 			});
