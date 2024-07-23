@@ -3,6 +3,7 @@
  */
 package com.kyj.fx.nightmare.actions.ai;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
@@ -181,15 +182,17 @@ public class AiComposite extends AbstractCommonsApp {
 							PyCodeBuilder pyCodeBuilder = new PyCodeBuilder();
 							pyCodeBuilder.codeType(cl.getCodeType());
 							
+							String fontPath = new File("fonts/NANUMBARUNGOTHIC.TTF").getAbsolutePath();
 							String pre = """
 									from matplotlib import font_manager, rc, rcParams
 
 									# 한글 폰트 설정
-									font_path = 'C:/Users/KYJ/AppData/Local/Microsoft/Windows/Fonts/NanumGothic.ttf'  # 폰트 파일 경로
+									font_path = '%s'  # 폰트 파일 경로
+									font_manager.fontManager.addfont(font_path)
 									font = font_manager.FontProperties(fname=font_path).get_name()
 									rc('font', family=font)
 									""";
-							
+							pre = String.format(pre, fontPath);
 							pyCodeBuilder.code(pre + script);
 							pyCodeBuilder.run();
 						} catch (IOException e) {
