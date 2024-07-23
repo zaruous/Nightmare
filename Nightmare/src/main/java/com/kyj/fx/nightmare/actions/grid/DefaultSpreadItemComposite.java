@@ -170,8 +170,8 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 					}
 
 				};
-
-				// listCell.setContextMenu(speechCtx);
+				//컨텍스트 메뉴 추가.
+				 listCell.setContextMenu(ctx);
 				// listCell.setOnContextMenuRequested(ev -> {
 				// Object item = listCell.getItem();
 				// boolean speechMenuVisible = item instanceof SpeechLabel;

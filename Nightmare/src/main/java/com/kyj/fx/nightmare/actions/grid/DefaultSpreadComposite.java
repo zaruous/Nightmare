@@ -306,7 +306,7 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 				Sheet sheetAt = readXlsx.getSheetAt(s);
 				int lastRowNum = sheetAt.getLastRowNum();
 				int firstRowNum = sheetAt.getFirstRowNum();
-				Tab newTab = createNewTab(sheetAt.getSheetName(), composite -> {
+				Tab newTab = createNewTab(sheetAt.getSheetName(), (lastRowNum > 100 ? lastRowNum : 100),(firstRowNum > 100 ? firstRowNum : 100),  composite -> {
 
 					DefaultSpreadSheetView spreadSheet = composite.getView();
 					for (int i = firstRowNum; i < lastRowNum; i++) {
