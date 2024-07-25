@@ -37,7 +37,7 @@ public class Rules {
 	 * @param content
 	 */
 	public Rules systemRuleContent(String content) {
-		systemRole = Map.of("role", "system", "content", content);
+		systemRole = Map.of("role", "system", "content", content == null ? "" : content);
 		return this;
 	}
 	/**

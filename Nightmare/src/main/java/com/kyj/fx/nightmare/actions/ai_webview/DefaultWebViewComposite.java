@@ -9,6 +9,7 @@ import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -438,7 +439,8 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 		}
 
 		OpenAIService openAIService = this.openAIService.get();
-		Map<String, Object> default1 = openAIService.createDefault(systemContent);
+		Map<String, Object> default1 = openAIService.createAssist(systemContent);
+		
 		openAIService.setSystemRole(default1);
 
 		String prompt = txtPrompt.getText();
@@ -448,7 +450,7 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			try {
-				String send = openAIService.send(text, true);
+				String send = openAIService.send(Arrays.asList(default1), text, true);
 				Platform.runLater(() -> {
 					try {
 						updateChatList(send);

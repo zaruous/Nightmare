@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
@@ -81,20 +82,29 @@ public abstract class SupportListViewInstaller {
 											lblMe.setTip("me");
 											aiComposite.lvResult.getItems().add(lblMe);
 											ICustomSupportView supportView = (ICustomSupportView) newInstance;
+
 											
-											aiComposite.search(promptId, systemMsg, text, data -> {
-												//TODO 동적 타입으로 변경
+											search(aiComposite, promptId, systemMsg, text, data -> {
+												// TODO 동적 타입으로 변경
 												CustomLabel ret = new CustomLabel(supportView);
 												supportView.setData(data);
-//												ret.setData(data);
 												return ret;
 											});
-										} else {
-											DefaultLabel lblMe = new DefaultLabel(text, graphic);
-											lblMe.setTip("me");
-											aiComposite.lvResult.getItems().add(lblMe);
-											aiComposite.search(systemMsg, text);
-										}
+											
+//											aiComposite.search(promptId, systemMsg, text, data -> {
+//												// TODO 동적 타입으로 변경
+//												CustomLabel ret = new CustomLabel(supportView);
+//												supportView.setData(data);
+//												return ret;
+//											});
+										} 
+//										else {
+//											DefaultLabel lblMe = new DefaultLabel(text, graphic);
+//											lblMe.setTip("me");
+//											aiComposite.lvResult.getItems().add(lblMe);
+////											aiComposite.search(systemMsg, text);
+//											search(aiComposite, systemMsg, text );
+//										}
 
 									} catch (Exception e) {
 										e.printStackTrace();
@@ -109,7 +119,6 @@ public abstract class SupportListViewInstaller {
 							}
 						}
 
-						
 					});
 
 				}
@@ -127,9 +136,40 @@ public abstract class SupportListViewInstaller {
 
 	}
 	
-	public static Object newInstance(String graphicClass)
-			throws ClassNotFoundException, NoSuchMethodException, InstantiationException,
-			IllegalAccessException, InvocationTargetException {
+
+	/**
+	 * ollama 모델에서 json 포멧으로 처리하기 위한 처리.
+	 * @param aiComposite
+	 * @param system
+	 * @param message
+	 * @param customResponseHandler
+	 * @throws Exception
+	 */
+	static void search(AiComposite aiComposite, String promptId , String system, String message, Function<String, DefaultLabel> customResponseHandler) throws Exception {
+		ListView<DefaultLabel> lv = aiComposite.lvResult;
+		JsonFormatOpenAIService openAIService = new JsonFormatOpenAIService();
+		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
+			try {
+				openAIService.setSystemRole(openAIService.createDefault(system));
+
+				String send = openAIService.send(promptId, message);
+				Platform.runLater(() -> {
+					lv.getItems().add(new DefaultLabel("", new Label(openAIService.getConfig().getModel())));
+					if (customResponseHandler != null) {
+						DefaultLabel apply = customResponseHandler.apply(send);
+						lv.getItems().add(apply);
+					}
+				});
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+
+	}
+
+	public static Object newInstance(String graphicClass) throws ClassNotFoundException, NoSuchMethodException,
+			InstantiationException, IllegalAccessException, InvocationTargetException {
 		Class<?> forName = Class.forName(graphicClass);
 		Constructor<?> declaredConstructor = forName.getDeclaredConstructor();
 		Object newInstance = declaredConstructor.newInstance();

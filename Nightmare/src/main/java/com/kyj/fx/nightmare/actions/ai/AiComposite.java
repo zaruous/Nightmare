@@ -382,6 +382,7 @@ public class AiComposite extends AbstractCommonsApp {
 
 					ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 						try {
+							
 							String send = openAIService.send(request, false);
 //							String content2 = openAIService.toUserMessage(send);
 							Platform.runLater(() -> {

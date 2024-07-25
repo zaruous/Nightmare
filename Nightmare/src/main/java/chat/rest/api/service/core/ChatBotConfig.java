@@ -5,6 +5,8 @@ import java.util.Properties;
 public class ChatBotConfig {
 //	private String rootUrl;
 	private Properties config;
+	//response format
+	private String format;
 //	private String proxyIp;
 //	private int proxyPort;
 
@@ -22,6 +24,14 @@ public class ChatBotConfig {
 
 	public void setConfig(Properties config) {
 		this.config = config;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
 	}
 
 }

@@ -30,10 +30,16 @@ public class JavalinStarter {
 		
 		String string = ResourceLoader.getInstance().get("application.check.port", "10022");
 		try {
-			Controller getHtml = new Controller();
-			var app = Javalin.create(getHtml.config())
-					.start(Integer.parseInt(string, 10));
 			
+			var app = Javalin.create(config ->{
+				 config.http.asyncTimeout = 10_000L;
+//				 config.http.maxRequestSize = 15;
+				 config.useVirtualThreads = true;
+				 config.showJavalinBanner = false;
+			})
+			.start(Integer.parseInt(string, 10));
+			
+			Controller getHtml = new Controller();
 			app.get("/", ctx -> getHtml.hellWorld(ctx))
 			.post("/getHtml", ctx -> getHtml.getHtml(ctx))
 			.get("/status", ctx -> getHtml.status(ctx));

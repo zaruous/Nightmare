@@ -57,7 +57,7 @@ public class AIDataDAO extends AbstractDAO {
 					WHERE 1=1
 					AND id = :id
 				""";
-		update(state, Map.of("id", id, "answer", answer));
+		update(state, Map.of("id", id, "answer", answer == null ? "" : answer));
 	}
 
 	/**

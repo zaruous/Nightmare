@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +29,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
@@ -43,9 +47,10 @@ import chat.rest.api.service.core.VirtualPool;
  * 
  */
 public class Ollama3Service extends AbstractPromptService {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(Ollama3Service.class);
 	public Ollama3Service() throws Exception {
 		super();
+		
 	}
 
 	@Override
@@ -73,18 +78,35 @@ public class Ollama3Service extends AbstractPromptService {
 		VirtualPool.newInstance().execute(runAsync(handler, httpPost));
 	}
 
-	public String send(String message) throws Exception {
+	@Override
+	public String send(List<Map<String, Object>> assistance, String message) throws Exception {
+
 
 		var param = new HashMap<>();
 		param.put("model", getConfig().getModel());
-		param.put("messages", List.of(getSystemRule(), Map.of("role", "user", "content", message)));
+		if(assistance.isEmpty())
+			param.put("messages", List.of(getSystemRule(), Map.of("role", "user", "content", message)));
+		else
+		{
+			ArrayList<Map<String, Object>> arrayList = new ArrayList<>(assistance.size() + 2);
+			arrayList.add(getSystemRule());
+//			arrayList.addAll(assistance);
+			arrayList.add(Map.of("role", "user", "content", message));
+			
+			param.put("messages", arrayList);
+		}
+		
+		param.put("format", getFormat());
 		param.put("stream", false);
-//		param.put("raw", true);
+
+		
+		
 
 		// API 요청 생성
 		Gson gson = new Gson();
 		String requestJson = gson.toJson(param);
 		StringEntity entity = new StringEntity(requestJson, StandardCharsets.UTF_8);
+		LOGGER.debug("{}",requestJson);
 		HttpPost httpPost = new HttpPost(getConfig().getRootUrl());
 		httpPost.setHeader("Content-Type", "application/json");
 		httpPost.setHeader("Authorization", "Bearer " + getConfig().getConfig().getProperty("apikey"));
@@ -117,6 +139,7 @@ public class Ollama3Service extends AbstractPromptService {
 				// var sb = new StringBuilder();
 				try (BufferedReader r = new BufferedReader(new InputStreamReader(responseEntity.getContent()))) {
 					str = r.lines().map(ret -> {
+						LOGGER.debug("{}",ret);
 						Ollama3ResponseDVO D = gson.fromJson(ret, Ollama3ResponseDVO.class);
 						return D.getMessage().getContent();
 					}).collect(Collectors.joining());
@@ -125,6 +148,11 @@ public class Ollama3Service extends AbstractPromptService {
 				return str;
 			}
 		}
+	
+	}
+
+	public String send(String message) throws Exception {
+		return send(Collections.emptyList(), message);
 	}
 
 	private Runnable runAsync(ResponseHandler handler, HttpPost httpPost) {
@@ -219,9 +247,6 @@ public class Ollama3Service extends AbstractPromptService {
 		}
 	}
 
-	@Override
-	public String send(List<Map<String, Object>> assistance, String message) throws Exception {
-		return send(message);
-	}
+	
 
 }

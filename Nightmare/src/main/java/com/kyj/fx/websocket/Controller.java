@@ -58,11 +58,11 @@ public class Controller {
 		ctx.result("ok");
 	}
 
-	public Consumer<JavalinConfig> config() {
-		return config -> {
-			config.useVirtualThreads = true;
-		};
-	}
+//	public Consumer<JavalinConfig> config() {
+//		return config -> {
+//			
+//		};
+//	}
 
 	/**
 	 * @param ctx

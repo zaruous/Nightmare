@@ -70,7 +70,18 @@ public class OpenAIService implements AiActionable{
 	public String send(String message, boolean writeHistory) throws Exception {
 		return send("", -1, message, writeHistory);
 	}
-
+	
+	/**
+	 * @param assists
+	 * @param message
+	 * @param writeHistory
+	 * @return
+	 * @throws Exception
+	 */
+	public String send(List<Map<String, Object>> assists, String message, boolean writeHistory) throws Exception {
+		return send(assists, "", -1, message, writeHistory, true);
+	}
+	
 	/**
 	 * @param message
 	 * @param writeHistory
@@ -110,6 +121,29 @@ public class OpenAIService implements AiActionable{
 	 * @throws Exception
 	 */
 	public String send(String promptId, long speechId, String message, boolean writeHistory, boolean responseAnswer) throws Exception {
+		List<Map<String, Object>> latestHistory = aiDataDAO.getLatestHistory(5);
+		List<Map<String, Object>> assists = latestHistory.stream().flatMap(v ->{
+			String q = v.get("QUESTION") == null ? "" : v.get("QUESTION").toString();
+			String a = v.get("ANSWER") == null ? "" : v.get("ANSWER").toString();
+			return Stream.of(
+					Map.of("role", "user", "content", List.of(Map.of("type", "text", "text", q))),
+					Map.of("role", "assistant", "content", List.of(Map.of("type", "text", "text", a))
+			));
+		}).collect(Collectors.toList());
+		return send(assists, promptId, speechId, message, writeHistory, responseAnswer);
+	}
+
+	/**
+	 * @param assists
+	 * @param promptId
+	 * @param speechId
+	 * @param message
+	 * @param writeHistory
+	 * @param responseAnswer
+	 * @return
+	 * @throws Exception
+	 */
+	public String send(List<Map<String, Object>> assists, String promptId, long speechId, String message, boolean writeHistory, boolean responseAnswer) throws Exception {
 		long chatId = -1;
 		if (writeHistory) {
 			Object aiId = serivce.getConfig().getConfig().get("id");
@@ -119,18 +153,6 @@ public class OpenAIService implements AiActionable{
 		String userMessage= "";
 		if(responseAnswer)
 		{
-			String id = serivce.getConfig().getConfig().get("id") == null ? null : serivce.getConfig().getConfig().get("id").toString();
-//			config.setProperty("id",
-			List<Map<String, Object>> latestHistory = aiDataDAO.getLatestHistory(5);
-			List<Map<String, Object>> assists = latestHistory.stream().flatMap(v ->{
-				String q = v.get("QUESTION") == null ? "" : v.get("QUESTION").toString();
-				String a = v.get("ANSWER") == null ? "" : v.get("ANSWER").toString();
-				return Stream.of(
-						Map.of("role", "user", "content", List.of(Map.of("type", "text", "text", q))),
-						Map.of("role", "assistant", "content", List.of(Map.of("type", "text", "text", a))
-				));
-			}).collect(Collectors.toList());
-			
 			send = serivce.send(assists, message);
 			userMessage = toUserMessage(send);
 		}
@@ -141,7 +163,7 @@ public class OpenAIService implements AiActionable{
 
 		return userMessage;
 	}
-
+	
 	/**
 	 * @param of
 	 */
@@ -158,6 +180,11 @@ public class OpenAIService implements AiActionable{
 	public Map<String, Object> createDefault(String systemContent) {
 		return Map.of("type", "text", "content", systemContent);
 	}
+	
+	public Map<String, Object> createAssist(String content) {
+//		Map.of("role", "assistant", "content", List.of(Map.of("type", "text", "text", a))
+		return Map.of("role", "assistant", "type", "text", "content", content);
+	}
 
 	public String getSystemRole() {
 		String string = this.serivce.getSystemRule().get("content") == null ? "" : this.serivce.getSystemRule().get("content").toString();
@@ -173,6 +200,10 @@ public class OpenAIService implements AiActionable{
 		return this.serivce.getConfig();
 	}
 
+	public ChatBotService getChatBotService() {
+		return this.serivce;
+	}
+	
 	public void setSpeechId(long speechId) {
 		this.speechId = speechId;
 	}

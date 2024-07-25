@@ -8,7 +8,10 @@ public abstract class AbstractPromptService implements ChatBotService {
 
 	private ChatBotConfig config;
 	private Rules rule = Rules.newInstance();
-
+	
+	public String getFormat() {return config.getFormat(); }
+	public void setFormat(String format) { config.setFormat(format);}
+	
 	public AbstractPromptService() throws Exception {
 		this.config = createConfig();
 	}

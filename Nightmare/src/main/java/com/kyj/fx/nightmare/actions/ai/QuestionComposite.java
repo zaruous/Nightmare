@@ -3,7 +3,10 @@
  */
 package com.kyj.fx.nightmare.actions.ai;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +55,21 @@ public class QuestionComposite extends AbstractCommonsApp implements ICustomSupp
 	private ObjectMapper mapper = new ObjectMapper();
 	RadioButton[] questionItems;
 
+	public static List<String> extractJsonStrings(String input) {
+        List<String> jsonStrings = new ArrayList<>();
+
+        // 정규 표현식으로 JSON 패턴을 매칭합니다.
+        String jsonPattern = "\\{(?:\"[^\"]*\"\\s*:\\s*\"[^\"]*\"\\s*,?\\s*)+\\}";
+        Pattern pattern = Pattern.compile(jsonPattern);
+        Matcher matcher = pattern.matcher(input);
+
+        while (matcher.find()) {
+            jsonStrings.add(matcher.group());
+        }
+
+        return jsonStrings;
+    }
+	
 	@FXML
 	public void initialize() {
 		questionItems = new RadioButton[] { lblQ1, lblQ2, lblQ3, lblQ4, lblQ5 };
@@ -73,8 +91,17 @@ public class QuestionComposite extends AbstractCommonsApp implements ICustomSupp
 					fixedText = newValue.substring(st + preffix.length(), ed);
 				}
 				
+				if(st == -1)
+				{
+					List<String> jsonStrings = extractJsonStrings(fixedText);
+					if(!jsonStrings.isEmpty())
+						fixedText = jsonStrings.get(0);
+				}
+				
+				
 				try {
 					Question question = mapper.readValue(fixedText, Question.class);
+					
 					lblQuestion.setText(question.getQuestion());
 					List<Answer> questionList = question.getQuestionList();
 
