@@ -19,7 +19,6 @@ public class CodeLabel extends DefaultLabel {
 
 	public CodeLabel(String text, Node graphic) {
 		super(text, graphic);
-
 	}
 
 	public CodeLabel(String text) {
@@ -42,6 +41,20 @@ public class CodeLabel extends DefaultLabel {
 
 	public final void setCodeType(final String codeType) {
 		this.codeTypeProperty().set(codeType);
+	}
+
+	private StringProperty result = new SimpleStringProperty();
+
+	public final StringProperty resultProperty() {
+		return this.result;
+	}
+
+	public final String getResult() {
+		return this.resultProperty().get();
+	}
+
+	public final void setResult(final String result) {
+		this.resultProperty().set(result);
 	}
 
 }

@@ -114,11 +114,19 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 
 		WritableImage snapshot = content.snapshot(snapshotParameters, null);
 		BufferedImage fromFXImage = SwingFXUtils.fromFXImage(snapshot, null);
-		File outputFile = new File("output.png");
+//		File outputFile = new File("output.png");
 		try {
-			ImageIO.write(fromFXImage, "png", outputFile);
+			var outFile = DialogUtil.showFileSaveDialog(FxUtil.getWindow(this), chooser->{
+				chooser.setInitialFileName("out.png");
+				chooser.getExtensionFilters().add(GargoyleExtensionFilters.PNG_EXTENSION_FILTER);
+				chooser.getExtensionFilters().add(GargoyleExtensionFilters.ALL_FILTER);
+			});
+			if(outFile !=null )
+			{
+				ImageIO.write(fromFXImage, "png", outFile);
+			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			DialogUtil.showExceptionDailog(e);
 		}
 
 	}
@@ -127,6 +135,10 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 	public void initialize() {
 		try {
 			this.openAIService = new OpenAIService();
+			String systemPrompt = """ 
+				데이터 전문가가 되어줘.
+				""";
+			this.openAIService.setSystemRole(this.openAIService.createDefault(systemPrompt));
 		} catch (Exception e) {
 			LOGGER.error(ValueUtil.toString(e));
 		}

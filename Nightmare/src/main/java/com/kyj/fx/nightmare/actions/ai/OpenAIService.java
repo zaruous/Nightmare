@@ -3,6 +3,7 @@
  */
 package com.kyj.fx.nightmare.actions.ai;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -183,7 +184,13 @@ public class OpenAIService implements AiActionable{
 	
 	public Map<String, Object> createAssist(String content) {
 //		Map.of("role", "assistant", "content", List.of(Map.of("type", "text", "text", a))
-		return Map.of("role", "assistant", "type", "text", "content", content);
+		var p = new HashMap<String,Object>();
+		p.put("role", "assistant");
+		p.put("type", "text");
+		p.put("content", content);
+		return p;
+//		return Map.of("role", "assistant", "type", "text", "content", content);
+		
 	}
 
 	public String getSystemRole() {

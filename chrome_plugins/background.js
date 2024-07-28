@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ eventName: request.action , text: request.text, location : request.location, iframeSrcs : request.iframeSrcs  })
+      body: JSON.stringify({ eventName: request.action , text: request.text, location : request.location, iframeSrcs : request.iframeSrcs, html : request.html  })
     })
     /*.then(response => response.json())*/
     .then(data => console.log(data))
@@ -95,7 +95,7 @@ function sendHtmlNavigation()
   
 	//console.log(chrome.storage.local);
 	let jsondata = "";
-	chrome.runtime.sendMessage({ action: 'sendHtmlNavigation', text: textOnly, location : location, iframeSrcs : iframeSrcs, storageData :jsondata });
+	chrome.runtime.sendMessage({ action: 'sendHtmlNavigation', text: textOnly, location : location, iframeSrcs : iframeSrcs, storageData :jsondata, html : html });
 	/*	
 	getStorageDataAsJson(function(jsondata){
 

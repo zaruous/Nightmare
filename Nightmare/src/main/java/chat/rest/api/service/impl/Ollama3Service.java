@@ -90,7 +90,7 @@ public class Ollama3Service extends AbstractPromptService {
 		{
 			ArrayList<Map<String, Object>> arrayList = new ArrayList<>(assistance.size() + 2);
 			arrayList.add(getSystemRule());
-//			arrayList.addAll(assistance);
+			arrayList.addAll(assistance);
 			arrayList.add(Map.of("role", "user", "content", message));
 			
 			param.put("messages", arrayList);
@@ -139,7 +139,7 @@ public class Ollama3Service extends AbstractPromptService {
 				// var sb = new StringBuilder();
 				try (BufferedReader r = new BufferedReader(new InputStreamReader(responseEntity.getContent()))) {
 					str = r.lines().map(ret -> {
-						LOGGER.debug("{}",ret);
+						LOGGER.debug("response : {}",ret);
 						Ollama3ResponseDVO D = gson.fromJson(ret, Ollama3ResponseDVO.class);
 						return D.getMessage().getContent();
 					}).collect(Collectors.joining());

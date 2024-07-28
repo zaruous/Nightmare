@@ -3,13 +3,13 @@
  */
 package com.kyj.fx.nightmare.actions.grid;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,7 @@ import com.kyj.fx.fxloader.FXMLController;
 import com.kyj.fx.nightmare.actions.ai.CodeLabel;
 import com.kyj.fx.nightmare.actions.ai.DefaultLabel;
 import com.kyj.fx.nightmare.actions.ai.OpenAIService;
-import com.kyj.fx.nightmare.actions.comm.ai.PyCodeBuilder;
+import com.kyj.fx.nightmare.actions.comm.ai.PythonHelper;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxClipboardUtil;
@@ -34,6 +34,8 @@ import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 
+import chat.rest.api.service.core.ChatBotService;
+import chat.rest.api.service.impl.Ollama3Service;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -195,29 +197,10 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 					CodeLabel codeLabel = (CodeLabel) selectedItem;
 					String codeType = codeLabel.getCodeType();
 					if ("python".equals(codeType)) {
+						
+						//파이썬 코드 실행
 						ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
-							try {
-								PyCodeBuilder pyCodeBuilder = new PyCodeBuilder();
-								pyCodeBuilder.codeType(codeType);
-								
-								String fontPath = new File("fonts/NANUMBARUNGOTHIC.TTF").getAbsolutePath();
-								String pre = """
-										from matplotlib import font_manager, rc, rcParams
-
-										# 한글 폰트 설정
-										font_path = '%s'  # 폰트 파일 경로
-										font_manager.fontManager.addfont(font_path)
-										font = font_manager.FontProperties(fname=font_path).get_name()
-										rc('font', family=font)
-										""";
-								pre = String.format(pre, fontPath);
-								
-								
-								pyCodeBuilder.code(pre + codeLabel.getText());
-								pyCodeBuilder.run();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
+							PythonHelper.exec(codeType, codeLabel.getText());
 						});
 					}
 
@@ -228,6 +211,7 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 		ctx.getItems().add(miRun);
 	}
 
+	
 	public void setAiService(OpenAIService openAIService) {
 		this.openAIService.set(openAIService);
 	}
@@ -268,9 +252,12 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 		}
 
 		OpenAIService openAIService = this.openAIService.get();
-		Map<String, Object> default1 = openAIService.createDefault(systemContent);
-		openAIService.setSystemRole(default1);
-
+		
+		
+//		Map<String, Object> default1 = openAIService.createDefault(systemContent);
+		
+//		assist.put("role", "user");
+		
 		String prompt = txtPrompt.getText();
 		DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
 		lblMe.setTip("me");
@@ -278,16 +265,38 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 
 		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			try {
-				String send = openAIService.send(text, true);
-				Platform.runLater(() -> {
-					try {
-						updateChatList(send);
-					} catch (Exception e) {
-						LOGGER.error(ValueUtil.toString(e));
-					} finally {
-						btnEnter.setDisable(false);
-					}
-				});
+				ChatBotService chatBotService = openAIService.getChatBotService();
+				Map<String, Object> assist = Collections.emptyMap();
+				if((chatBotService instanceof Ollama3Service))
+				{
+					openAIService.setSystemRole(Map.of("role", "system", "content", systemContent));
+//					openAIService.createDefault(systemContent);
+					String send = openAIService.send( Collections.emptyList(), text, true);
+					Platform.runLater(() -> {
+						try {
+							updateChatList(send);
+						} catch (Exception e) {
+							LOGGER.error(ValueUtil.toString(e));
+						} finally {
+							btnEnter.setDisable(false);
+						}
+					});
+				}
+				else {
+					assist = openAIService.createAssist(systemContent);
+					String send = openAIService.send(Arrays.asList(assist), text, true);
+					Platform.runLater(() -> {
+						try {
+							updateChatList(send);
+						} catch (Exception e) {
+							LOGGER.error(ValueUtil.toString(e));
+						} finally {
+							btnEnter.setDisable(false);
+						}
+					});
+				}
+				
+				
 			} catch (Exception e) {
 				LOGGER.error(ValueUtil.toString(e));
 			}

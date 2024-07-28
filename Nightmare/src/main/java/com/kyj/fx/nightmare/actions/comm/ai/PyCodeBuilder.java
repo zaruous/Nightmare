@@ -5,6 +5,7 @@ package com.kyj.fx.nightmare.actions.comm.ai;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +28,23 @@ public class PyCodeBuilder extends AbstractCodeRunner {
 	private File pythonFile;
 //	private String baseDir = "../python/execute/";
 	private String baseDir = "../python/";
+
+	public static final LogOutputStream DEFAULT_OUTPUT_STREAM = new LogOutputStream() {
+		@Override
+		protected void processLine(String line) {
+			LOGGER.debug("{}", line);
+		}
+	};
+	public static final LogOutputStream DEFAULT_ERROR_OUTPUT_STREAM = new LogOutputStream() {
+		@Override
+		protected void processLine(String line) {
+			LOGGER.debug("{}", line);
+		}
+	};
+	private OutputStream outputStream = DEFAULT_OUTPUT_STREAM;
+	private OutputStream errorStream = DEFAULT_ERROR_OUTPUT_STREAM;
+	
+	
 
 	public PyCodeBuilder() {
 		super(command);
@@ -66,21 +84,12 @@ public class PyCodeBuilder extends AbstractCodeRunner {
 	public ProcessExecutor defaultBuilder()
 			throws InvalidExitValueException, IOException, InterruptedException, TimeoutException {
 		ProcessExecutor defaultProcessExecutor = createDefaultProcessExecutor();
-		defaultProcessExecutor.redirectError(new LogOutputStream() {
-			@Override
-			protected void processLine(String line) {
-				LOGGER.error("{}", line);
-			}
-		});
+		defaultProcessExecutor.redirectError(errorStream);
+//		defaultProcessExecutor.redirectOutput(null)
 		defaultProcessExecutor.directory(new File(baseDir));
 //		String absolutePath = new File("../python/execute",".pythonrc.py").getAbsolutePath();
 //		LOGGER.debug("pyrc {}" , absolutePath);
-		defaultProcessExecutor.command(command, getPythonFile().getAbsolutePath()).redirectOutput(new LogOutputStream() {
-			@Override
-			protected void processLine(String line) {
-				LOGGER.debug("{}", line);
-			}
-		})
+		defaultProcessExecutor.command(command, getPythonFile().getAbsolutePath()).redirectOutput(outputStream)
 		.environment("PYTHONIOENCODING", "utf8");
 //		.environment("PYTHONSTARTUP", absolutePath);
 		defaultProcessExecutor.destroyOnExit();
@@ -96,4 +105,21 @@ public class PyCodeBuilder extends AbstractCodeRunner {
 			LOGGER.error(ValueUtil.toString(e));
 		}
 	}
+	
+	public OutputStream getOutputStream() {
+		return outputStream;
+	}
+
+	public void setOutputStream(OutputStream outputStream) {
+		this.outputStream = outputStream;
+	}
+
+	public OutputStream getErrorStream() {
+		return errorStream;
+	}
+
+	public void setErrorStream(OutputStream errorStream) {
+		this.errorStream = errorStream;
+	}
+	
 }

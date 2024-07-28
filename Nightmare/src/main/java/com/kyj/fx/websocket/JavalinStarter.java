@@ -33,7 +33,7 @@ public class JavalinStarter {
 			
 			var app = Javalin.create(config ->{
 				 config.http.asyncTimeout = 10_000L;
-//				 config.http.maxRequestSize = 15;
+				 config.http.maxRequestSize = 2_000_000L;
 				 config.useVirtualThreads = true;
 				 config.showJavalinBanner = false;
 			})

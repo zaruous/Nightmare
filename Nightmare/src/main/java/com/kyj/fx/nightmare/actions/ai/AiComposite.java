@@ -3,10 +3,10 @@
  */
 package com.kyj.fx.nightmare.actions.ai;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.io.LineNumberReader;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -28,7 +28,7 @@ import com.kyj.fx.fxloader.FxPostInitialize;
 import com.kyj.fx.groovy.DefaultScriptEngine;
 import com.kyj.fx.nightmare.actions.ai_voice.SimpleAIVoiceConversionComposite;
 import com.kyj.fx.nightmare.actions.ai_webview.AIWebViewComposite;
-import com.kyj.fx.nightmare.actions.comm.ai.PyCodeBuilder;
+import com.kyj.fx.nightmare.actions.comm.ai.PythonHelper;
 import com.kyj.fx.nightmare.actions.grid.DefaultSpreadComposite;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
@@ -68,6 +68,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
@@ -172,32 +173,49 @@ public class AiComposite extends AbstractCommonsApp {
 							DefaultScriptEngine engine = new DefaultScriptEngine();
 							engine.execute(script);
 						} catch (Exception e) {
-							e.printStackTrace();
+							LOGGER.error(ValueUtil.toString(e));
+							DialogUtil.showExceptionDailog(e);
 						}
 					});
 				} else if ("python".equals(cl.getCodeType())) {
 
 					ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
-						try {
-							PyCodeBuilder pyCodeBuilder = new PyCodeBuilder();
-							pyCodeBuilder.codeType(cl.getCodeType());
-							
-							String fontPath = new File("fonts/NANUMBARUNGOTHIC.TTF").getAbsolutePath();
-							String pre = """
-									from matplotlib import font_manager, rc, rcParams
-
-									# 한글 폰트 설정
-									font_path = '%s'  # 폰트 파일 경로
-									font_manager.fontManager.addfont(font_path)
-									font = font_manager.FontProperties(fname=font_path).get_name()
-									rc('font', family=font)
-									""";
-							pre = String.format(pre, fontPath);
-							pyCodeBuilder.code(pre + script);
-							pyCodeBuilder.run();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+						PythonHelper.exec(cl.getCodeType(), script, outputStream);
+						String string = outputStream.toString(StandardCharsets.UTF_8);
+						LOGGER.info(string);
+						Platform.runLater(()->{
+							cl.setResult(string);
+							TextArea parent = new TextArea(string);
+							parent.setWrapText(true);
+							FxUtil.createStageAndShow(parent, stage->{});
+//							DialogUtil.showMessageDialog(string);
+//							this.lvResult.refresh();
+//							lvResult.refresh();
+//							lvResult.requestFocus();
+//							lvResult.requestLayout();
+						});
+						
+//						try {
+//							PyCodeBuilder pyCodeBuilder = new PyCodeBuilder();
+//							pyCodeBuilder.codeType(cl.getCodeType());
+//							
+//							String fontPath = new File("fonts/NANUMBARUNGOTHIC.TTF").getAbsolutePath();
+//							String pre = """
+//									from matplotlib import font_manager, rc, rcParams
+//
+//									# 한글 폰트 설정
+//									font_path = '%s'  # 폰트 파일 경로
+//									font_manager.fontManager.addfont(font_path)
+//									font = font_manager.FontProperties(fname=font_path).get_name()
+//									rc('font', family=font)
+//									""";
+//							pre = String.format(pre, fontPath);
+//							pyCodeBuilder.code(pre + script);
+//							pyCodeBuilder.run();
+//						} catch (IOException e) {
+//							e.printStackTrace();
+//						}
 					});
 
 				}
@@ -258,28 +276,34 @@ public class AiComposite extends AbstractCommonsApp {
 								setText("");
 								setGraphic(null);
 							} else {
-								setText(stringConverter.toString(item));
-
+								
+//								if (item instanceof CodeLabel) {
+//									setText(null);
+//									
+//									CodeLabel c = (CodeLabel) item;
+//									Label graphic = new Label("결과");
+//									graphic.setStyle("-fx-text-fill : blue;");
+//									Label ret = new Label(c.getResult(), graphic);
+////									ret.setFocusTraversable(false);
+//									setGraphic(new VBox(
+//											new Label(item.getText()),
+//													ret));
+//									setPrefWidth(lvResult.getWidth() - 20); // 패딩 고려
+//									setStyle("-fx-wrap-text: true;");
+//									return;
+//								}
+								
 								if (item instanceof CustomLabel) {
 									CustomLabel questionLabel = (CustomLabel) item;
-//									QuestionComposite c = new QuestionComposite();
-
-//									c.setQuestionLabel(questionLabel);
-//									c.setData(questionLabel.getData());
-
-//									c.setUserAnswer(questionLabel.getUserAnswer());
 									setGraphic(questionLabel.getGraphic());
-
-								} else if (item instanceof DefaultLabel) {
-//									if ("me".equals(item.getTip())) {
-//										if (getStyleClass().indexOf("me") == -1)
-//											getStyleClass().add("me");
-//									} else {
-//										getStyleClass().remove("me");
-//									}
-									setGraphic(item.getGraphic());
+									setText(stringConverter.toString(item));
 								}
-
+								
+								else if (item instanceof DefaultLabel) {
+									setGraphic(item.getGraphic());
+									setText(stringConverter.toString(item));
+								}
+								
 								if ("me".equals(item.getTip())) {
 									if (getStyleClass().indexOf("me") == -1)
 										getStyleClass().add("me");
@@ -429,7 +453,7 @@ public class AiComposite extends AbstractCommonsApp {
 								.newInstance(graphicClass);
 						CustomLabel ret = new CustomLabel(supportView);
 //						String content2 = openAIService.toUserMessage(apiName, m.get("ANSWER").toString());
-						supportView.setData(m.get("ANSWER").toString());
+						supportView.setData(m.get("ANSWER") == null ? "" : m.get("ANSWER").toString());
 						Platform.runLater(() -> {
 							lvResult.getItems().add(ret);
 						});
@@ -563,7 +587,7 @@ public class AiComposite extends AbstractCommonsApp {
 					CodeLabel content = new CodeLabel(sb.toString());
 					Label graphic = new Label("Copy");
 					graphic.setOnMouseClicked(ev -> {
-						FxClipboardUtil.putString(content.getText());
+						FxClipboardUtil.putString(content.getText() + "\n" + content.getResult());
 						DialogUtil.showMessageDialog("클립보드에 복사되었습니다.");
 					});
 					content.setGraphic(graphic);
@@ -581,7 +605,7 @@ public class AiComposite extends AbstractCommonsApp {
 					lvResult.getItems().add(content);
 				}
 			}
-			lvResult.scrollTo(lvResult.getItems().size() - 1);
+//			lvResult.scrollTo(lvResult.getItems().size() - 1);
 		} catch (Exception e) {
 			LOGGER.error(ValueUtil.toString(e));
 		}
