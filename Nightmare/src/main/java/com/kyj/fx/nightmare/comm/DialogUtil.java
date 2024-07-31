@@ -484,6 +484,13 @@ public class DialogUtil {
 	}
 
 	/**
+	 * @param option
+	 * @return
+	 */
+	public static File showFileSaveDialog(Consumer<FileChooser> option) {
+		return showFileSaveDialog(StageStore.getPrimaryStage(), option);
+	}
+	/**
 	 * @작성자 : KYJ
 	 * @작성일 : 2018. 4. 22.
 	 * @param ownerWindow

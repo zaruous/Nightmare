@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import com.kyj.fx.fxloader.FXMLController;
 import com.kyj.fx.fxloader.FxPostInitialize;
 import com.kyj.fx.nightmare.actions.ai.AIDataDAO;
+import com.kyj.fx.nightmare.actions.ai.DefaultLabel;
 import com.kyj.fx.nightmare.actions.ai.OpenAIService;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExcelUtil;
@@ -36,6 +37,7 @@ import com.kyj.fx.nightmare.comm.GargoyleExtensionFilters;
 import com.kyj.fx.nightmare.comm.Message;
 import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
+import com.kyj.fx.nightmare.comm.report.ReportHelper;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 import com.kyj.fx.nightmare.ui.grid.AnnotationOptions;
 import com.kyj.fx.nightmare.ui.grid.Buttons;
@@ -53,6 +55,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
@@ -79,12 +82,13 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 	private Tab tabNew;
 	@FXML
 	private BorderPane borContent, borSql;
-	
+
 	private OpenAIService openAIService;
 	private ObjectProperty<File> currentFile = new SimpleObjectProperty<File>();
 	@FXML
 	private ComboBox<Datasource> cbDatabase;
 	private SqlKeywords sqlKeywords;
+
 	public DefaultSpreadComposite() {
 		try {
 			FxUtil.loadRoot(DefaultSpreadComposite.class, this);
@@ -95,14 +99,29 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 
 	@FxPostInitialize
 	public void after() {
-		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(()->{
+		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
 			List<Datasource> dataSourceList = getDataSourceList();
-			Platform.runLater(()->{
+			Platform.runLater(() -> {
 				cbDatabase.getItems().addAll(dataSourceList);
 			});
 		});
-		
+
 	}
+
+	@FXML
+	public void miReportOnAction() {
+		DefaultSpreadItemComposite currentView = getCurrentView();
+		ListView<DefaultLabel> lvResult = currentView.getLvResult();
+		ObservableList<DefaultLabel> items = lvResult.getItems();
+
+		try (FileOutputStream out = new FileOutputStream(new File("test.html"))) {
+			ReportHelper.generate(items, out);
+		} catch (IOException e) {
+			DialogUtil.showExceptionDailog(e);
+		}
+
+	}
+
 	@FXML
 	public void miScreenshotOnAction() {
 
@@ -116,13 +135,12 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		BufferedImage fromFXImage = SwingFXUtils.fromFXImage(snapshot, null);
 //		File outputFile = new File("output.png");
 		try {
-			var outFile = DialogUtil.showFileSaveDialog(FxUtil.getWindow(this), chooser->{
+			var outFile = DialogUtil.showFileSaveDialog(FxUtil.getWindow(this), chooser -> {
 				chooser.setInitialFileName("out.png");
 				chooser.getExtensionFilters().add(GargoyleExtensionFilters.PNG_EXTENSION_FILTER);
 				chooser.getExtensionFilters().add(GargoyleExtensionFilters.ALL_FILTER);
 			});
-			if(outFile !=null )
-			{
+			if (outFile != null) {
 				ImageIO.write(fromFXImage, "png", outFile);
 			}
 		} catch (IOException e) {
@@ -135,9 +153,9 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 	public void initialize() {
 		try {
 			this.openAIService = new OpenAIService();
-			String systemPrompt = """ 
-				데이터 전문가가 되어줘.
-				""";
+			String systemPrompt = """
+					데이터 전문가가 되어줘.
+					""";
 			this.openAIService.setSystemRole(this.openAIService.createDefault(systemPrompt));
 		} catch (Exception e) {
 			LOGGER.error(ValueUtil.toString(e));
@@ -160,55 +178,51 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		});
 
 		addNewTabView("Sheet1");
-		
-		
+
 		sqlKeywords = new SqlKeywords();
 		borSql.setCenter(sqlKeywords);
 		sqlKeywords.addEventFilter(KeyEvent.KEY_PRESSED, this::sqlKeywordOnKeyPressed);
-		
+
 		this.cbDatabase.setConverter(new StringConverter<Datasource>() {
-			
+
 			@Override
 			public String toString(Datasource object) {
 				return object.getAliasName();
 			}
-			
+
 			@Override
 			public Datasource fromString(String string) {
 				return null;
 			}
 		});
-		
-		
+
 	}
 
-	
 	public void sqlKeywordOnKeyPressed(KeyEvent ke) {
-		if(ke.getCode() == KeyCode.ENTER && ke.isControlDown()) {
-			if(!ke.isConsumed()) ke.consume();
+		if (ke.getCode() == KeyCode.ENTER && ke.isControlDown()) {
+			if (!ke.isConsumed())
+				ke.consume();
 			Datasource ds = cbDatabase.getSelectionModel().getSelectedItem();
-			
+
 			try {
 				var dao = new DataSourceDAO(ds.getAliasName());
 				List<Map<String, Object>> query = dao.query(sqlKeywords.getCodeArea().getText(), Map.of());
 				LOGGER.debug("data size : {}", query.size());
 				DefaultSpreadItemComposite currentView = getCurrentView();
 				currentView.updateUI(query, 0, 0);
-				
-				
+
 			} catch (Exception e) {
 				LOGGER.error(ValueUtil.toString(e));
 			}
 
 		}
 	}
-	
+
 //	private Connection getConnection(Datasource v) throws SQLException {
 //		return DbUtil.getConnection(v.getDriver(), v.getUrl(), v.getUserId(), v.getUserPwd() , ds->{
 //		});	
 //	}
-	
-	
+
 	Tab createNewTab(String title, Consumer<DefaultSpreadItemComposite> handler) {
 		return createNewTab(title, 100, 100, handler);
 	}
@@ -233,11 +247,11 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 
 	public DefaultSpreadItemComposite getCurrentView() {
 		Tab selectedItem = tabPane.getSelectionModel().getSelectedItem();
-		if(selectedItem == null)
+		if (selectedItem == null)
 			throw new RuntimeException("no tab selected.");
 		return (DefaultSpreadItemComposite) selectedItem.getContent();
 	}
-	
+
 	/**
 	 * @param e
 	 */
@@ -300,73 +314,83 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 			return;
 
 		File openFile = DialogUtil.showFileDialog(chooser -> {
-			chooser.getExtensionFilters()
-					.add(new ExtensionFilter(GargoyleExtensionFilters.XLSX_NAME, GargoyleExtensionFilters.XLSX));
+			chooser.getExtensionFilters().add(GargoyleExtensionFilters.XLSX_FILTER);
+//			chooser.getExtensionFilters().add(GargoyleExtensionFilters.CSV_FILTER);
 		});
+
 		if (openFile == null)
 			return;
 
 		tabPane.getTabs().remove(1, tabPane.getTabs().size());
 
 		ObservableList<Tab> tabList = FXCollections.emptyObservableList();
-		try (Workbook readXlsx = ExcelUtil.readXlsx(openFile)) {
-			int numberOfSheets = readXlsx.getNumberOfSheets();
-			tabList = FXCollections.observableArrayList();
-			int activeSheetIndex = readXlsx.getActiveSheetIndex();
-			for (int s = 0; s < numberOfSheets; s++) {
 
-				Sheet sheetAt = readXlsx.getSheetAt(s);
-				int lastRowNum = sheetAt.getLastRowNum();
-				int firstRowNum = sheetAt.getFirstRowNum();
-				Tab newTab = createNewTab(sheetAt.getSheetName(), (lastRowNum > 100 ? lastRowNum : 100),(firstRowNum > 100 ? firstRowNum : 100),  composite -> {
+		
+		if(openFile.getName().toLowerCase().endsWith(".csv"))
+		{
+			
+		}
+		else if (openFile.getName().toLowerCase().endsWith(".xlsx")) {
+			try (Workbook readXlsx = ExcelUtil.readXlsx(openFile)) {
+				int numberOfSheets = readXlsx.getNumberOfSheets();
+				tabList = FXCollections.observableArrayList();
+				int activeSheetIndex = readXlsx.getActiveSheetIndex();
+				for (int s = 0; s < numberOfSheets; s++) {
 
-					DefaultSpreadSheetView spreadSheet = composite.getView();
-					for (int i = firstRowNum; i < lastRowNum; i++) {
-						Row row = sheetAt.getRow(i);
-						short lastCellNum = row.getLastCellNum();
-						short firstCellNum = row.getFirstCellNum();
-						for (int c = firstCellNum; c < lastCellNum; c++) {
-							Cell cell = row.getCell(c);
+					Sheet sheetAt = readXlsx.getSheetAt(s);
+					int lastRowNum = sheetAt.getLastRowNum();
+					int firstRowNum = sheetAt.getFirstRowNum();
+					Tab newTab = createNewTab(sheetAt.getSheetName(), (lastRowNum > 100 ? lastRowNum : 100),
+							(firstRowNum > 100 ? firstRowNum : 100), composite -> {
 
-							SpreadsheetCell spreadsheetCell = spreadSheet.getRows().get(i).get(c);
-							switch (cell.getCellType()) {
-							case BLANK:
-								spreadsheetCell.setItem("");
-								break;
-							case BOOLEAN:
-								spreadsheetCell.setItem(cell.getBooleanCellValue());
-								break;
-							case ERROR:
-								spreadsheetCell.setItem(cell.getErrorCellValue());
-								break;
-							case FORMULA:
-								spreadsheetCell.setItem(cell.getCellFormula());
-								break;
-							case NUMERIC:
-								double numericCellValue = cell.getNumericCellValue();
-								SpreadsheetCell newCell = SpreadsheetCellType.DOUBLE.createCell(i, c, 1, 1,
-										numericCellValue);
-								spreadSheet.getRows().get(i).set(c, newCell);
-								break;
-							case STRING:
-								spreadsheetCell.setItem(cell.getStringCellValue());
-								break;
-							default:
-								spreadsheetCell.setItem(cell.getStringCellValue());
-								break;
-							}
-						}
-					}
+								DefaultSpreadSheetView spreadSheet = composite.getView();
+								for (int i = firstRowNum; i < lastRowNum; i++) {
+									Row row = sheetAt.getRow(i);
+									short lastCellNum = row.getLastCellNum();
+									short firstCellNum = row.getFirstCellNum();
+									for (int c = firstCellNum; c < lastCellNum; c++) {
+										Cell cell = row.getCell(c);
 
-				});
-				tabList.add(newTab);
+										SpreadsheetCell spreadsheetCell = spreadSheet.getRows().get(i).get(c);
+										switch (cell.getCellType()) {
+										case BLANK:
+											spreadsheetCell.setItem("");
+											break;
+										case BOOLEAN:
+											spreadsheetCell.setItem(cell.getBooleanCellValue());
+											break;
+										case ERROR:
+											spreadsheetCell.setItem(cell.getErrorCellValue());
+											break;
+										case FORMULA:
+											spreadsheetCell.setItem(cell.getCellFormula());
+											break;
+										case NUMERIC:
+											double numericCellValue = cell.getNumericCellValue();
+											SpreadsheetCell newCell = SpreadsheetCellType.DOUBLE.createCell(i, c, 1, 1,
+													numericCellValue);
+											spreadSheet.getRows().get(i).set(c, newCell);
+											break;
+										case STRING:
+											spreadsheetCell.setItem(cell.getStringCellValue());
+											break;
+										default:
+											spreadsheetCell.setItem(cell.getStringCellValue());
+											break;
+										}
+									}
+								}
 
+							});
+					tabList.add(newTab);
+
+				}
+				tabPane.getTabs().addAll(tabList);
+				tabPane.getSelectionModel().select(activeSheetIndex + 1);
+				currentFile.set(openFile);
+			} catch (IOException e) {
+				DialogUtil.showExceptionDailog(e);
 			}
-			tabPane.getTabs().addAll(tabList);
-			tabPane.getSelectionModel().select(activeSheetIndex + 1);
-			currentFile.set(openFile);
-		} catch (IOException e) {
-			DialogUtil.showExceptionDailog(e);
 		}
 
 	}
@@ -399,8 +423,7 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 	@FXML
 	public void miFileSaveOnAction() {
 		File saveFile = currentFile.get();
-		if(saveFile == null)
-		{
+		if (saveFile == null) {
 			miFileSaveAsOnAction();
 			return;
 		}
@@ -436,15 +459,14 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 			} catch (IOException e) {
 				Platform.runLater(() -> {
 					DialogUtil.showExceptionDailog(e);
-				});	
+				});
 				return;
-			}			
+			}
 
-			if(success)
-			{
+			if (success) {
 				Platform.runLater(() -> {
 					DialogUtil.showMessageDialog("Complete");
-				});	
+				});
 			}
 		});
 	}
@@ -469,8 +491,8 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 			try {
 				var ds = AIDataDAO.getInstance();
 				ds.saveBatch(list);
-				
-				DialogUtil.showMessageDialog(Message.getInstance().getMessage("SaveComplete")/*"저장되었습니다."*/);
+
+				DialogUtil.showMessageDialog(Message.getInstance().getMessage("SaveComplete")/* "저장되었습니다." */);
 			} catch (Exception e) {
 				DialogUtil.showExceptionDailog(e);
 			}
@@ -501,7 +523,7 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 	private List<Datasource> getDataSourceList() {
 		var ds = AIDataDAO.getInstance();
 		String statement = """
-				select * from datasource where 1=1 order by FST_REG_DT 
+				select * from datasource where 1=1 order by FST_REG_DT
 				""";
 		List<Datasource> queryForList = ds.queryForList(statement, Map.of(), Datasource.class);
 		return queryForList;

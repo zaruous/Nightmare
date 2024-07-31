@@ -54,6 +54,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#miScreenshotOnAction" text="SnapShot" />
               <MenuItem mnemonicParsing="false" onAction="#miDBToolsOnAction" text="DB Tools" />
+                  <MenuItem mnemonicParsing="false" onAction="#miReportOnAction" text="Report" />
             </items>
           </Menu>
         </menus>

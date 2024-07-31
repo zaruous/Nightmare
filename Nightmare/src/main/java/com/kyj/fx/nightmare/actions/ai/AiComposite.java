@@ -4,6 +4,7 @@
 package com.kyj.fx.nightmare.actions.ai;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
@@ -32,13 +33,16 @@ import com.kyj.fx.nightmare.actions.comm.ai.PythonHelper;
 import com.kyj.fx.nightmare.actions.grid.DefaultSpreadComposite;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
+import com.kyj.fx.nightmare.comm.FileUtil;
 import com.kyj.fx.nightmare.comm.FxClipboardUtil;
 import com.kyj.fx.nightmare.comm.FxUtil;
+import com.kyj.fx.nightmare.comm.GargoyleExtensionFilters;
 import com.kyj.fx.nightmare.comm.Message;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 import com.kyj.fx.nightmare.comm.codearea.CodeAreaHelper;
+import com.kyj.fx.nightmare.comm.report.ReportHelper;
 import com.kyj.fx.nightmare.ui.frame.AbstractCommonsApp;
 
 import javafx.application.Platform;
@@ -48,6 +52,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -68,7 +73,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
@@ -189,39 +193,15 @@ public class AiComposite extends AbstractCommonsApp {
 							TextArea parent = new TextArea(string);
 							parent.setWrapText(true);
 							FxUtil.createStageAndShow(parent, stage->{});
-//							DialogUtil.showMessageDialog(string);
-//							this.lvResult.refresh();
-//							lvResult.refresh();
-//							lvResult.requestFocus();
-//							lvResult.requestLayout();
 						});
-						
-//						try {
-//							PyCodeBuilder pyCodeBuilder = new PyCodeBuilder();
-//							pyCodeBuilder.codeType(cl.getCodeType());
-//							
-//							String fontPath = new File("fonts/NANUMBARUNGOTHIC.TTF").getAbsolutePath();
-//							String pre = """
-//									from matplotlib import font_manager, rc, rcParams
-//
-//									# 한글 폰트 설정
-//									font_path = '%s'  # 폰트 파일 경로
-//									font_manager.fontManager.addfont(font_path)
-//									font = font_manager.FontProperties(fname=font_path).get_name()
-//									rc('font', family=font)
-//									""";
-//							pre = String.format(pre, fontPath);
-//							pyCodeBuilder.code(pre + script);
-//							pyCodeBuilder.run();
-//						} catch (IOException e) {
-//							e.printStackTrace();
-//						}
 					});
 
 				}
 
 			}
 		});
+		
+		
 		MenuItem miProperty = new MenuItem("Property");
 		miProperty.setOnAction(ev -> {
 
@@ -244,14 +224,29 @@ public class AiComposite extends AbstractCommonsApp {
 			});
 		});
 
-		speechCtx.getItems().addAll(miRunCode, miProperty);
+		MenuItem miReport = new MenuItem("Report");
+		miReport.setOnAction(ev -> {
+			ObservableList<DefaultLabel> selectedItems = lvResult.getSelectionModel().getSelectedItems();
+			if(selectedItems.isEmpty())return;
+			
+			File outFile = DialogUtil.showFileSaveDialog(chooser->{
+				chooser.setInitialFileName("report.html");
+				chooser.getExtensionFilters().add(GargoyleExtensionFilters.HTML_FILTER);
+				chooser.getExtensionFilters().add(GargoyleExtensionFilters.ALL_FILTER);
+			});
+			if(outFile == null)return;
+			ReportHelper.generate(selectedItems, outFile);
+			FileUtil.openFile(outFile);
+		});
+		
+		speechCtx.getItems().addAll(miRunCode, miReport , miProperty);
 
 		this.lvResult.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.lvResult.setCellFactory(new Callback<ListView<DefaultLabel>, ListCell<DefaultLabel>>() {
 
 			@Override
 			public ListCell<DefaultLabel> call(ListView<DefaultLabel> param) {
-//new TextFieldListCell<DefaultLabel>();
+
 				ListCell<DefaultLabel> listCell = new ListCell<DefaultLabel>() {
 
 					@Override
@@ -276,23 +271,7 @@ public class AiComposite extends AbstractCommonsApp {
 								setText("");
 								setGraphic(null);
 							} else {
-								
-//								if (item instanceof CodeLabel) {
-//									setText(null);
-//									
-//									CodeLabel c = (CodeLabel) item;
-//									Label graphic = new Label("결과");
-//									graphic.setStyle("-fx-text-fill : blue;");
-//									Label ret = new Label(c.getResult(), graphic);
-////									ret.setFocusTraversable(false);
-//									setGraphic(new VBox(
-//											new Label(item.getText()),
-//													ret));
-//									setPrefWidth(lvResult.getWidth() - 20); // 패딩 고려
-//									setStyle("-fx-wrap-text: true;");
-//									return;
-//								}
-								
+																
 								if (item instanceof CustomLabel) {
 									CustomLabel questionLabel = (CustomLabel) item;
 									setGraphic(questionLabel.getGraphic());

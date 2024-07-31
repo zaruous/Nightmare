@@ -475,4 +475,11 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 ////			items.add(cellList)
 //		}
 	}
+
+	public final ListView<DefaultLabel> getLvResult() {
+		return lvResult;
+	}
+
+	
+	
 }

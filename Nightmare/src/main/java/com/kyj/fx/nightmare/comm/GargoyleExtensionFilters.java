@@ -48,6 +48,11 @@ public interface GargoyleExtensionFilters {
 	public static final String XLSX = EXTENSION_COMMONS + XLSX_EXTENSION;
 	public static final ExtensionFilter XLSX_FILTER = new ExtensionFilter(XLSX_NAME, XLSX);
 
+	public static final String CSV_NAME = "CSV files (*.csv)";
+	public static final String CSV_EXTENSION = "csv";
+	public static final String CSV = EXTENSION_COMMONS + CSV_EXTENSION;
+	public static final ExtensionFilter CSV_FILTER = new ExtensionFilter(CSV_NAME, CSV);
+	
 	public static final String DOCX_NAME = "Doc files (*.docx)";
 	public static final String DOCX_EXTENSION = "docx";
 	public static final String DOCX = EXTENSION_COMMONS + DOCX_EXTENSION;
@@ -64,15 +69,18 @@ public interface GargoyleExtensionFilters {
 	public static final String FONT_NAME = "Font files (*.ttf)";
 	public static final String FONT_EXTENSION = "ttf";
 	public static final String FONT = EXTENSION_COMMONS + FONT_EXTENSION;
-
+	public static final ExtensionFilter FONT_FILTER = new ExtensionFilter(FONT_NAME, FONT);
+	
 	public static final String HTML_NAME = "html files (*.html)";
 	public static final String HTML_EXTENSION = "html";
 	public static final String HTML = EXTENSION_COMMONS + HTML_EXTENSION;
-
+	public static final ExtensionFilter HTML_FILTER = new ExtensionFilter(HTML_NAME, HTML);
+	
 	public static final String MP3_NAME = "mp3 files (*.mp3)";
 	public static final String MP3_EXTENSION = "mp3";
 	public static final String MP3 = EXTENSION_COMMONS + MP3_EXTENSION;
-
+	public static final ExtensionFilter MP3_FILTER = new ExtensionFilter(MP3_NAME, MP3);
+	
 	public static final String XML_NAME = "xml files (*.xml)";
 	public static final String XML_EXTENSION = "xml";
 	public static final String XML = EXTENSION_COMMONS + XML_EXTENSION;

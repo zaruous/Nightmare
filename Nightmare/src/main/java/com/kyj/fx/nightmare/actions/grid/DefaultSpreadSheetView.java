@@ -608,5 +608,6 @@ public class DefaultSpreadSheetView extends StackPane {
 	public ObservableList<ObservableList<SpreadsheetCell>> getItems() {
 		return ssv.getItems();
 	}
+	
 
 }
