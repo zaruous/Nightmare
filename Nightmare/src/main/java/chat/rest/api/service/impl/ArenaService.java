@@ -78,13 +78,10 @@ public class ArenaService extends AbstractPromptService {
 				response = r.get(15, TimeUnit.SECONDS);
 				handler.onFinish(response.api, response.retMessage, response.costTimeMills);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (TimeoutException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

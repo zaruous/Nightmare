@@ -151,7 +151,6 @@ public class GroovyScriptEngine {
 
 		@Override
 		public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-			// TODO Auto-generated method stub
 			return FileVisitResult.CONTINUE;
 		}
 

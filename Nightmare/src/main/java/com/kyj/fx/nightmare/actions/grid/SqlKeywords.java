@@ -72,7 +72,7 @@ public class SqlKeywords extends BorderPane {
 		codeArea.setParagraphGraphicFactory(intFunction);
 		new CodeAreaHelper<CodeArea>(codeArea);
 		
-		codeArea.richChanges().filter(ch -> !ch.getInserted().equals(ch.getRemoved())) // XXX
+		codeArea.richChanges().filter(ch -> !ch.getInserted().equals(ch.getRemoved())) 
 				.successionEnds(Duration.ofMillis(500)).supplyTask(this::computeHighlightingAsync)
 				.awaitLatest(codeArea.richChanges()).filterMap(t -> {
 					if (t.isSuccess()) {

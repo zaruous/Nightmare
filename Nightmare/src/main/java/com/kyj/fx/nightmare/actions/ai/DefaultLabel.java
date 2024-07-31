@@ -101,7 +101,6 @@ public class DefaultLabel implements PlaySoundAble {
 
 			ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> playObject.run());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

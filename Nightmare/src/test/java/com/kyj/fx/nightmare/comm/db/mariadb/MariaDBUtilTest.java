@@ -29,7 +29,6 @@ class MariaDBUtilTest {
 			MariaDBUtil.exportData(DbUtil.getConnection(), "datasource", out);
 			System.out.println(out.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -49,7 +48,6 @@ class MariaDBUtilTest {
 			MariaDBUtil.exportTables(DbUtil.getConnection(), out);
 			System.out.println(out.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

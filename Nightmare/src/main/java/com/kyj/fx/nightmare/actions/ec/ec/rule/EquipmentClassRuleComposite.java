@@ -402,7 +402,7 @@ public class EquipmentClassRuleComposite extends AbstractManagementBorderPane<Eq
 
 	@Override
 	public void importExcel(File fromFile, Document doc) {
-		// TODO Auto-generated method stub
+		
 
 	}
 

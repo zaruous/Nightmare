@@ -44,7 +44,7 @@ open module ETHelper {
 	requires org.apache.httpcomponents.httpcore;
 	requires org.apache.httpcomponents.httpclient;
 	requires org.fxmisc.richtext;
-	requires SparseBitSet;
+//	requires SparseBitSet;
 
 	// requires reactfx;
 

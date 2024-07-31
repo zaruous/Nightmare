@@ -90,7 +90,7 @@ class FxTreeViewClipboardUtil {
 						//
 
 					} else {
-						// TODO :: 첫번째 컬럼(행 선택 기능)도 빈값으로 복사됨..
+						// TODO :: 첫번째 컬럼(행 선택 기능)도 빈값으로 복사됨.. 
 						// 행변경시
 						if (v != null) {
 							sb.append(v.toString());

@@ -85,26 +85,12 @@ public abstract class SupportListViewInstaller {
 
 											
 											search(aiComposite, promptId, systemMsg, text, data -> {
-												// TODO 동적 타입으로 변경
+												
 												CustomLabel ret = new CustomLabel(supportView);
 												supportView.setData(data);
 												return ret;
 											});
-											
-//											aiComposite.search(promptId, systemMsg, text, data -> {
-//												// TODO 동적 타입으로 변경
-//												CustomLabel ret = new CustomLabel(supportView);
-//												supportView.setData(data);
-//												return ret;
-//											});
 										} 
-//										else {
-//											DefaultLabel lblMe = new DefaultLabel(text, graphic);
-//											lblMe.setTip("me");
-//											aiComposite.lvResult.getItems().add(lblMe);
-////											aiComposite.search(systemMsg, text);
-//											search(aiComposite, systemMsg, text );
-//										}
 
 									} catch (Exception e) {
 										e.printStackTrace();

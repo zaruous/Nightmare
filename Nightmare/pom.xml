@@ -28,7 +28,7 @@
 
 		<spring-framework.version>5.3.19</spring-framework.version>
 		<!-- <spring-framework.version>4.3.19.RELEASE</spring-framework.version> -->
-		<poi.word.version>5.2.2</poi.word.version>
+<!--		<poi.word.version>5.2.2</poi.word.version>-->
 		<!-- HTTP -->
 		<apache-http-client.version>4.5.13</apache-http-client.version>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
@@ -364,7 +364,7 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>5.2.2</version>
+			<version>5.2.5</version>
 		</dependency>
 
 
@@ -622,6 +622,44 @@
 		    <artifactId>zt-exec</artifactId>
 		    <version>1.12</version>
 		</dependency>
+		
+		    <!-- Apache Tika core dependency -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.tika</groupId>-->
+<!--            <artifactId>tika-core</artifactId>-->
+<!--            <version>2.9.2</version>-->
+<!--        </dependency>-->
+
+<!--         Apache Tika parser dependency -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.tika</groupId>-->
+<!--            <artifactId>tika-parsers-standard-package</artifactId>-->
+<!--            <version>2.9.2</version>-->
+<!--        </dependency>-->
+        
+
+<!-- https://mvnrepository.com/artifact/org.apache.tika/tika-parsers -->
+<!-- https://mvnrepository.com/artifact/org.apache.tika/tika-parsers -->
+<!--<dependency>-->
+<!--    <groupId>org.apache.tika</groupId>-->
+<!--    <artifactId>tika-parsers</artifactId>-->
+<!--    <version>2.9.2</version>-->
+<!--    <type>pom</type>-->
+<!--</dependency>-->
+<dependency>
+    <groupId>org.apache.tika</groupId>
+    <artifactId>tika-core</artifactId>
+    <version>2.9.2</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.tika/tika-parsers-standard-package -->
+<dependency>
+    <groupId>org.apache.tika</groupId>
+    <artifactId>tika-parsers-standard-package</artifactId>
+    <version>2.9.2</version>
+</dependency>
+
+
+
 
 	</dependencies>
 

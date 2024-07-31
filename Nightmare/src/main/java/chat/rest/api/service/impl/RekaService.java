@@ -186,7 +186,6 @@ public class RekaService extends AbstractPromptService {
 
 	@Override
 	public String send(List<Map<String, Object>> assistance, String message) throws Exception {
-		//TODO
 		return send(message);
 	}
 
