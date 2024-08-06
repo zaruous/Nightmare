@@ -103,6 +103,8 @@ public class GroovyScriptEngine {
 		this.groovyEngine.eval(reader);
 	}
 
+	
+	
 	/**
 	 * @작성자 : (zaruous@naver.com)
 	 * @작성일 : 2023. 4. 1.

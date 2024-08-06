@@ -10,6 +10,7 @@ import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -545,6 +546,7 @@ public class AiComposite extends AbstractCommonsApp {
 
 			if (speech && useMicrophoneFlag.get()) {
 				var allData = new DefaultLabel(content2);
+				allData.setTip(apiName);
 				playingObject.set(allData);
 			}
 
@@ -554,6 +556,8 @@ public class AiComposite extends AbstractCommonsApp {
 			boolean isCodeBlock = false;
 			String codeType = "";
 			StringBuilder sb = new StringBuilder();
+			
+			ArrayList<DefaultLabel> newItems = new ArrayList<DefaultLabel>();
 			while ((temp = br.readLine()) != null) {
 				if (temp.trim().startsWith("```") && !isCodeBlock) {
 					isCodeBlock = true;
@@ -573,7 +577,7 @@ public class AiComposite extends AbstractCommonsApp {
 
 					content.setCodeType(codeType);
 					sb.setLength(0);
-					lvResult.getItems().add(content);
+					newItems.add(content);
 					continue;
 				}
 
@@ -581,10 +585,16 @@ public class AiComposite extends AbstractCommonsApp {
 					sb.append(temp).append(System.lineSeparator());
 				} else {
 					DefaultLabel content = new DefaultLabel(temp);
-					lvResult.getItems().add(content);
+					newItems.add(content);
 				}
 			}
-//			lvResult.scrollTo(lvResult.getItems().size() - 1);
+			//scrollTo(lvResult.getItems().size() - 1);
+			if(!newItems.isEmpty())
+			{
+				newItems.get(0).setTip(apiName);
+			}
+			
+			lvResult.getItems().addAll(newItems);
 		} catch (Exception e) {
 			LOGGER.error(ValueUtil.toString(e));
 		}

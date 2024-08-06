@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -148,11 +150,14 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		}
 
 	}
-
+	final String TAB_NAME_FORMT = "Sheet%d";  
+	private int MAX_TAB_SIZE = 1000;
+	
 	@FXML
 	public void initialize() {
 		try {
 			this.openAIService = new OpenAIService();
+			
 			String systemPrompt = """
 					데이터 전문가가 되어줘.
 					""";
@@ -167,7 +172,14 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 			if (ev.getButton() == MouseButton.PRIMARY) {
 //				if(ev.isConsumed())return;
 //				ev.consume();
-				addNewTabView("Sheet" + tabPane.getTabs().size());
+				
+				for(int i= tabPane.getTabs().size(); i< MAX_TAB_SIZE; i++ ) {
+					if(isTabNameValid("Sheet" + i))
+					{
+						addNewTabView("Sheet" + i);
+						break;
+					}
+				}
 			}
 		});
 
@@ -177,7 +189,7 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 			}
 		});
 
-		addNewTabView("Sheet1");
+		addNewTabView(String.format(TAB_NAME_FORMT, 1));
 
 		sqlKeywords = new SqlKeywords();
 		borSql.setCenter(sqlKeywords);
@@ -270,7 +282,6 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 	public boolean isTabNameValid(String newTabName) {
 		Optional<Tab> any = tabPane.getTabs().stream().filter(t -> ValueUtil.equals(t.getText(), newTabName)).findAny();
 		if (any.isPresent()) {
-			DialogUtil.showMessageDialog(String.format("중복된 이름이 존재합니다.[%s]", newTabName));
 			return false;
 		}
 		return true;
@@ -282,6 +293,7 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 
 		});
 		if (!isTabNameValid(newTabName)) {
+			DialogUtil.showMessageDialog(String.format("중복된 이름이 존재합니다.[%s]", newTabName));
 			return null;
 		}
 		tabPane.getTabs().add(newTab);

@@ -45,11 +45,32 @@ public class DefaultGridBase {
 		var rowAppender = new StringBuilder();
 		List<ObservableList<SpreadsheetCell>> rows = gridBase.getRows();
 		boolean rowIsNotEmpty = false;
+		
+		int maxValidColIndex = 0;
+		
+		for (int row = 0; row < gridBase.getRowCount(); ++row) {
+			ObservableList<SpreadsheetCell> currentRow = rows.get(row);
+			for (int column = gridBase.getColumnCount() -1 ; column >= 0 ; column --) {
+				SpreadsheetCell createCell = currentRow.get(column);
+
+				if(ValueUtil.isNotEmpty(createCell.getText()))
+				{
+					if(maxValidColIndex < column)
+					{
+						maxValidColIndex = Integer.max(maxValidColIndex, column);
+						continue;
+					}
+				}
+			}
+			
+		}
+		
+		
 		for (int row = 0; row < gridBase.getRowCount(); ++row) {
 			ObservableList<SpreadsheetCell> currentRow = rows.get(row);
 			rowAppender.setLength(0);
 			rowIsNotEmpty = false;
-			for (int column = 0; column < gridBase.getColumnCount(); ++column) {
+			for (int column = 0; column < maxValidColIndex; ++column) {
 				SpreadsheetCell createCell = currentRow.get(column);
 				String text = createCell.getText();
 				rowIsNotEmpty |= ValueUtil.isNotEmpty(text);

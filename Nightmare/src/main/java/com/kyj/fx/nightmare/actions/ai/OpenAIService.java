@@ -237,7 +237,8 @@ public class OpenAIService implements AiActionable{
 	}
 	
 	public String toUserMessage(API api, String message) {
-		if (API.LLAMA3 == api || API.GEMMA == api) {
+		
+		if ("OLLAMA".equals(api.getGroup()) || API.LLAMA3 == api || API.GEMMA == api || API.CODEGEMMA == api) {
 			return message;
 		} else {
 			ResponseModelDVO ret = ResponseModelDVO.fromGtpResultMessage(message);

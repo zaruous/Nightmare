@@ -3,8 +3,13 @@
  */
 package com.kyj.fx.nightmare.actions.grid;
 
+import java.io.ByteArrayOutputStream;
 import java.io.LineNumberReader;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -15,6 +20,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+import org.controlsfx.control.spreadsheet.Grid;
 import org.controlsfx.control.spreadsheet.GridBase;
 import org.controlsfx.control.spreadsheet.SpreadsheetCell;
 import org.controlsfx.control.spreadsheet.SpreadsheetCellType;
@@ -48,8 +59,10 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
@@ -105,6 +118,7 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 	public final DefaultSpreadSheetView getView() {
 		return sv.get();
 	}
+
 	public final SpreadsheetView getSpreadSheetView() {
 		return sv.get().getView();
 	}
@@ -172,16 +186,8 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 					}
 
 				};
-				//컨텍스트 메뉴 추가.
-				 listCell.setContextMenu(ctx);
-				// listCell.setOnContextMenuRequested(ev -> {
-				// Object item = listCell.getItem();
-				// boolean speechMenuVisible = item instanceof SpeechLabel;
-				// miPlayMyVoice.setVisible(speechMenuVisible);
-				// miPlaySound.setVisible(!speechMenuVisible);
-				// miRunCode.setVisible(item instanceof CodeLabel);
-				// });
-
+				// 컨텍스트 메뉴 추가.
+				listCell.setContextMenu(ctx);
 				return listCell;
 			}
 		});
@@ -189,29 +195,102 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 
 		MenuItem miRun = new MenuItem("Run");
 		miRun.setAccelerator(KeyCombination.keyCombination("F5"));
-		EventHandler<ActionEvent> value = new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent ev) {
-				DefaultLabel selectedItem = lvResult.getSelectionModel().getSelectedItem();
-				if (selectedItem instanceof CodeLabel) {
-					CodeLabel codeLabel = (CodeLabel) selectedItem;
-					String codeType = codeLabel.getCodeType();
-					if ("python".equals(codeType)) {
-						
-						//파이썬 코드 실행
-						ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
-							PythonHelper.exec(codeType, codeLabel.getText());
-						});
-					}
-
-				}
-			}
-		};
-		miRun.setOnAction(value);
+		miRun.setOnAction(runCodeActionHandler);
 		ctx.getItems().add(miRun);
+
+		Menu miRunAs = new Menu("Run As");
+		MenuItem miPyhtonRun = new MenuItem("Python");miPyhtonRun.setOnAction(ev ->{
+			DefaultLabel selectedItem = lvResult.getSelectionModel().getSelectedItem();
+			if (selectedItem instanceof CodeLabel) {
+				CodeLabel codeLabel = (CodeLabel) selectedItem;
+				String codeType = codeLabel.getCodeType();
+				pythonRun(codeLabel, codeType);
+			}
+		});
+		miRunAs.getItems().add(miPyhtonRun);
+		ctx.getItems().addAll(new SeparatorMenuItem(), miRunAs);
 	}
 
-	
+	EventHandler<ActionEvent> runCodeActionHandler = new EventHandler<ActionEvent>() {
+		@Override
+		public void handle(ActionEvent ev) {
+			DefaultLabel selectedItem = lvResult.getSelectionModel().getSelectedItem();
+			if (selectedItem instanceof CodeLabel) {
+				CodeLabel codeLabel = (CodeLabel) selectedItem;
+				String codeType = codeLabel.getCodeType();
+				if ("python".equals(codeType)) {
+					pythonRun(codeLabel, codeType);
+				} else if ("groovy".equals(codeType)) {
+
+					Platform.runLater(() -> {
+						ScriptEngineManager factory = new ScriptEngineManager();
+						ScriptEngine engineByName = factory.getEngineByName("groovy");
+						try {
+							String text = codeLabel.getText();
+//							engineByName.getBindings(0).put("grid", value)
+							engineByName.eval(text);
+							Invocable invocable = (Invocable) engineByName;
+//							Invocable invocable = engine.invocable(text);
+							DefaultSpreadSheetView defaultSpreadSheetView = sv.get();
+							if (defaultSpreadSheetView == null)
+								return;
+							SpreadsheetView view = defaultSpreadSheetView.getView();
+							Grid grid = view.getGrid();
+							int columnCount = grid.getColumnCount() - 1;
+							int rowCount = grid.getRowCount() - 1;
+
+//							PipedReader reader = new PipedReader();
+//							StringBuilder sb = new StringBuilder();
+							ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+							engineByName.getContext().setWriter(new PrintWriter(outputStream));
+							String ret = outputStream.toString("UTF-8");
+//							reader.connect(new PrintWriter(outputStream));
+//							reader.transferTo();
+
+							Object invokeFunction = invocable.invokeFunction("update", grid, rowCount, columnCount);
+							System.out.println(invokeFunction);
+							if (invokeFunction != null)
+								FxUtil.createStageAndShow(new TextArea(invokeFunction.toString()), stage -> {
+								});
+							else
+								FxUtil.createStageAndShow(new TextArea(ret), stage -> {
+								});
+						} catch (ScriptException e) {
+							e.printStackTrace();
+						} catch (NoSuchMethodException e) {
+							e.printStackTrace();
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					});
+
+				}
+
+			}
+		}
+
+	};
+
+	private void pythonRun(CodeLabel codeLabel, String codeType) {
+		// 파이썬 코드 실행
+		ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(() -> {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			PythonHelper.exec(codeType, codeLabel.getText(), out);
+
+			try {
+				String string = out.toString("utf-8");
+				if (!string.isEmpty()) {
+					FxUtil.createStageAndShow(new TextArea(string), stage -> {
+					});
+				}
+
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
 	public void setAiService(OpenAIService openAIService) {
 		this.openAIService.set(openAIService);
 	}
@@ -223,12 +302,15 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 	}
 
 	private Tab currentTab;
+
 	public void setCurrentTab(Tab e) {
 		this.currentTab = e;
 	}
+
 	public Tab getCurrentTab() {
 		return this.currentTab;
 	}
+
 	/*******************************************************************************************************************/
 
 	@FXML
@@ -245,19 +327,18 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 			return;
 
 		String text = txtPrompt.getText();
-		String systemContent = getAllDocumentText();
-		if (systemContent == null) {
+		String documentText = getAllDocumentText();
+		if (documentText == null) {
 			btnEnter.setDisable(true);
 			return;
 		}
 
 		OpenAIService openAIService = this.openAIService.get();
-		
-		
+
 //		Map<String, Object> default1 = openAIService.createDefault(systemContent);
-		
+
 //		assist.put("role", "user");
-		
+
 		String prompt = txtPrompt.getText();
 		DefaultLabel lblMe = new DefaultLabel(prompt, new Label(" 나 "));
 		lblMe.setTip("me");
@@ -267,11 +348,12 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 			try {
 				ChatBotService chatBotService = openAIService.getChatBotService();
 				Map<String, Object> assist = Collections.emptyMap();
-				if((chatBotService instanceof Ollama3Service))
-				{
-					openAIService.setSystemRole(Map.of("role", "system", "content", systemContent));
+				if ((chatBotService instanceof Ollama3Service)) {
+					String systemPrompt = Files.readString(Path.of("script", "prompts", "Grid", "Prompt.txt"));
+					openAIService.setSystemRole(Map.of("role", "system", "content", systemPrompt.concat(documentText)));
+//					Map<String, Object> assist2 = openAIService.createAssist(systemContent);
 //					openAIService.createDefault(systemContent);
-					String send = openAIService.send( Collections.emptyList(), text, true);
+					String send = openAIService.send(Collections.emptyList(), text, true);
 					Platform.runLater(() -> {
 						try {
 							updateChatList(send);
@@ -281,9 +363,10 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 							btnEnter.setDisable(false);
 						}
 					});
-				}
-				else {
-					assist = openAIService.createAssist(systemContent);
+				} else {
+					String systemPrompt = Files.readString(Path.of("script", "prompts", "Grid", "Prompt.txt"));
+					openAIService.setSystemRole(Map.of("role", "system", "content", systemPrompt.concat(documentText)));
+					assist = openAIService.createAssist(documentText);
 					String send = openAIService.send(Arrays.asList(assist), text, true);
 					Platform.runLater(() -> {
 						try {
@@ -295,13 +378,20 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 						}
 					});
 				}
-				
-				
+
 			} catch (Exception e) {
 				LOGGER.error(ValueUtil.toString(e));
 			}
 		});
 
+	}
+
+	public ObservableList<SpreadsheetCell> getRow(Grid grid, int rowIndex) {
+		return grid.getRows().get(rowIndex);
+	}
+
+	public SpreadsheetCell getCell(Grid grid, int rowIndex, int colIndex) {
+		return getRow(grid, rowIndex).get(colIndex);
 	}
 
 	/**
@@ -325,7 +415,7 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 	 * @param speack
 	 */
 	private void updateChatList(String send) {
-		
+
 //		ResponseModelDVO fromGtpResultMessage = //ResponseModelDVO.fromGtpResultMessage(send);
 //		LOGGER.info("{}", fromGtpResultMessage);
 //		List<Choice> choices = fromGtpResultMessage.getChoices();
@@ -383,70 +473,66 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 		} catch (Exception e) {
 			LOGGER.error(ValueUtil.toString(e));
 		}
-	
+
 	}
 
 	public void updateUI(List<Map<String, Object>> query, int startRow, int startCol) {
 //		SpreadsheetView ssv = getSpreadSheetView();
 		DefaultSpreadSheetView view = getView();
-		
+
 		Map<String, Object> map = query.get(0);
-		GridBase grid = DefaultGridBase.createGrid( (query.size() + 100), map.size() > 100 ? map.size() : 100 );
+		GridBase grid = DefaultGridBase.createGrid((query.size() + 100), map.size() > 100 ? map.size() : 100);
 		view.setGrid(grid);
 		ObservableList<ObservableList<SpreadsheetCell>> rows = view.getItems();
-		
-		//head
+
+		// head
 		ObservableList<SpreadsheetCell> headerCells = rows.get(0);
 		Iterator<Entry<String, Object>> it = map.entrySet().iterator();
 		int c = startCol;
-		
-		while(it.hasNext())
-		{
+
+		while (it.hasNext()) {
 			Entry<String, Object> next = it.next();
 			headerCells.get(c).setItem(next.getKey());
 			c++;
 		}
-		
+
 		ObservableList<SpreadsheetCell> cellList = null;
-		//data
-		for(int i= startRow+ 1, size = query.size(); i< size; i++)
-		{
+		// data
+		for (int i = startRow + 1, size = query.size(); i < size; i++) {
 			cellList = rows.get(i);
-			map = query.get(i );
-			
+			map = query.get(i);
+
 			c = startCol;
 			it = map.entrySet().iterator();
-			while(it.hasNext())
-			{
-				
+			while (it.hasNext()) {
+
 				Entry<String, Object> next = it.next();
 				SpreadsheetCell spreadsheetCell = cellList.get(c);
 				Object value = next.getValue();
-				if(value instanceof Date) {
-					LocalDate localDate = ((Date)value).toLocalDate();
-					spreadsheetCell = SpreadsheetCellType.DATE.createCell(spreadsheetCell.getRow(), spreadsheetCell.getColumn(), 1, 1, localDate);
+				if (value instanceof Date) {
+					LocalDate localDate = ((Date) value).toLocalDate();
+					spreadsheetCell = SpreadsheetCellType.DATE.createCell(spreadsheetCell.getRow(),
+							spreadsheetCell.getColumn(), 1, 1, localDate);
 					cellList.set(c, spreadsheetCell);
-				}
-				else if(value instanceof java.sql.Timestamp) 
-				{
-					var localDate = ((Timestamp)value).toLocalDateTime();
-					spreadsheetCell = new LocalDateTimeCellType().createCell(spreadsheetCell.getRow(), spreadsheetCell.getColumn(), 1, 1, localDate);
+				} else if (value instanceof java.sql.Timestamp) {
+					var localDate = ((Timestamp) value).toLocalDateTime();
+					spreadsheetCell = new LocalDateTimeCellType().createCell(spreadsheetCell.getRow(),
+							spreadsheetCell.getColumn(), 1, 1, localDate);
 					cellList.set(c, spreadsheetCell);
-					
-				}
-				else if(value instanceof Double) {
-					Double d = ((Double)value);
-					spreadsheetCell = SpreadsheetCellType.DOUBLE.createCell(spreadsheetCell.getRow(), spreadsheetCell.getColumn(), 1, 1, d);
+
+				} else if (value instanceof Double) {
+					Double d = ((Double) value);
+					spreadsheetCell = SpreadsheetCellType.DOUBLE.createCell(spreadsheetCell.getRow(),
+							spreadsheetCell.getColumn(), 1, 1, d);
 					cellList.set(c, spreadsheetCell);
+				} else {
+					spreadsheetCell.setItem(value);
 				}
-				else {
-					spreadsheetCell.setItem(value);	
-				}
-				
+
 				c++;
 			}
 		}
-		
+
 //		for(int i= rows.size(), size = query.size(); i< size; i++ )
 //		{
 //			ObservableList<SpreadsheetCell> newRowList = FXCollections.observableArrayList();
@@ -480,6 +566,4 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 		return lvResult;
 	}
 
-	
-	
 }

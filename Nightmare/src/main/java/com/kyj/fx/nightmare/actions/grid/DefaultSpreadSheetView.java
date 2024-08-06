@@ -72,6 +72,7 @@ public class DefaultSpreadSheetView extends StackPane {
 	public DefaultSpreadSheetView(Grid grid) {
 
 		ssv = new SpreadsheetView();
+		ssv.getGrid().getRows().get(1).get(1).setItem("hello");
 		this.ssv.gridProperty().addListener(new ChangeListener<Grid>() {
 
 			@Override
@@ -83,6 +84,19 @@ public class DefaultSpreadSheetView extends StackPane {
 				newValue.addEventHandler(GridChange.GRID_CHANGE_EVENT, gridUnRedo);
 			}
 		});
+//		ssv.editingCellProperty().addListener(new ChangeListener<TablePosition>() {
+//
+//			@Override
+//			public void changed(ObservableValue<? extends TablePosition> observable, TablePosition oldValue,
+//					TablePosition newValue) {
+//				if(newValue == null) return;
+//				
+//				int column = newValue.getColumn();
+//				int row = newValue.getRow();
+//				Object item = ssv.getItems().get(row).get(column).getItem();
+//				System.out.println(item);
+//				
+//			}});
 //		undoStack.add(new GridCommand(ssv, ssv.getGrid(), grid));
 		ssv.setGrid(grid);
 

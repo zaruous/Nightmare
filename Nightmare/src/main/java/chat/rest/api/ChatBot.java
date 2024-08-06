@@ -10,6 +10,7 @@ import chat.rest.api.service.core.Rules;
 import chat.rest.api.service.impl.ChatGpt3Service;
 import chat.rest.api.service.impl.ChatGpt4oService;
 import chat.rest.api.service.impl.Ollama3Service;
+import chat.rest.api.service.impl.DeepSeekStreamService;
 import chat.rest.api.service.impl.RekaService;
 import chat.rest.api.service.impl.SpeechToTextGptService;
 
@@ -22,7 +23,16 @@ public final class ChatBot {
 		
 	}
 	public enum API {
-		GTP_3_5, GTP_4_O, LLAMA3, REKA, GTP_SPEECH_TO_TEST, GEMMA
+		GTP_3_5, GTP_4_O, LLAMA3("OLLAMA"), REKA, GTP_SPEECH_TO_TEST, GEMMA("OLLAMA"), DEEPSEEK_CODER_V2("OLLAMA"), CODEGEMMA("OLLAMA");
+
+		private String group;
+		API(String group) {
+			this.group = group;
+		}
+		API() {
+			this.group = "";
+		}
+		public String getGroup() {return this.group; }
 	}
 
 	/**
@@ -50,7 +60,11 @@ public final class ChatBot {
 			break;
 		case GEMMA:	
 		case LLAMA3:
+		case CODEGEMMA:
 			chatGpt3Service = new Ollama3Service();
+			break;
+		case DEEPSEEK_CODER_V2:
+			chatGpt3Service = new DeepSeekStreamService();
 			break;
 		case REKA:
 			chatGpt3Service = new RekaService();

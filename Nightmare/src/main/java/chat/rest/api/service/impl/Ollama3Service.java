@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +21,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -84,20 +86,25 @@ public class Ollama3Service extends AbstractPromptService {
 
 		var param = new HashMap<>();
 		param.put("model", getConfig().getModel());
-		if(assistance.isEmpty())
-			param.put("messages", List.of(getSystemRule(), Map.of("role", "user", "content", message)));
-		else
-		{
-			ArrayList<Map<String, Object>> arrayList = new ArrayList<>(assistance.size() + 2);
-			arrayList.add(getSystemRule());
-			arrayList.addAll(assistance);
-			arrayList.add(Map.of("role", "user", "content", message));
-			
-			param.put("messages", arrayList);
-		}
+//		if(assistance.isEmpty())
+//			param.put("messages", List.of(getSystemRule(), Map.of("role", "user", "content", message)));
+//		else
+//		{
+//			ArrayList<Map<String, Object>> arrayList = new ArrayList<>(assistance.size() + 2);
+//			arrayList.add(getSystemRule());
+//			arrayList.addAll(assistance);
+//			arrayList.add(Map.of("role", "user", "content", message));
+//			
+//			param.put("messages", arrayList);
+//		}
+		String sys = getSystemRule().get("content").toString();
+		String assitst = assistance.stream().map( m -> m.get("content").toString()).collect(Collectors.joining("\n"));
+		
+		String msg = String.format("%s\n%s\n%s", sys, assitst, message);
+		param.put("messages", List.of(Map.of("role", "user", "content", msg)));
 		
 		param.put("format", getFormat());
-		param.put("stream", false);
+		param.put("stream", isStream());
 
 		
 		
@@ -128,27 +135,52 @@ public class Ollama3Service extends AbstractPromptService {
 		}
 
 		try (CloseableHttpClient httpClient = httpClientBuilder.build()) {
+			
 			try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
 //				System.out.println("!!");
 				// API 응답 처리
 				// System.out.println(response.getStatusLine().getStatusCode());
-				Stream.of(response.getAllHeaders()).forEach(System.out::println);
+				Stream.of(response.getAllHeaders()).forEach(h -> LOGGER.debug("{}", h));
 				responseEntity = response.getEntity();
-
 				String str;
-				// var sb = new StringBuilder();
-				try (BufferedReader r = new BufferedReader(new InputStreamReader(responseEntity.getContent()))) {
-					str = r.lines().map(ret -> {
-						LOGGER.debug("response : {}",ret);
-						Ollama3ResponseDVO D = gson.fromJson(ret, Ollama3ResponseDVO.class);
-						return D.getMessage().getContent();
-					}).collect(Collectors.joining());
-					// sb.append(r.readLine());
+				if(response.getStatusLine().getStatusCode() == 200)
+				{
+					String contType = responseEntity.getContentType().getValue();
+					
+					// var sb = new StringBuilder();
+					try (BufferedReader r = new BufferedReader(new InputStreamReader(responseEntity.getContent()))) {
+						if(contType.contains("text/event-stream"))
+						{
+							str = r.lines().map(s -> s.startsWith("data: ") ? s.substring("data: ".length()) : s)
+							.map(ret -> {
+								LOGGER.debug("response : {}",ret);
+								Ollama3ResponseDVO D = gson.fromJson(ret, Ollama3ResponseDVO.class);
+								return D.getMessage().getContent();
+							}).collect(Collectors.joining());
+						}
+						else {
+							str = r.lines().map(ret -> {
+								LOGGER.debug("response : {}",ret);
+								Ollama3ResponseDVO D = gson.fromJson(ret, Ollama3ResponseDVO.class);
+								return D.getMessage().getContent();
+							}).collect(Collectors.joining());	
+						}
+						
+					}
 				}
+				else {
+					str = IOUtils.toString(responseEntity.getContent(), Charset.defaultCharset());
+					LOGGER.error(str);
+				}
+				
 				return str;
 			}
 		}
 	
+	}
+
+	protected boolean isStream() {
+		return false;
 	}
 
 	public String send(String message) throws Exception {
