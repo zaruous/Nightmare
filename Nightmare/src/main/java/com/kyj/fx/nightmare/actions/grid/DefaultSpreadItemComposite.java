@@ -8,6 +8,7 @@ import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Date;
@@ -525,7 +526,14 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 					spreadsheetCell = SpreadsheetCellType.DOUBLE.createCell(spreadsheetCell.getRow(),
 							spreadsheetCell.getColumn(), 1, 1, d);
 					cellList.set(c, spreadsheetCell);
-				} else {
+				} 
+				else if (value instanceof BigDecimal) {
+					BigDecimal d = ((BigDecimal) value);
+					spreadsheetCell = SpreadsheetCellType.DOUBLE.createCell(spreadsheetCell.getRow(),
+							spreadsheetCell.getColumn(), 1, 1, d.doubleValue());
+					cellList.set(c, spreadsheetCell);
+				} 
+				else {
 					spreadsheetCell.setItem(value);
 				}
 

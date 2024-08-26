@@ -1,4 +1,5 @@
 -Xms512m -Xms2048m
+--add-exports=javafx.base/com.sun.javafx.event=ALL-UNNAMED
 --add-exports javafx.base/com.sun.javafx.event=org.controlsfx.controls
---add-exports javafx.base/com.sun.javafx.event=org.controlsfx.controls 
+--add-exports javafx.base/com.sun.javafx.event=javafx.base
 --add-exports javafx.controls/com.sun.javafx.scene.control.behavior=org.controlsfx.controls
