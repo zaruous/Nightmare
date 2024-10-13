@@ -240,7 +240,10 @@ public class AiComposite extends AbstractCommonsApp {
 			FileUtil.openFile(outFile);
 		});
 		
-		speechCtx.getItems().addAll(miRunCode, miReport , miProperty);
+		MenuItem miClear = new MenuItem("Clear");
+		miClear.setOnAction((ev)->{ lvResult.getItems().clear(); });
+		
+		speechCtx.getItems().addAll(miRunCode, miReport , miClear, miProperty);
 
 		this.lvResult.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.lvResult.setCellFactory(new Callback<ListView<DefaultLabel>, ListCell<DefaultLabel>>() {
