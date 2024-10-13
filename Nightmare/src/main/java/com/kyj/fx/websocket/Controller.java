@@ -75,4 +75,6 @@ public class Controller {
 	public void status(Context ctx) {
 		ctx.result("1");
 	}
+	
+	public void ping(Context ctx) { ctx.status(200); }
 }

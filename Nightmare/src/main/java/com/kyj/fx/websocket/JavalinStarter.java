@@ -33,7 +33,7 @@ public class JavalinStarter {
 			
 			var app = Javalin.create(config ->{
 				 config.http.asyncTimeout = 10_000L;
-				 config.http.maxRequestSize = 2_000_000L;
+				 config.http.maxRequestSize = 5_000_000L;
 				 config.useVirtualThreads = true;
 				 config.showJavalinBanner = false;
 			})
@@ -42,7 +42,8 @@ public class JavalinStarter {
 			Controller getHtml = new Controller();
 			app.get("/", ctx -> getHtml.hellWorld(ctx))
 			.post("/getHtml", ctx -> getHtml.getHtml(ctx))
-			.get("/status", ctx -> getHtml.status(ctx));
+			.get("/status", ctx -> getHtml.status(ctx))
+			.get("/ping", ctx -> getHtml.ping(ctx));
 			
 		} catch (JavalinBindException ex) {
 			LOGGER.error(ValueUtil.toString(ex));
