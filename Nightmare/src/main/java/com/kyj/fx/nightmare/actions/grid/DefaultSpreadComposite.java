@@ -3,6 +3,7 @@
  */
 package com.kyj.fx.nightmare.actions.grid;
 
+import java.awt.Desktop;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,6 +35,7 @@ import com.kyj.fx.nightmare.actions.ai.OpenAIService;
 import com.kyj.fx.nightmare.comm.DialogUtil;
 import com.kyj.fx.nightmare.comm.ExcelUtil;
 import com.kyj.fx.nightmare.comm.ExecutorDemons;
+import com.kyj.fx.nightmare.comm.FileUtil;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.GargoyleExtensionFilters;
 import com.kyj.fx.nightmare.comm.Message;
@@ -116,8 +118,15 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		ListView<DefaultLabel> lvResult = currentView.getLvResult();
 		ObservableList<DefaultLabel> items = lvResult.getItems();
 
-		try (FileOutputStream out = new FileOutputStream(new File("test.html"))) {
+		File file = new File("test.html");
+		try (FileOutputStream out = new FileOutputStream(file)) {
 			ReportHelper.generate(items, out);
+		} catch (IOException e) {
+			DialogUtil.showExceptionDailog(e);
+		}
+		
+		try {
+			Desktop.getDesktop().open(file);
 		} catch (IOException e) {
 			DialogUtil.showExceptionDailog(e);
 		}

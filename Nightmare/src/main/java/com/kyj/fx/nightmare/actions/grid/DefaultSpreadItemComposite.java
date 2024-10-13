@@ -279,16 +279,21 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			PythonHelper.exec(codeType, codeLabel.getText(), out);
 
-			try {
-				String string = out.toString("utf-8");
-				if (!string.isEmpty()) {
-					FxUtil.createStageAndShow(new TextArea(string), stage -> {
-					});
-				}
+			
+				Platform.runLater(()->{
+					try {
+						String string = out.toString("utf-8");
+						if (!string.isEmpty()) {
+							FxUtil.createStageAndShow(new TextArea(string), stage -> {
+							});
+						}	
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				});
+				
 
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
+			
 		});
 	}
 
@@ -499,9 +504,10 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 
 		ObservableList<SpreadsheetCell> cellList = null;
 		// data
-		for (int i = startRow + 1, size = query.size(); i < size; i++) {
+		int datarowIndxex = 0;
+		for (int i = startRow + 1, size = query.size(); i <= size; i++) {
 			cellList = rows.get(i);
-			map = query.get(i);
+			map = query.get(datarowIndxex);
 
 			c = startCol;
 			it = map.entrySet().iterator();
@@ -521,7 +527,14 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 							spreadsheetCell.getColumn(), 1, 1, localDate);
 					cellList.set(c, spreadsheetCell);
 
-				} else if (value instanceof Double) {
+				} 
+				else if (value instanceof Long) {
+					Long d = ((Long) value);
+					spreadsheetCell = SpreadsheetCellType.DOUBLE.createCell(spreadsheetCell.getRow(),
+							spreadsheetCell.getColumn(), 1, 1, d.doubleValue());
+					cellList.set(c, spreadsheetCell);
+				}
+				else if (value instanceof Double) {
 					Double d = ((Double) value);
 					spreadsheetCell = SpreadsheetCellType.DOUBLE.createCell(spreadsheetCell.getRow(),
 							spreadsheetCell.getColumn(), 1, 1, d);
@@ -539,6 +552,7 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 
 				c++;
 			}
+			datarowIndxex++;
 		}
 
 //		for(int i= rows.size(), size = query.size(); i< size; i++ )
