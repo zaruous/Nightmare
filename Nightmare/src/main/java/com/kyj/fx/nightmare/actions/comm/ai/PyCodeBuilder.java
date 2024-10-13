@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
@@ -17,12 +16,14 @@ import org.zeroturnaround.exec.InvalidExitValueException;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.stream.LogOutputStream;
 
+import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
 /**
  * 
  */
 public class PyCodeBuilder extends AbstractCodeRunner {
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PyCodeBuilder.class);
 	private static final String command = "python";
 	private File pythonFile;
@@ -100,7 +101,13 @@ public class PyCodeBuilder extends AbstractCodeRunner {
 	public void run() {
 		try {
 			defaultBuilder().execute();
-			Files.deleteIfExists(pythonFile.toPath());
+			
+			if("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.PYCODE_BUILDER_CLEAN_YN)))
+			{
+				//파이썬 실행 후 파일 삭제가 필요한 경우
+				Files.deleteIfExists(pythonFile.toPath());
+			}
+			
 		} catch (InvalidExitValueException | IOException | InterruptedException | TimeoutException e) {
 			LOGGER.error(ValueUtil.toString(e));
 		}

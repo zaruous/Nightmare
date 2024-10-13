@@ -69,7 +69,10 @@ public class ResourceLoader {
 	
 	public static final String TRAY_SUPPORT_YN = "tary.support.yn";
 	
-	
+	/**
+	 * 파이썬 실행기에서 프로그램 실행후 파일 삭제 여부 
+	 */
+	public static final String PYCODE_BUILDER_CLEAN_YN = "pycode.builder.clean.yn";
 	/**
 	 * 앱 버젼 <br/>
 	 * @최초생성일 2021. 12. 8.
