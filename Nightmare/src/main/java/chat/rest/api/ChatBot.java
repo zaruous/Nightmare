@@ -23,8 +23,8 @@ public final class ChatBot {
 		
 	}
 	public enum API {
-		GTP_3_5, GTP_4_O, LLAMA3("OLLAMA"), REKA, GTP_SPEECH_TO_TEST, GEMMA("OLLAMA"), DEEPSEEK_CODER_V2("OLLAMA"), CODEGEMMA("OLLAMA");
-
+		GTP_3_5, GTP_4_O, LLAMA3("OLLAMA"), REKA, GTP_SPEECH_TO_TEST, GEMMA("OLLAMA"), 
+		DEEPSEEK_CODER_V2("OLLAMA"), CODEGEMMA("OLLAMA"), O1_PREVIEW, O1_MINI;
 		private String group;
 		API(String group) {
 			this.group = group;
@@ -55,6 +55,8 @@ public final class ChatBot {
 		case GTP_3_5:
 			chatGpt3Service = new ChatGpt3Service(rules);
 			break;
+		case O1_MINI:
+		case O1_PREVIEW:
 		case GTP_4_O:
 			chatGpt3Service = new ChatGpt4oService(rules);
 			break;

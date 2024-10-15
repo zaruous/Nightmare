@@ -69,9 +69,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
@@ -210,6 +213,37 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 		});
 		miRunAs.getItems().add(miPyhtonRun);
 		ctx.getItems().addAll(new SeparatorMenuItem(), miRunAs);
+		
+		lvResult.setOnMouseClicked(ev ->{
+			
+			if(ev.getClickCount() == 2 && ev.getButton() == MouseButton.PRIMARY )  {
+				
+				if(ev.isConsumed())
+					return;
+				ev.consume();
+				
+				DefaultLabel selectedItem = lvResult.getSelectionModel().getSelectedItem();
+				String text = selectedItem.getText();
+				
+				CodeLabel c = (CodeLabel) selectedItem;
+				
+				Button btnSave = new Button("Save");
+				TextArea textArea = new TextArea(text);
+				VBox vBox = new VBox(textArea, new HBox(btnSave));
+				
+				btnSave.setOnAction(eve ->{
+					String text2 = textArea.getText();
+					c.setResult(text2);
+					Stage s = (Stage) btnSave.getScene().getWindow();
+					s.close();
+				});
+				
+				FxUtil.createStageAndShow(vBox, stage ->{});
+			
+				
+			}
+			
+		});
 	}
 
 	EventHandler<ActionEvent> runCodeActionHandler = new EventHandler<ActionEvent>() {
@@ -373,6 +407,7 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 					String systemPrompt = Files.readString(Path.of("script", "prompts", "Grid", "Prompt.txt"));
 					openAIService.setSystemRole(Map.of("role", "system", "content", systemPrompt.concat(documentText)));
 					assist = openAIService.createAssist(documentText);
+//					String _documentText = String.format("'''data\n%s'''\n %s", documentText, text);
 					String send = openAIService.send(Arrays.asList(assist), text, true);
 					Platform.runLater(() -> {
 						try {
@@ -458,6 +493,7 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 						}
 					});
 
+					
 					VBox vBox = new VBox(graphic);
 					vBox.setSpacing(5.0d);
 					content.setGraphic(vBox);

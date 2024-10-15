@@ -118,7 +118,12 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		ListView<DefaultLabel> lvResult = currentView.getLvResult();
 		ObservableList<DefaultLabel> items = lvResult.getItems();
 
-		File file = new File("test.html");
+		File file = DialogUtil.showFileDialog(chooser->{
+			chooser.setSelectedExtensionFilter(GargoyleExtensionFilters.HTML_FILTER);
+			chooser.setInitialFileName("test.html");
+		});
+		if(file == null)return;
+		
 		try (FileOutputStream out = new FileOutputStream(file)) {
 			ReportHelper.generate(items, out);
 		} catch (IOException e) {
