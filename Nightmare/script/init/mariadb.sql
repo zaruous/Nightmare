@@ -20,12 +20,12 @@ USE `nightmare`;
 -- 테이블 nightmare.chat_history 구조 내보내기
 CREATE TABLE IF NOT EXISTS `chat_history` (
   `ID` double NOT NULL,
-  `SYSTEM` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `QUESTION` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ANSWER` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `SYSTEM` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `QUESTION` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ANSWER` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `FIRST_REGER_ID` enum('USER','AI') DEFAULT NULL,
   `FST_REG_DT` timestamp NULL DEFAULT sysdate(),
-  `AI_ID` double DEFAULT NULL,
+  `AI_ID` double unsigned DEFAULT NULL,
   `SPEECH_ID` double DEFAULT NULL,
   `PROMPT_ID` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`ID`)
