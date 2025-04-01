@@ -133,9 +133,16 @@ public class AiComposite extends AbstractCommonsApp {
 
 	@FXML
 	public void initialize() {
-		useMicrophoneFlag.set("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_AUTO_PLAY_SOUND_YN, "N")));
-		useSpeakingFlag.set(true);
-
+		boolean f = "Y".equals(ResourceLoader.getInstance().get(ResourceLoader.AI_AUTO_PLAY_SOUND_YN, "N"));
+		useMicrophoneFlag.set(true);
+		useSpeakingFlag.set(f);
+		
+		if(f) {
+			rbSpeackingYes.setSelected(true);
+		}
+		else
+			rbSpeackingNo.setSelected(true);
+			
 		rbSpeackingYes.setOnAction(ev -> {
 			useSpeakingFlag.set(true);
 		});
