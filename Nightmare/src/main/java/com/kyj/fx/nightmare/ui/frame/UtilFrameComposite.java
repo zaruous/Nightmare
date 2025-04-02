@@ -190,4 +190,9 @@ public class UtilFrameComposite extends AbstractCommonsApp {
 
 	}
 
+	@Override
+	public void showStatusMessage(String message) {
+		// TODO Auto-generated method stub		
+	}
+
 }

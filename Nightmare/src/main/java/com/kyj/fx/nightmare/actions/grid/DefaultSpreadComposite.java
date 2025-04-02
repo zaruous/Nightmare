@@ -554,4 +554,10 @@ public class DefaultSpreadComposite extends AbstractCommonsApp {
 		List<Datasource> queryForList = ds.queryForList(statement, Map.of(), Datasource.class);
 		return queryForList;
 	}
+
+	@Override
+	public void showStatusMessage(String message) {
+		// TODO Auto-generated method stub
+		
+	}
 }

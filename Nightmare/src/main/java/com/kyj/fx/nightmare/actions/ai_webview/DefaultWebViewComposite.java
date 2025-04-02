@@ -609,6 +609,12 @@ public class DefaultWebViewComposite extends AbstractCommonsApp {
 	public void setHtml(String html) {
 		this.getWebView().getEngine().loadContent(html);
 	}
+
+	@Override
+	public void showStatusMessage(String message) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 }

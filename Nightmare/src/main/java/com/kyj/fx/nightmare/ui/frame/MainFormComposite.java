@@ -9,18 +9,14 @@ package com.kyj.fx.nightmare.ui.frame;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.kyj.fx.nightmare.actions.ai.AiComposite;
 import com.kyj.fx.nightmare.actions.grid.DefaultSpreadComposite;
-import com.kyj.fx.nightmare.comm.ExecutorDemons;
 import com.kyj.fx.nightmare.comm.FxUtil;
 import com.kyj.fx.nightmare.comm.ResourceLoader;
 import com.kyj.fx.nightmare.comm.StageStore;
 import com.kyj.fx.nightmare.comm.ValueUtil;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -34,7 +30,8 @@ public class MainFormComposite extends BorderPane {
 
 	public MainFormComposite() {
 		FXMLLoader newLaoder = FxUtil.newLaoder();
-		newLaoder.setLocation(MainFormComposite.class.getResource("MainForm2.fxml"));
+		newLaoder.setLocation(MainFormComposite.class.getResource("MainForm.fxml"));
+//		newLaoder.setLocation(MainFormComposite.class.getResource("MainForm2.fxml"));
 		newLaoder.setRoot(this);
 		newLaoder.setController(this);
 		
@@ -47,26 +44,28 @@ public class MainFormComposite extends BorderPane {
 			    -fx-background-radius: 5.0;
 			    -fx-opacity: 0.9;
 			    -fx-cursor: hand ;
+			    
         		"""
         	);
 		try {
 			newLaoder.load();
-			ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(()->{
-				
-				Timer timer = new Timer();
-				timer.schedule(new TimerTask() {
-					
-					@Override
-					public void run() {
-						AbstractCommonsApp app = StageStore.getApp();
-						if(app!=null && (app.getClass() == AiComposite.class))
-							return;
-						Platform.runLater(()->{
-							aiOnClick();	
-						});
-					}
-				}, 2000);
-			});
+			this.getStylesheets().add(MainFormComposite.class.getResource("MainForm.css").toExternalForm());
+//			ExecutorDemons.getGargoyleSystemExecutorSerivce().execute(()->{
+//				
+//				Timer timer = new Timer();
+//				timer.schedule(new TimerTask() {
+//					
+//					@Override
+//					public void run() {
+//						AbstractCommonsApp app = StageStore.getApp();
+//						if(app!=null && (app.getClass() == AiComposite.class))
+//							return;
+//						Platform.runLater(()->{
+//							aiOnClick();	
+//						});
+//					}
+//				}, 2000);
+//			});
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

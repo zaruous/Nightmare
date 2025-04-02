@@ -1,6 +1,8 @@
 package etc;
 
-import java.io.StringWriter;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +62,7 @@ public class SQLNOLOCKAdderBuilder {
 
 	// 가상의 Velocity 엔진
 	public String processVelocityTemplate(String template, Map<String, Object> params) {
-		StringWriter writer = new StringWriter();
+		BufferedWriter writer = new BufferedWriter(new PrintWriter(new ByteArrayOutputStream()));
 		var ctx = new VelocityContext(params) {
 			private static final long serialVersionUID = 7234457145219251719L;
 

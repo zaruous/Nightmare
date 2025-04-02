@@ -26,9 +26,7 @@ public abstract class AbstractCommonsApp extends BorderPane {
 	 * @작성일 : 2023. 4. 1.
 	 * @param message
 	 */
-	public void showStatusMessage(String message) {
-		StageStore.getApp().showStatusMessage(message);
-	}
+	public abstract void showStatusMessage(String message) ;
 
 	/**
 	 * @작성자 : (zaruous@naver.com)

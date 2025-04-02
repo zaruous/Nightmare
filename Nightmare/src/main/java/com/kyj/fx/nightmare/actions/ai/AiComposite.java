@@ -787,4 +787,10 @@ public class AiComposite extends AbstractCommonsApp {
 			stage.setHeight(800d);
 		});
 	}
+
+	@Override
+	public void showStatusMessage(String message) {
+		// TODO Auto-generated method stub
+		
+	}
 }

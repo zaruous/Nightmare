@@ -159,4 +159,10 @@ public class QuestionComposite extends AbstractCommonsApp implements ICustomSupp
 		return this.dataProperty();
 	}
 
+	@Override
+	public void showStatusMessage(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

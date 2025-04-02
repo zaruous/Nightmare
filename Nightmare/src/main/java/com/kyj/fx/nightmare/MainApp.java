@@ -18,22 +18,20 @@ import com.kyj.fx.nightmare.ui.frame.MainFormComposite;
 import com.kyj.fx.websocket.JavalinStarter;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class MainApp extends Application implements UncaughtExceptionHandler {
 
 	public static final String IMAGES_NIGHTMARE_PNG = "images/Nightmare.png";
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
-
+	
 	public static void main(String[] args) throws Exception {
-		
-		//socker port binding 으로 어플리케이션 실행여부 확인
-		if("N".equals(ResourceLoader.getInstance().get("multi.application.support.yn", "N")))
-			new JavalinStarter().start();
 		
 		String strLocale = ResourceLoader.getInstance().get(ResourceLoader.DEFAULT_LOCALE);
 		Locale locale = Locale.KOREAN;
@@ -61,12 +59,36 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 		
 		launch(args);
 	}
-
+	
+	private JavalinStarter javalinStarter;
 	public void start(Stage stage) throws Exception {
 		
+		
+		//socker port binding 으로 어플리케이션 실행여부 확인
+		if("N".equals(ResourceLoader.getInstance().get("multi.application.support.yn", "N"))) {
+			javalinStarter = new JavalinStarter();
+			javalinStarter.start();
+			
+		}
+		
+		//어플리케이션을 닫을때 트레이아이콘 처리할지 여부
 		if("Y".equals(ResourceLoader.getInstance().get(ResourceLoader.TRAY_SUPPORT_YN, "Y")))
 			TraySupport.addAppToTray(stage);
-		
+		else
+		{
+			//트레이아이콘 모드가 아닌경우 앱 종료
+			stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, ev->{
+				/*
+				 * 자벨린 종료시 이후 프로세스는 
+				 * 현재 개발 상태로는 종료됨 자벨린이 처리하는 데이터 처리가 끝난 후 종료되도록 고려차원에서 시스템 강제종료 처리 부분은 주석처리.
+ 				강제 종료가 필요한 상황이 될 경우 아래 두 종료코드를 고려해볼것.
+ 				Platform.exit();
+//				System.exit(0);
+				*/ 
+				javalinStarter.stop();
+
+			});
+		}
 		StageStore.setPrimaryStage(stage);
 
 		stage.addEventFilter(KeyEvent.KEY_RELEASED, ev -> {
@@ -85,6 +107,7 @@ public class MainApp extends Application implements UncaughtExceptionHandler {
 			}
 		});
 		
+		//예상치못한 예외 상황에 대한 이벤트 핸들링.
 		Thread.setDefaultUncaughtExceptionHandler(this);
 
 		updateComponent(stage);

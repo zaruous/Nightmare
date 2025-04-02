@@ -624,4 +624,10 @@ public class DefaultSpreadItemComposite extends AbstractCommonsApp {
 		return lvResult;
 	}
 
+	@Override
+	public void showStatusMessage(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

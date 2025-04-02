@@ -1,10 +1,12 @@
 package chat.rest.api.service.core;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.Map;
 import java.util.Properties;
@@ -35,7 +37,7 @@ public class VelocitySupport {
 
 		VelocityEngine engine = new VelocityEngine(properties);
 
-		StringWriter writer = new StringWriter();
+		BufferedWriter writer = new BufferedWriter(new PrintWriter(new ByteArrayOutputStream()));
 		engine.evaluate(context, writer, "DaoWizard", new StringReader(script));
 		return writer.toString();
 	}

@@ -6,10 +6,11 @@
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -290,7 +291,8 @@ public class ValueUtil {
 	 */
 	public static String getVelocityToText(String dynamicSql, Map<String, Object> paramMap, boolean replaceNamedValue,
 			Context velocityContext, Function<String, String> customReplaceFormat) {
-		StringWriter writer = new StringWriter();
+		
+		BufferedWriter writer = new BufferedWriter(new PrintWriter(new ByteArrayOutputStream()));
 		VelocityContext context = new VelocityContext(paramMap, new DateFormatVelocityContextExtension(velocityContext));
 
 		String _dynamicSql = dynamicSql;
@@ -301,6 +303,8 @@ public class ValueUtil {
 			convetedString = replace(convetedString, paramMap, customReplaceFormat);
 		}
 		return convetedString.trim();
+		
+		
 	}
 	
 	static final String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|\'([^\"\\\\]|\\\\.)*\'";

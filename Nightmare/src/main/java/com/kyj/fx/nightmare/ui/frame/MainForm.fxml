@@ -27,7 +27,7 @@
                <children>
                   <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label styleClass="vbox-item-label" text="Equipment">
+                        <Label styleClass="vbox-item-label" text="AI">
                            <font>
                               <Font size="11.0" />
                            </font>
@@ -75,19 +75,7 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox onMouseClicked="#aiOnClick" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2" style="-fx-cursor: hand;" styleClass="vbox-item">
-               <children>
-                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label styleClass="vbox-item-label" text="AI">
-                           <font>
-                              <Font size="11.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
+            <VBox onMouseClicked="#aiOnClick" prefHeight="200.0" prefWidth="100.0" style="-fx-cursor: hand;" styleClass="vbox-item" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </center>

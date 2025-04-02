@@ -1,7 +1,10 @@
 package com.kyj.fx.nightmare.comm;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Writer;
 
 import org.jsoup.nodes.Element;
@@ -21,9 +24,10 @@ public class XmlW3cUtil {
 //	}
 
 	public static String parseElement(Element element) throws IOException {
-
-		try (StringWriter writer = new StringWriter()) {
+		
+		try (BufferedWriter writer = new BufferedWriter(new PrintWriter(new ByteArrayOutputStream()))) {
 			parseElement(element, writer);
+			writer.flush();
 			return writer.toString();
 		}
 	}

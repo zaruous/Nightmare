@@ -362,4 +362,9 @@ public class NotebookComposite extends AbstractCommonsApp {
 			});
 		});
 	}
+
+	@Override
+	public void showStatusMessage(String message) {
+		//TODO
+	}
 }

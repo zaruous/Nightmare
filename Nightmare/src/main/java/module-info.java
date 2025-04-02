@@ -8,7 +8,6 @@ open module ETHelper {
 	requires transitive javafx.controls;
 	requires transitive javafx.base;
 	requires transitive javafx.swing;
-	
 	requires spring.core;
 	
 	requires spring.beans;

@@ -6,7 +6,9 @@
  *******************************/
 package com.kyj.fx.nightmare.comm;
 
-import java.io.StringWriter;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -174,7 +176,7 @@ public class AbstractDAO {
 	 */
 	public int[] batchUpdate(String sql, Map<String, Object>[] paramMaps) throws Exception {
 		if (paramMaps != null && isVelocity(sql)) {
-			StringWriter writer = new StringWriter();
+			BufferedWriter writer = new BufferedWriter(new PrintWriter(new ByteArrayOutputStream()));
 			Velocity.evaluate(new VelocityContext(paramMaps[0]), writer, "AbstractDAO", sql.toString());
 			sql = writer.toString();
 		}
@@ -188,7 +190,7 @@ public class AbstractDAO {
 	 */
 	public int update(String sql, Map<String, Object> paramMap) throws Exception {
 		if (isVelocity(sql)) {
-			StringWriter writer = new StringWriter();
+			BufferedWriter writer = new BufferedWriter(new PrintWriter(new ByteArrayOutputStream()));
 			Velocity.evaluate(new VelocityContext(paramMap), writer, "AbstractDAO", sql.toString());
 
 			sql = writer.toString();
@@ -209,7 +211,7 @@ public class AbstractDAO {
 	public int[] batchUpdate(String sql, Map<String, Object> velocityParam, SqlParameterSource[] paramMaps)
 			throws Exception {
 		if (paramMaps != null && isVelocity(sql)) {
-			StringWriter writer = new StringWriter();
+			BufferedWriter writer = new BufferedWriter(new PrintWriter(new ByteArrayOutputStream()));
 			Velocity.evaluate(new VelocityContext(velocityParam), writer, "AbstractDAO", sql.toString());
 			sql = writer.toString();
 		}
@@ -264,7 +266,7 @@ public class AbstractDAO {
 		String sql = sb.toString();
 		Map<String, Object> param = Map.of("tableName", tableName);
 		if (instance != null && isVelocity(sql)) {
-			StringWriter writer = new StringWriter();
+			BufferedWriter writer = new BufferedWriter(new PrintWriter(new ByteArrayOutputStream()));
 			Velocity.evaluate(new VelocityContext(param), writer, "AbstractDAO", sql);
 			sql = writer.toString();
 		}
@@ -319,7 +321,7 @@ public class AbstractDAO {
 		String sql = sb.toString();
 		Map<String, Object> param = Map.of("tableName", tableName);
 		if (instance != null && isVelocity(sql)) {
-			StringWriter writer = new StringWriter();
+			BufferedWriter writer = new BufferedWriter(new PrintWriter(new ByteArrayOutputStream()));
 			Velocity.evaluate(new VelocityContext(param), writer, "AbstractDAO", sql);
 			sql = writer.toString();
 		}
@@ -365,7 +367,7 @@ public class AbstractDAO {
 		String sql = sb.toString();
 		Map<String, Object> param = Map.of("tableName", tableName);
 		if (instance != null && isVelocity(sql)) {
-			StringWriter writer = new StringWriter();
+			BufferedWriter writer = new BufferedWriter(new PrintWriter(new ByteArrayOutputStream()));
 			Velocity.evaluate(new VelocityContext(param), writer, "AbstractDAO", sql);
 			sql = writer.toString();
 		}
@@ -408,7 +410,7 @@ public class AbstractDAO {
 	}
 	public <T> List<T> queryForList(String sql, Map<String, Object> paramMap, Class<T> clazz) {
 		if (isVelocity(sql)) {
-			StringWriter writer = new StringWriter();
+			BufferedWriter writer = new BufferedWriter(new PrintWriter(new ByteArrayOutputStream()));
 			Velocity.evaluate(new VelocityContext(paramMap), writer, "AbstractDAO", sql.toString());
 			sql = writer.toString();
 		}
